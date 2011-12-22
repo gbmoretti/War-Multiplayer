@@ -1,0 +1,376 @@
+--- &id016 
+SERVER_SOFTWARE: thin 1.3.1 codename Triple Espresso
+SERVER_NAME: localhost
+rack.input: &id015 !ruby/object:StringIO {}
+
+rack.version: &id005 
+  - 1
+  - 0
+rack.errors: &id006 !ruby/object:IO {}
+
+rack.multithread: false
+rack.multiprocess: false
+rack.run_once: false
+REQUEST_METHOD: GET
+REQUEST_PATH: /websocket
+PATH_INFO: ""
+REQUEST_URI: /websocket
+HTTP_VERSION: HTTP/1.1
+HTTP_HOST: localhost:3000
+HTTP_USER_AGENT: Mozilla/5.0 (Ubuntu; X11; Linux x86_64; rv:8.0) Gecko/20100101 Firefox/8.0
+HTTP_ACCEPT: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+HTTP_ACCEPT_LANGUAGE: pt-br,pt;q=0.8,en-us;q=0.5,en;q=0.3
+HTTP_ACCEPT_ENCODING: gzip, deflate
+HTTP_ACCEPT_CHARSET: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+HTTP_CONNECTION: keep-alive, Upgrade
+HTTP_SEC_WEBSOCKET_VERSION: "8"
+HTTP_SEC_WEBSOCKET_ORIGIN: http://localhost:3000
+HTTP_SEC_WEBSOCKET_KEY: 4RKdukOtONuc0LyG1rVW8Q==
+HTTP_COOKIE: rack.session=BAh7BkkiD3Nlc3Npb25faWQGOgZFRiJFYTJlMTlmM2E5MTcyZjNmMTJhMTlh%0AYzliYjc5MmUyOWU4N2Q0ODlmY2UxYzI1ZjBjZjYwNjFjZTdiOGMyYjEyYQ%3D%3D%0A--d2e817924071da0419feac332cf73c53c982016b; _LastTv_session=BAh7B0kiD3Nlc3Npb25faWQGOgZFRiIlNjc2ZmI2ZGU0NDE2MWNlYzVhNGRjOWE4MDc2MWJmMDVJIhBfY3NyZl90b2tlbgY7AEZJIjFNTUozTW1nSGE2N09FZExLNWpkZHlKRE1KcHNMV1kyK2FlSXh3elZYTW1NPQY7AEY%3D--e40a93795e15203a9954a62b4aad13f60ae7aa2f
+HTTP_PRAGMA: no-cache
+HTTP_CACHE_CONTROL: no-cache
+HTTP_UPGRADE: websocket
+GATEWAY_INTERFACE: CGI/1.2
+SERVER_PORT: "3000"
+QUERY_STRING: ""
+SERVER_PROTOCOL: HTTP/1.1
+rack.url_scheme: http
+SCRIPT_NAME: /websocket
+async.connection: &id019 !ruby/object:Thin::Connection 
+  app: &id003 !ruby/object:Rack::Session::Cookie 
+    app: !ruby/object:Rack::URLMap 
+      mapping: 
+      - - 
+        - /websocket
+        - !ruby/regexp /^\/+websocket(.*)/n
+        - !ruby/object:Rack::Session::Pool 
+          app: !ruby/object:WarServer 
+            options: &id009 
+              :backend: &id008 
+                :debug: true
+          cookie_only: true
+          default_options: 
+            :key: rack.session
+            :path: /
+            :domain: localhost
+            :expire_after: 2592000
+            :secure: false
+            :httponly: true
+            :defer: false
+            :renew: false
+            :sidbits: 128
+            :secure_random: &id001 !ruby/object:Module 
+              pid: 13796
+            :drop: false
+          key: rack.session
+          mutex: !ruby/object:Mutex {}
+
+          pool: 
+            5fbbcf32044d65610f3e0895825fb2559c3b9f070cb7ee1e5b53b219f0b33f72: {}
+
+          sid_length: 32
+          sid_secure: *id001
+          sidbits: 128
+      - - 
+        - ""
+        - !ruby/regexp /^(.*)/n
+        - !ruby/object:Rack::File 
+          cache_control: 
+          root: /home/guilherme/warserver/
+    coder: &id002 !ruby/object:Rack::Session::Cookie::Base64::Marshal {}
+
+    cookie_only: true
+    default_options: 
+      :key: rack.session
+      :path: /websocket
+      :domain: 
+      :expire_after: 2592000
+      :secure: false
+      :httponly: true
+      :defer: false
+      :renew: false
+      :sidbits: 128
+      :secure_random: *id001
+      :secret: que_eh_isso
+      :coder: *id002
+    key: rack.session
+    secret: que_eh_isso
+    sid_length: 32
+    sid_secure: *id001
+    sidbits: 128
+  backend: &id013 !ruby/object:Thin::Backends::TcpServer 
+    connections: 
+    - &id012 !ruby/object:Thin::Connection 
+      app: *id003
+      backend: *id013
+      can_persist: true
+      request: !ruby/object:Thin::Request 
+        body: &id004 !ruby/object:StringIO {}
+
+        data: 
+        env: &id007 
+          SERVER_SOFTWARE: thin 1.3.1 codename Triple Espresso
+          SERVER_NAME: localhost
+          rack.input: *id004
+          rack.version: *id005
+          rack.errors: *id006
+          rack.multithread: false
+          rack.multiprocess: false
+          rack.run_once: false
+          REQUEST_METHOD: GET
+          REQUEST_PATH: /websocket
+          PATH_INFO: /websocket
+          REQUEST_URI: /websocket
+          HTTP_VERSION: HTTP/1.1
+          HTTP_HOST: localhost:3000
+          HTTP_USER_AGENT: Mozilla/5.0 (Ubuntu; X11; Linux x86_64; rv:8.0) Gecko/20100101 Firefox/8.0
+          HTTP_ACCEPT: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+          HTTP_ACCEPT_LANGUAGE: pt-br,pt;q=0.8,en-us;q=0.5,en;q=0.3
+          HTTP_ACCEPT_ENCODING: gzip, deflate
+          HTTP_ACCEPT_CHARSET: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+          HTTP_CONNECTION: keep-alive, Upgrade
+          HTTP_SEC_WEBSOCKET_VERSION: "8"
+          HTTP_SEC_WEBSOCKET_ORIGIN: http://localhost:3000
+          HTTP_SEC_WEBSOCKET_KEY: +Zk7L4MHVG4zvSd7e8XWvg==
+          HTTP_COOKIE: rack.session=BAh7BkkiD3Nlc3Npb25faWQGOgZFRiJFMWFjZDE4OTQzZWUwMzA4ZGU2ZGQ4%0AOGNmNGFjNTk4OGE5OGU0OTFkMDliYjE4ZmVmMTA3ZjQ5N2E1ZTQ1OTNkYQ%3D%3D%0A--ef673f810418c74cb2364a3d2e6adf13c73cbad2; _LastTv_session=BAh7B0kiD3Nlc3Npb25faWQGOgZFRiIlNjc2ZmI2ZGU0NDE2MWNlYzVhNGRjOWE4MDc2MWJmMDVJIhBfY3NyZl90b2tlbgY7AEZJIjFNTUozTW1nSGE2N09FZExLNWpkZHlKRE1KcHNMV1kyK2FlSXh3elZYTW1NPQY7AEY%3D--e40a93795e15203a9954a62b4aad13f60ae7aa2f
+          HTTP_PRAGMA: no-cache
+          HTTP_CACHE_CONTROL: no-cache
+          HTTP_UPGRADE: websocket
+          GATEWAY_INTERFACE: CGI/1.2
+          SERVER_PORT: "3000"
+          QUERY_STRING: ""
+          SERVER_PROTOCOL: HTTP/1.1
+          rack.url_scheme: http
+          SCRIPT_NAME: ""
+          async.connection: *id012
+          REMOTE_ADDR: 127.0.0.1
+          async.callback: !ruby/object:Method {}
+
+          async.close: !ruby/object:EventMachine::DefaultDeferrable {}
+
+          rack.session: !map:Rack::Session::Abstract::SessionHash {}
+
+          rack.session.options: !map:Rack::Session::Abstract::OptionsHash 
+            :key: rack.session
+            :path: /
+            :domain: localhost
+            :expire_after: 2592000
+            :secure: false
+            :httponly: true
+            :defer: false
+            :renew: false
+            :sidbits: 128
+            :secure_random: *id001
+            :drop: false
+            :id: 5fbbcf32044d65610f3e0895825fb2559c3b9f070cb7ee1e5b53b219f0b33f72
+          rack.request.cookie_hash: 
+            rack.session: |-
+              BAh7BkkiD3Nlc3Npb25faWQGOgZFRiJFMWFjZDE4OTQzZWUwMzA4ZGU2ZGQ4
+              OGNmNGFjNTk4OGE5OGU0OTFkMDliYjE4ZmVmMTA3ZjQ5N2E1ZTQ1OTNkYQ==
+              --ef673f810418c74cb2364a3d2e6adf13c73cbad2
+            _LastTv_session: BAh7B0kiD3Nlc3Npb25faWQGOgZFRiIlNjc2ZmI2ZGU0NDE2MWNlYzVhNGRjOWE4MDc2MWJmMDVJIhBfY3NyZl90b2tlbgY7AEZJIjFNTUozTW1nSGE2N09FZExLNWpkZHlKRE1KcHNMV1kyK2FlSXh3elZYTW1NPQY7AEY=--e40a93795e15203a9954a62b4aad13f60ae7aa2f
+          rack.request.cookie_string: rack.session=BAh7BkkiD3Nlc3Npb25faWQGOgZFRiJFMWFjZDE4OTQzZWUwMzA4ZGU2ZGQ4%0AOGNmNGFjNTk4OGE5OGU0OTFkMDliYjE4ZmVmMTA3ZjQ5N2E1ZTQ1OTNkYQ%3D%3D%0A--ef673f810418c74cb2364a3d2e6adf13c73cbad2; _LastTv_session=BAh7B0kiD3Nlc3Npb25faWQGOgZFRiIlNjc2ZmI2ZGU0NDE2MWNlYzVhNGRjOWE4MDc2MWJmMDVJIhBfY3NyZl90b2tlbgY7AEZJIjFNTUozTW1nSGE2N09FZExLNWpkZHlKRE1KcHNMV1kyK2FlSXh3elZYTW1NPQY7AEY%3D--e40a93795e15203a9954a62b4aad13f60ae7aa2f
+        nparsed: 982
+        parser: !ruby/object:Thin::HttpParser {}
+
+      response: !ruby/object:Thin::Response 
+        headers: !ruby/object:Thin::Headers 
+          out: []
+
+          sent: {}
+
+        persistent: false
+        status: 200
+      signature: 4
+      threaded: 
+      websocket: &id011 !ruby/object:Rack::WebSocket::Handler::Base::Connection 
+        app: &id010 !ruby/object:Rack::WebSocket::Handler::Thin 
+          connection: *id011
+          env: *id007
+          options: *id008
+          parent: !ruby/object:WarServer 
+            options: *id009
+            websocket_handler: *id010
+        debug: true
+        handler: !ruby/object:EventMachine::WebSocket::Handler08 
+          application_data_buffer: ""
+          connection: *id011
+          data: !str:EventMachine::WebSocket::MaskedString 
+            str: ""
+            :@masking_key: 
+          debug: true
+          request: 
+            path: /websocket
+            method: GET
+            query: ""
+            Body: ""
+            version: HTTP/1.1
+            host: !ruby/object:Addressable::URI 
+              authority: 
+              hash: 
+              host: localhost
+              normalized_host: 
+              normalized_path: 
+              normalized_port: 
+              normalized_scheme: 
+              path: ""
+              port: 3000
+              scheme: ws
+              uri_string: 
+              validation_deferred: false
+            user-agent: Mozilla/5.0 (Ubuntu; X11; Linux x86_64; rv:8.0) Gecko/20100101 Firefox/8.0
+            accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+            accept-language: pt-br,pt;q=0.8,en-us;q=0.5,en;q=0.3
+            accept-encoding: gzip, deflate
+            accept-charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+            connection: keep-alive, Upgrade
+            sec-websocket-version: "8"
+            sec-websocket-origin: http://localhost:3000
+            sec-websocket-key: +Zk7L4MHVG4zvSd7e8XWvg==
+            cookie: rack.session=BAh7BkkiD3Nlc3Npb25faWQGOgZFRiJFMWFjZDE4OTQzZWUwMzA4ZGU2ZGQ4%0AOGNmNGFjNTk4OGE5OGU0OTFkMDliYjE4ZmVmMTA3ZjQ5N2E1ZTQ1OTNkYQ%3D%3D%0A--ef673f810418c74cb2364a3d2e6adf13c73cbad2; _LastTv_session=BAh7B0kiD3Nlc3Npb25faWQGOgZFRiIlNjc2ZmI2ZGU0NDE2MWNlYzVhNGRjOWE4MDc2MWJmMDVJIhBfY3NyZl90b2tlbgY7AEZJIjFNTUozTW1nSGE2N09FZExLNWpkZHlKRE1KcHNMV1kyK2FlSXh3elZYTW1NPQY7AEY%3D--e40a93795e15203a9954a62b4aad13f60ae7aa2f
+            pragma: no-cache
+            cache-control: no-cache
+            upgrade: websocket
+          state: :closed
+        options: 
+          :debug: true
+        socket: *id012
+        ssl: 
+    - !ruby/object:Thin::Connection 
+      app: *id003
+      backend: *id013
+      can_persist: true
+      request: !ruby/object:Thin::Request 
+        body: &id014 !ruby/object:StringIO {}
+
+        data: ""
+        env: 
+          SERVER_SOFTWARE: thin 1.3.1 codename Triple Espresso
+          SERVER_NAME: localhost
+          rack.input: *id014
+          rack.version: *id005
+          rack.errors: *id006
+          rack.multithread: false
+          rack.multiprocess: false
+          rack.run_once: false
+        nparsed: 0
+        parser: !ruby/object:Thin::HttpParser {}
+
+      response: !ruby/object:Thin::Response 
+        headers: !ruby/object:Thin::Headers 
+          out: []
+
+          sent: {}
+
+        persistent: false
+        status: 200
+      signature: 5
+      threaded: 
+    - *id019
+    host: 0.0.0.0
+    maximum_connections: 1024
+    maximum_persistent_connections: 512
+    no_epoll: 
+    persistent_connection_count: 3
+    port: 3000
+    running: true
+    server: !ruby/object:Thin::Server 
+      app: *id003
+      backend: *id013
+      log_file: log/thin.log
+      on_restart: !ruby/object:Proc {}
+
+      pid_file: tmp/pids/thin.pid
+      tag: 
+    signature: 3
+    stopping: false
+    threaded: 
+    timeout: 0
+  can_persist: true
+  request: !ruby/object:Thin::Request 
+    body: *id015
+    data: 
+    env: *id016
+    nparsed: 982
+    parser: !ruby/object:Thin::HttpParser {}
+
+  response: !ruby/object:Thin::Response 
+    headers: !ruby/object:Thin::Headers 
+      out: []
+
+      sent: {}
+
+    persistent: false
+    status: 200
+  signature: 6
+  threaded: 
+  websocket: &id018 !ruby/object:Rack::WebSocket::Handler::Base::Connection 
+    app: &id017 !ruby/object:Rack::WebSocket::Handler::Thin 
+      connection: *id018
+      env: *id016
+      options: *id008
+      parent: !ruby/object:WarServer 
+        options: *id009
+        websocket_handler: *id017
+    debug: true
+    handler: !ruby/object:EventMachine::WebSocket::Handler08 
+      application_data_buffer: ""
+      connection: *id018
+      data: !str:EventMachine::WebSocket::MaskedString 
+      debug: true
+      request: 
+        path: /websocket
+        method: GET
+        query: ""
+        Body: ""
+        version: HTTP/1.1
+        host: !ruby/object:Addressable::URI 
+          authority: 
+          hash: 
+          host: localhost
+          normalized_host: 
+          normalized_path: 
+          normalized_port: 
+          normalized_scheme: 
+          path: ""
+          port: 3000
+          scheme: ws
+          uri_string: 
+          validation_deferred: false
+        user-agent: Mozilla/5.0 (Ubuntu; X11; Linux x86_64; rv:8.0) Gecko/20100101 Firefox/8.0
+        accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+        accept-language: pt-br,pt;q=0.8,en-us;q=0.5,en;q=0.3
+        accept-encoding: gzip, deflate
+        accept-charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+        connection: keep-alive, Upgrade
+        sec-websocket-version: "8"
+        sec-websocket-origin: http://localhost:3000
+        sec-websocket-key: 4RKdukOtONuc0LyG1rVW8Q==
+        cookie: rack.session=BAh7BkkiD3Nlc3Npb25faWQGOgZFRiJFYTJlMTlmM2E5MTcyZjNmMTJhMTlh%0AYzliYjc5MmUyOWU4N2Q0ODlmY2UxYzI1ZjBjZjYwNjFjZTdiOGMyYjEyYQ%3D%3D%0A--d2e817924071da0419feac332cf73c53c982016b; _LastTv_session=BAh7B0kiD3Nlc3Npb25faWQGOgZFRiIlNjc2ZmI2ZGU0NDE2MWNlYzVhNGRjOWE4MDc2MWJmMDVJIhBfY3NyZl90b2tlbgY7AEZJIjFNTUozTW1nSGE2N09FZExLNWpkZHlKRE1KcHNMV1kyK2FlSXh3elZYTW1NPQY7AEY%3D--e40a93795e15203a9954a62b4aad13f60ae7aa2f
+        pragma: no-cache
+        cache-control: no-cache
+        upgrade: websocket
+      state: :connected
+    options: 
+      :debug: true
+    socket: *id019
+    ssl: 
+REMOTE_ADDR: 127.0.0.1
+async.callback: !ruby/object:Method {}
+
+async.close: !ruby/object:EventMachine::DefaultDeferrable {}
+
+rack.session: !map:Rack::Session::Abstract::SessionHash {}
+
+rack.session.options: !map:Rack::Session::Abstract::OptionsHash 
+  :key: rack.session
+  :path: /
+  :domain: localhost
+  :expire_after: 2592000
+  :secure: false
+  :httponly: true
+  :defer: false
+  :renew: false
+  :sidbits: 128
+  :secure_random: *id001
+  :drop: false

@@ -1,0 +1,78 @@
+<html>
+<head>
+  <title>War Chat</title>
+  <meta charset="utf-8">
+  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script src="/warclient.js" type="text/javascript"></script>
+  
+  <style type="text/css">
+    body {
+      text-align: center;
+    }
+    
+    div#chat {
+      width: 80%;
+      height: 50%;
+      border: 1px solid #000;
+      padding: 0.5%;
+      text-align: left;
+      font-size: 90%;
+      font-family: monospace;
+      overflow: auto;
+    }
+    
+    div#chatinput {
+      width: 80%;
+      height: 10%;
+      text-align: left;
+    }
+    
+    div#chatinput input[type=text] {
+      width: 89%;
+    }
+    
+    div#chatinput input[type=button] {
+      width: 10%;
+    }
+    
+    div#status {
+      height: 4%;
+      width: 80%;
+      padding: 0.25%;
+      padding-left: 1%;
+      text-align: left;
+      font-size: 80%;
+    }
+    
+    div#status.offline {
+      background-color: red;
+    }
+    
+    div#status.online {
+      background-color: green;
+    }
+    
+    div#status.connecting {
+      background-color: gray;
+    }
+    
+    span.warn {
+      color: gray;
+    }
+    
+  </style>
+  
+</head>
+<body>
+  <h1>War Chat</h1>
+
+  <div id="status" class="offline">OFFLINE</div>
+  <div id="chat"></div>
+  <div id="chatinput">
+    <input type="text" id="txt" value="Digite a mensagem aqui..." /> <input type="button" value="Enviar" id="btnenviar" />
+  </div>
+</body>
+
+
+
+</html>

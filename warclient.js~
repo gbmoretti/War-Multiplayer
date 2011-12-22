@@ -39,7 +39,7 @@ $(document).ready(function() {
   //Evento onmessage
   socket.onmessage = function(msg) {
     msg = eval("(" + msg.data + ")");
-    if(msg.type == 'warn') writeChat('&ltAVISO&gt' + msg.msg);
+    if(msg.type == 'warn') writeChat('<span class="warn">' + msg.msg + '</span>');
     if(msg.type == 'txt') writeChat('&lt' + msg.author + '&gt' + msg.msg);
   }
   

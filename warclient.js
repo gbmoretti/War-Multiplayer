@@ -24,9 +24,9 @@ $(document).ready(function() {
   //     ============= Websocket =================
   //Conexao websocket
   if($.browser.mozilla) {
-    socket = new MozWebSocket("ws://localhost:3000/websocket"); //para FF8
+    socket = new MozWebSocket("ws://warchat.herokuapp.com/websocket"); //para FF8
   }else {
-    socket = new WebSocket("ws://192.168.132.132:3000/websocket");
+    socket = new WebSocket("ws://warchat.herokuapp.com/websocket");
   }
   
   

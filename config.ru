@@ -13,7 +13,7 @@ map '/' do
 end
 
 map '/websocket' do
-  app = WarServer.new
+  app = WarServerConnection.new
   sessioned = Rack::Session::Pool.new(app, 
     :domain => 'localhost',
     :expire_after => 2592000)

@@ -1,19 +1,16 @@
 #encoding: utf-8
 
-#yaml_obj = YAML::dump(env)
-#File.open('on_message','w+') { |f| f.write (yaml_obj) }
-
 require 'cgi'
-#require 'yaml'
 require 'json'
+require './messages.rb'
 
-class WarServer < Rack::WebSocket::Application
+class WarServerConnection < Rack::WebSocket::Application
   
   attr_reader :sid
   
   def initialize(opts = {}) #chamado quando servidor é estartado.
     super #super sempre deve ser chamado primeiro
-    @@app ||= WarChat.new
+    @@app ||= WarApp.new
     @sid = nil
     puts 'Rodando aplicacao: ' + @@app.to_s
   end
@@ -29,72 +26,80 @@ class WarServer < Rack::WebSocket::Application
   
   def on_message(env,msg) #chamado quando recebe um mensagem
     msg = JSON.parse(msg)
-    @@app.message_received(self,msg)      
+    msg.each { |k,v| msg[k] = CGI.escapeHTML(v) }
+    puts '<== ' << msg.to_s
+    action = msg.key?('action') ? msg.delete('action') : 'default'
+    @@app.send action.to_sym, msg, self      
   end
   
   def on_error(env, error) #chamado quando um erro acontece
-    puts "<<ERRO>> " << error.message
+    puts "======= ERRO (#{error.class}: #{error.message}) ===== "
+    puts "Backtrace:"
+    error.backtrace.each { |v| puts v }
+    puts "=======      ====="
   end
   
-  def send_msg(msg,escape=true)
-    msg.each { |k,v| msg[k] = CGI.escapeHTML(v) } if escape
+  def send_msg(msg)
     msg = msg.to_json
-    puts 'Enviando: ' + msg
+    puts '==> ' + msg
     send_data(msg);
   end
 end
 
-
-
-class WarChat
+class WarApp
 
   def initialize
-    @persons = []
-    puts 'Aplicacao WarChat iniciada...'
+    @players = []
+    puts 'Aplicacao WarApp iniciada...'
   end
   
+  #events
   def new_conn(conn)
-    puts 'Nova conexao...'
+    conn.send_msg SetNewNick.new #envia mensagem para cliente enviar nick
   end
   
   def closed_conn(conn)
-    person = person_by_conn(conn)
-    @persons.delete(person)
+    p = player_by_conn(conn)
+    @players.delete(p) unless p.nil?
+    broadcast(PlayerListMessage.new(@players),[p]);
+    broadcast(WarnMessage.new(p.to_s + " saiu..."))
   end
   
-  def message_received(conn,msg)    
-    add_person(conn,msg['nick']) if msg['type'] == 'init'
-    txt_message(conn,msg) if msg['type'] == 'txt'
-  end  
-  
-  private
-  def add_person(conn,nick)
-    p =  Person.new(conn,nick)
-    @persons.push(p)
-    conn.send_msg(Message.warn('Bem Vindo ' + p.to_s))
-    conn.send_msg(Message.warn('Existem ' + @persons.size.to_s + ' pessoas online'))
-    broadcast(Message.warn(p.to_s + ' acabou de entrar'),[p])
+  #actions
+  def default(args,conn)
+    puts 'NoAction ' << args.to_s
   end
   
-  def txt_message(conn,msg)
-    person = person_by_conn(conn)
-    broadcast(Message.txt(person,msg['msg']))
+  def set_nick(args,conn)
+    p = Player.new(conn,args['nick'])
+    @players.push(p)
+    broadcast(PlayerListMessage.new(@players));    
+    broadcast(WarnMessage.new(p.to_s + " acabou de entrar..."),[p])
+    p.send_msg(WarnMessage.new("Bem vindo " + p.to_s))
   end
   
-  def broadcast(msg,remove=[])
-    @persons.each do |p|
-      p.send_msg(msg) unless remove.include?(p) #envia mensagem a nao ser que p exista em remove
+  def chat(args,conn)
+    if args['type'] == 'txt'
+      p = player_by_conn(conn)
+      broadcast(TxtMessage.new(p,args['msg']));
     end
   end
   
-  def person_by_conn(conn)
-    i = @persons.index { |p| p.conn == conn }
-    @persons[i]
+  
+  private
+  def player_by_conn(c)
+    i = @players.rindex { |x| x.conn == c }
+    @players[i] unless i.nil?
   end
   
+  def broadcast(msg,ignore=[])
+    @players.each do |p|
+      p.send_msg(msg) unless ignore.include?(p)
+    end
+  end  
 end
 
-class Person
+class Player
   attr_reader :conn, :nick
 
   def initialize(conn=nil,nick=nil)
@@ -112,14 +117,7 @@ class Person
   
 end
 
-class Message
-  
-  def self.warn(msg)
-    {'msg' => msg, 'type' => 'warn'}
-  end
-  
-  def self.txt(author,msg)
-    {'msg' => msg, 'type' => 'txt', 'author' => author.to_s}
-  end
-end
+
+
+
 

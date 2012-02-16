@@ -1,12 +1,20 @@
-socket = null; //objeto websocket
-nick = null; //sring com o nick do usuario
+conn = null; //objeto Connection
+nick = null; //nick do cliente
+
+//Classe de conexão WebSocket
+function Connection() {
+  this.socket = null;
+  
+  if($.browser.mozilla) {
+    this.socket = new MozWebSocket("ws://192.168.132.134:3000/websocket"); //para FF8
+  }else {
+    this.socket = new WebSocket("ws://192.168.132.134:3000/websocket");
+  }
+}
+
 
 $(document).ready(function() {
 
-  do {
-    nick = prompt("Escolha seu nick:");
-  } while(nick=="");
-  
   atualizaStatus('conectando');
   
   //Event handler ao apertar enter no #chatinput
@@ -16,84 +24,107 @@ $(document).ready(function() {
     }
   });
   
-  //Event handler ao clicar no botao Enviar
-  $('#chatinput input[type=button]').click(function(eventObject) {
-    sendText();
-  });
-  
   //     ============= Websocket =================
   //Conexao websocket
-  if($.browser.mozilla) {
-    socket = new MozWebSocket("ws://warchat.herokuapp.com/websocket"); //para FF8
-  }else {
-    socket = new WebSocket("ws://warchat.herokuapp.com/websocket");
-  }
   
+  conn = new Connection();
   
   //Evento onopen
-  socket.onopen = function() {
+  conn.socket.onopen = function() {
     atualizaStatus('conectado');
-    send(new InitMessage(nick));
+    send(new InitMessage('nick'));
   }
   
   //Evento onmessage
-  socket.onmessage = function(msg) {
+  conn.socket.onmessage = function(msg) {
     msg = eval("(" + msg.data + ")");
     if(msg.type == 'warn') writeChat('<span class="warn">' + msg.msg + '</span>');
-    if(msg.type == 'txt') writeChat('&lt' + msg.author + '&gt' + msg.msg);
+    if(msg.type == 'txt') writeChat('&lt' + msg.author + '&gt ' + msg.msg);
+    if(msg.type == 'player_list') refreshPlayerList(msg.list);
   }
   
   //Evento onclose
-  socket.onclose = function() {
+  conn.socket.onclose = function() {
     atualizaStatus('desconectado');
   }
   
   // ===================
 
+  //atribui funcao onclick para botao fechar
+  $('.closebtn').click(function() {
+    hideModal($(this).parent());
+  });
+  
+  showModal($('#login'));
   
 });
 
+function refreshPlayerList(l) {
+  console.log(l);
+  e = $('#players');
+  e.html(' ');
+  $.each(l, function(i,v) {
+    e.append(v + '<br>');
+  });
+}
+
+
 function writeChat(msg) {
   $('#chat').append(msg + "<br>");
-  $('#chat').scrollTop($('#chat').height());//atualiza barra de rolagem
+  $('#chat').scrollTop($('#chat').height()); //atualiza barra de rolagem
 }
 
 function sendText() {
   var msg = $('#chatinput input[type=text]').val();
-  send(new TxtMessage(msg));
+  if(msg!='') send(new TxtMessage(msg));
   $($('#chatinput input[type=text]')).val("");
 }
 
 function send(obj) {
   msg = JSON.stringify(obj);
-  socket.send(msg);
+  console.log('Enviando ' + msg);
+  conn.socket.send(msg);
 }
 
 function atualizaStatus(str) {
   e = $('div#status');
   e.removeClass();
-  console.log('Mudando para: ' + str);
   if(str=='conectando') {
     e.addClass('connecting');
     e.html('CONECTANDO...');
   }
   if(str=='conectado') {
     e.addClass('online');
-    e.html('ONLINE :)');
+    e.html('CONECTADO!');
   }
   if(str=='desconectado') { 
     e.addClass('offline');
-    e.html('OFFLINE :(');
+    e.html('DESCONECTADO');
   }
 }
 
 //DEFININDO AQUI A CLASSE MESSAGE, DEPOIS COLOCAR NUM ARQUIVO SEPARADO
 function InitMessage(n) {
-  this.type = "init";
+  this.action = 'set_nick';
   this.nick = n; 
 }
 
 function TxtMessage(m,a) {
-  this.type = "txt";
+  this.action = 'chat';
+  this.type = 'txt';
   this.msg = m;
 }
+
+
+//FUÇÕES PARA DIV MODAL
+function showModal(e) {
+  $('.modal-overlay').show();
+  e.show();
+} 
+
+function hideModal(e) {
+  e.hide();
+  $('.modal-overlay').hide();
+}
+
+

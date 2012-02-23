@@ -1,7 +1,7 @@
 #require 'rubygems'
 require 'rack/websocket'
 
-require './warserver.rb'
+require './load.rb'
 
 use Rack::Session::Cookie, :key => 'rack.session',
                            :path => '/websocket',
@@ -9,12 +9,14 @@ use Rack::Session::Cookie, :key => 'rack.session',
                            :secret => 'que_eh_isso'
 
 map '/' do
-  run Rack::File.new(File.expand_path(File.dirname(__FILE__)) + '/')
+  f = File.expand_path(File.dirname(__FILE__)) + '/client/'
+  puts "Procurando em: " + f
+  run Rack::File.new(f)
 end
 
 map '/websocket' do
-  app = WarServerConnection.new
-  sessioned = Rack::Session::Pool.new(app, 
+  conn = ServerConnection.new
+  sessioned = Rack::Session::Pool.new(conn, 
     :domain => 'localhost',
     :expire_after => 2592000)
     

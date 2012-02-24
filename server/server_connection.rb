@@ -7,9 +7,9 @@ class ServerConnection < Rack::WebSocket::Application
   
   attr_reader :sid
   
-  def initialize(opts = {}) #chamado quando servidor é estartado.
-    super #super sempre deve ser chamado primeiro
-    @@app ||= AppController.new
+  def initialize(app,opts = {}) #chamado quando servidor é estartado.
+    super(opts) #super sempre deve ser chamado primeiro
+    @@app ||= app
     @sid = nil
     puts 'Rodando aplicacao: ' + @@app.to_s
   end
@@ -25,10 +25,9 @@ class ServerConnection < Rack::WebSocket::Application
   
   def on_message(env,msg) #chamado quando recebe um mensagem
     msg = JSON.parse(msg)
-    msg.each { |k,v| msg[k] = CGI.escapeHTML(v) }
-    puts '<== ' << msg.to_s
-    action = msg.key?('action') ? msg.delete('action') : 'default'
-    @@app.send action.to_sym, msg, self      
+    msg.each { |k,v| msg[k] = CGI.escapeHTML(v) if msg[k].respond_to?(:gsub) }
+    puts '<== ' << msg.to_s    
+    @@app.message(msg, self)      
   end
   
   def on_error(env, error) #chamado quando um erro acontece

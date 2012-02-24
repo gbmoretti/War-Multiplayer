@@ -1,7 +1,5 @@
 require 'cgi'
 
-
-
 #Classes que encapsulam os dados a serem enviados ao cliente
 #Todas as classes herdadas de JSONable respondem aos métodos #to_json e #from_json!
 

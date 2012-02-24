@@ -63,14 +63,23 @@
   TxtMessage = (function() {
 
     function TxtMessage(msg) {
-      this.controller = 'chat';
-      this.action = 'send_msg';
-      this.params = {
-        'msg': msg
-      };
+      this.msg = msg;
+      this.action = 'chat';
+      this.type = 'txt';
     }
 
     return TxtMessage;
+
+  })();
+
+  InitMessage = (function() {
+
+    function InitMessage(nick) {
+      this.nick = nick;
+      this.action = 'set_nick';
+    }
+
+    return InitMessage;
 
   })();
 
@@ -135,11 +144,8 @@
   InitMessage = (function() {
 
     function InitMessage(nick) {
-      this.controller = 'set_nick';
-      this.action = 'set';
-      this.params = {
-        'nick': nick
-      };
+      this.nick = nick;
+      this.action = 'set_nick';
     }
 
     return InitMessage;

@@ -1,13 +1,9 @@
 class TxtMessage
-  constructor: (@msg) ->
-    @action = 'chat'
-    @type = 'txt'
+  constructor: (msg) ->
+    @controller = 'chat'
+    @action = 'send_msg'
+    @params = {'msg': msg}
         
-class InitMessage
-  constructor: (@nick) ->
-    @action = 'set_nick'    
-
-
 class ChatController
   constructor: (@app) ->
     @controllerName = 'chat'

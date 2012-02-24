@@ -1,6 +1,8 @@
 class InitMessage
-  constructor: (@nick) ->
-    @action = 'set_nick'
+  constructor: (nick) ->
+    @controller = 'set_nick'
+    @action = 'set'
+    @params = {'nick': nick}   
 
 class SetNickController
   constructor: (@app) ->

@@ -1,12 +1,17 @@
 class SetNickController < AppController
 
   def set(conn,args)
-    puts "sid: " + conn.sid
     p = Player.new(conn.sid,args['nick'])
     @app.bind_client(conn,p)
     @app.broadcast(PlayerListMessage.new(Player.list));    
     @app.broadcast(WarnMessage.new(p.to_s + " acabou de entrar..."),[p])
     @app.send(p,WarnMessage.new("Bem vindo " + p.to_s))
+    
+    #Mostra as ultimas 5 mensagens
+    ChatLog.get.each do |m|
+      m = JSON.parse(m)
+      @app.send(p,TxtMessage.new(m['author'],m['msg']))
+    end
   end
   
   def new_conn(conn)

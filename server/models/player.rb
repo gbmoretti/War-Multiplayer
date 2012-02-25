@@ -21,15 +21,16 @@ class Player
   end
   
   def self.remove(p)
-    Player.redis.del "player:#{p.sid}"
+    puts "Removendo player:" + p.sid
+    Player.redis.del("player:" + p.sid)
   end
 
   def initialize(sid,nick,persisted=false) #se persisted for verdadeiro, assume-se que o objeto ja esta salvo    
     @sid = sid
     @nick = nick
     Player.redis.hmset "player:#{sid}", "sid", sid, "nick", nick unless persisted
-    puts 'Criado ' + @sid + ':' + @nick unless persisted
-    puts 'Lido ' + @sid + ':' + @nick if persisted
+    puts 'Criado ' + @nick unless persisted
+    puts 'Lido ' + @nick if persisted
   end
   
   def to_s

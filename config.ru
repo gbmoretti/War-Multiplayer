@@ -10,8 +10,8 @@ use Rack::Session::Cookie, :key => 'rack.session',
                            :secret => 'que_eh_isso'
 
 app = Application.new
-app.add_c ChatController.new
-app.add_c SetNickController.new
+app.add_c ChatController.new(app)
+app.add_c SetNickController.new(app)
 
 #map '/assets' do
 #  environment = Sprockets::Environment.new

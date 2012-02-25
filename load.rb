@@ -1,6 +1,8 @@
 
 #TODO: Use Autoload gem
 
+require 'redis'
+
 SERVER_DIR = "./server/"
 
 require SERVER_DIR + "messages/jsonable.rb"

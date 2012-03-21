@@ -2,6 +2,7 @@ class SetNickController < AppController
 
   def set(conn,args)
     p = Player.new(conn.sid,args['nick'])
+    Player.add(p)
     @app.bind_client(conn,p)
     @app.broadcast(PlayerListMessage.new(Player.list));    
     @app.broadcast(WarnMessage.new(p.to_s + " acabou de entrar..."),[p])

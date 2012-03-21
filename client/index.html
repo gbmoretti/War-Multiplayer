@@ -7,24 +7,21 @@
   <link href="style.css" rel="stylesheet" type="text/css"> 
    
 </head>
-<body>
-  <div id="game">
-    <embed src="map.svg" type="image/svg+xml" width="100%" height="100%" />
-  </div>
-  <div id="chat-window">
-    <div class="row title">
-      <div id="title-chat">Chat</div>
-      <div id="title-players">Jogadores</div>
-    </div>    
-    <div class="row">
-      <div id="chat"></div>
-    
-      <div id="players"></div>
+<body style="overflow: hidden; max-height: 100%;">
+  <div style="max-height: 100%;">
+    <div id="game">
+      <embed src="map.svg" type="image/svg+xml" width="100%" height="100%" style="overflow: hidden;" />
     </div>
-    <div class="row">
+    <div id="chat-window">
+      <div id="chat"></div>       
       <div id="chatinput">
-        <input type="text" id="txt" />
+          <input type="text" id="txt" />
       </div>
+      
+      </div>
+    </div>
+    <div id="statusbar">
+      <div id="players"></div>
       <div id="status" class="offline"></div>
     </div>
   </div>

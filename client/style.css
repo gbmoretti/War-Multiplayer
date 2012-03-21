@@ -13,7 +13,7 @@ body {
 
 div#status {
   display: table-cell;
-  width: 20%;
+  width: 10%;
   border-left: solid 1px black;
 }
 
@@ -34,14 +34,19 @@ span.warn {
 }
 
 div#chat-window {
-  height: 20%;
-  max-height: 30%;
-  display: table;
-  width: 100%; 
+  position: absolute;
+  height: 50%;
+  width: 33%;
+  background-color: rgba(0,0,0,0.8);
+  top: 2%;
+  left: 65%;
+  display: block; 
+  overflow: hidden;
+  /*border: solid 1px #000;*/
 }
 
 div#game {
-  height: 80%;
+  height: 95%;
   background-color: #CCC;
   margin: 0;
 }
@@ -49,51 +54,55 @@ div#game {
 div#players {
   border-left: solid 1px black;
   height: 100%;
-  width: 19%;
+  width: 90%;
   display: table-cell;
   padding: 0.5%;
   text-align: left;
   font-size: 75%;
   font-family: 'Lucida Console', Monaco, monospace;
   overflow: scroll;
+}
+
+div#players .nick {
+  display: inline-block;
+  padding: 0.3%;
+  border: solid 1px #000;
 }
 
 div#chat {
-  width: 80%;
-  height: 80%;
-  max-height: 80%;
-  padding: 0.5%;
+  height: 94%;
+  width: 98%; 
+  margin: 1%;
   text-align: left;
+  vertical-align: bottom;
   font-size: 75%;
   font-family: 'Lucida Console', Monaco, monospace;
-  overflow: scroll;
-  display: table-cell;
+  overflow: auto;
+  color: #fff;
+  /*background-color: #345;*/
+  margin-bottom: 0px;
 }
 
 div#chatinput {
-  width: 80%;
-  height: 10%;
+  width: 100%;
   text-align: left;
-  display: table-cell;
+  margin: 0px;
+  padding: 0px;
+}
+
+div#statusbar {
+  height: 5%;
+  display: table;
+  width: 100%;
 }
 
 div#chatinput input[type=text] {
   width: 100%;
-}
-
-div#title-players {
-  display: table-cell;
-  width: 19%;    
-}
-
-div#title-chat {
-  display: table-cell;
-  width: 80%;      
-}
-
-div.row {
-  display: table-row;
-  /*height: 5%;*/
+  background-color: rgba(0,0,0,0.8);
+  border: 0px;
+  color: #fff;
+  font-family: 'Lucida Console', Monaco, monospace;
+  height: 5%; 
 }
 
 div.title {

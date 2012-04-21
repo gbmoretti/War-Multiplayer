@@ -1,0 +1,44 @@
+Classes no lado servidor
+========================
+
+A biblioteca Rack::Websocket precisa de uma classe herdada de *Rack::Websocket::Application*.
+Essa classe é o ponto de entrada e saída do servidor. É ela que recebe os dados e envia 
+respostas aos clientes, é ela que é chamada nos eventos de nova conexão (on_open) e conexão 
+fechada (on_close)
+
+********************
+* ServerConnection *
+********************
+
+No War Multiplayer, a classe filha de *Rack::Websocket::Application* é a *ServerConnection*
+Cada cliente conectado ao servidor é 'representado' durante toda a duração da conexão por 
+uma instancia de *ServerConnection*.
+
+
+ - Ao receber uma mensagem (on_message)
+   * Trasnforma a string JSON em um objeto Hash
+   * Encaminha o hash para o objeto da aplicação (Application)
+ 
+ - Ao enviar uma mensagem (send_message)
+   * Transforma o objeto hash em JSON
+   * Envia ao cliente
+ 
+ - Eventos (on_open, on_close)
+   * Encaminhados ao objeto da aplicacao
+   
+***************
+* Application *
+***************
+
+A classe Application faz a ponte entre os controladores e as instancias ServerConnection 
+(que representam os clientes).
+Ela mantem uma lista de todos os controladores instanciados, e todas as ServerConnection 
+instanciadas. Ao receber uma mensagem de um determinado cliente ela dispacha essa mensagem
+ao controlador responsavel por ela
+
+ - Eventos (on_open, on_close)
+   * Procura entre os objetos controladores, quais deles implementam os métodos on_open e 
+   on_close
+   * Aciona o(s) controlador(es), caso exista, chamando o método em questão
+ 
+ - 

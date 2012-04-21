@@ -12,6 +12,7 @@ use Rack::Session::Cookie, :key => 'rack.session',
 app = Application.new
 app.add_c ChatController.new(app)
 app.add_c SetNickController.new(app)
+app.add_c RoomsController.new(app)
 
 #map '/assets' do
 #  environment = Sprockets::Environment.new

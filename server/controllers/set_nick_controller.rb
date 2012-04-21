@@ -13,6 +13,9 @@ class SetNickController < AppController
       m = JSON.parse(m)
       @app.send(p,TxtMessage.new(m['author'],m['msg']))
     end
+    
+    #chama controller de salas
+    @app.controllers[:rooms].show(p)
   end
   
   def new_conn(conn)

@@ -51,4 +51,12 @@ class SetNewNick < Message
   end
 end
 
+class ListRooms < Message
+  def initialize(list)
+    @controller = 'rooms'
+    @action = 'list'
+    @params = { 'list' => list }
+  end
+end
+
 

@@ -1,5 +1,7 @@
 class Application
 
+  attr_reader :controllers
+
   def initialize
     @controllers = {}
     @clients = []
@@ -62,8 +64,8 @@ class Application
   
   def closed_conn(conn)
     #Percorre por todos os controllers chamando aqueles que implementam o método closed_conn
-    @controllers.each do |c|
-      c.closed_conn(conn) if c.respond_to?(:closed_conn)
+    @controllers.each do |k,v|
+      v.closed_conn(conn) if v.respond_to?(:closed_conn)
     end
     #########
   end
@@ -75,6 +77,9 @@ class Application
     a = msg['action'].to_sym
     p = msg['params']
     puts "#{c}##{a}(#{p})"   
+    
+    o = get_client(conn)
+    
     
     @controllers[c].__send__ a, conn, p
   end

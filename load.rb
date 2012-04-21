@@ -14,6 +14,7 @@ require SERVER_DIR + "application.rb"
 require SERVER_DIR + "controllers/app_controller.rb"
 require SERVER_DIR + "controllers/chat_controller.rb"
 require SERVER_DIR + "controllers/set_nick_controller.rb"
+require SERVER_DIR + "controllers/rooms_controller.rb"
 
 
 

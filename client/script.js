@@ -6,11 +6,7 @@
     function WSConnection(addr, statusElmnt) {
       this.addr = addr;
       this.statusElmnt = statusElmnt != null ? statusElmnt : $('div#status');
-      if ($.browser.mozilla) {
-        this.socket = new MozWebSocket(this.addr);
-      } else {
-        this.socket = new WebSocket(this.addr);
-      }
+      this.socket = new WebSocket(this.addr);
     }
 
     WSConnection.prototype.send = function(obj) {
@@ -82,14 +78,21 @@
       this.controllerName = 'chat';
       this.inputElmnt = $('div#chatinput input[type=text]');
       this.chatElmnt = $('div#chat');
+      this.chatWindow = $('div#chat-window');
+      this.btnElmnt = $('div#btnchat');
+      this.chatWindow.hide(0);
       this.inputElmnt.keydown(function(eventObject) {
         if (eventObject.keyCode === 13) return _this.sendTxt();
+      });
+      this.btnElmnt.click(function(eventObject) {
+        return _this.chatWindow.toggle(0);
       });
     }
 
     ChatController.prototype.txt = function(msg) {
       this.chatElmnt.append('&lt' + msg.author + '&gt ' + msg.msg + '<br/>');
-      return this.chatElmnt.scrollTop(this.chatElmnt.height());
+      this.chatElmnt.scrollTop(this.chatElmnt.height());
+      return this.animBtn();
     };
 
     ChatController.prototype.warn = function(msg) {
@@ -102,6 +105,15 @@
       txt = this.inputElmnt.val();
       this.app.conn.send(new TxtMessage(txt));
       return this.inputElmnt.val('');
+    };
+
+    ChatController.prototype.animBtn = function() {
+      this.btnElmnt.animate({
+        'background-color': '#444'
+      }, 'slow');
+      return this.btnElmnt.animate({
+        'background-color': '#000'
+      }, 'slow');
     };
 
     return ChatController;
@@ -234,11 +246,22 @@
 
   $(function() {
     var app;
-    app = new AppController("ws://192.168.11.23:3000/websocket");
+    app = new AppController("ws://192.168.1.102:3000/websocket");
     app.add_controller(new ChatController(app));
     app.add_controller(new PlayerListController(app));
     app.add_controller(new SetNickController(app));
-    return app.start();
+    app.start();
+    return $("#game").svg({
+      onLoad: function() {
+        var svg;
+        svg = $("#game").svg('get');
+        return svg.load('map.svg', {
+          addTo: true,
+          changeSize: false
+        });
+      },
+      settings: {}
+    });
   });
 
 }).call(this);

@@ -157,3 +157,14 @@ div.closebtn {
   text-align: center;
   cursor: pointer;
 }
+
+div#btnchat {
+  position: absolute;
+  background-color: #FFF;
+  top: 2%;
+  left: 95%;
+  width: 40px;
+  display: inline-block;
+  z-index: 2;
+}
+

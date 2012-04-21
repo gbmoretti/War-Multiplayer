@@ -28,3 +28,4 @@ class SetNickController
       @app.user = @inputNick.val()
       @app.conn.send new InitMessage(@app.user)
       @app.closeModal @modal
+

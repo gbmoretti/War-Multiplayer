@@ -1,8 +1,8 @@
 class WSConnection
   constructor: (@addr,@statusElmnt = $('div#status')) ->
-    if $.browser.mozilla
-      @socket = new MozWebSocket(@addr)
-    else
+    #if $.browser.mozilla
+     # @socket = new MozWebSocket(@addr)
+    #else
       @socket = new WebSocket(@addr)
       
   send: (obj) ->

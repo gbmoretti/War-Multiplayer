@@ -40,5 +40,3 @@ ao controlador responsavel por ela
    * Procura entre os objetos controladores, quais deles implementam os métodos on_open e 
    on_close
    * Aciona o(s) controlador(es), caso exista, chamando o método em questão
- 
- - 

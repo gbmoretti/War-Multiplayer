@@ -20,16 +20,14 @@ end
 
 class WarnMessage < Message
   def initialize(msg)
-    @controller = 'chat'
-    @action = 'warn'
+    @name = 'warn'
     @params = { 'msg' => html_escaped(msg) }    
   end
 end
 
 class TxtMessage < Message
   def initialize(author,msg)
-    @controller = 'chat'
-    @action = 'txt'    
+    @name = 'chat'
     @params = { 'author' => author.to_s, 
                 'msg'    => html_escaped(msg) }
   end
@@ -37,24 +35,21 @@ end
 
 class PlayerListMessage < Message
   def initialize(list)
-    @controller = 'playerList'
-    @action = 'update'
+    @name = 'player_list'
     @params = { 'list' => list }    
   end
 end
 
 class SetNewNick < Message
   def initialize
-    @controller = 'setNick'
-    @action = 'open'
+    @name = 'set_nick'
     @params = ''
   end
 end
 
 class ListRooms < Message
   def initialize(list)
-    @controller = 'rooms'
-    @action = 'list'
+    @name = 'rooms_list'
     @params = { 'list' => list }
   end
 end

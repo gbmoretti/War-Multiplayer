@@ -16,13 +16,17 @@
       return this.socket.send(msg);
     };
 
+    /*
+       ** por algum motivo bisonho isso nao funciona
+    */
+
     WSConnection.prototype.on_close = function(func) {
-      this.socket.onclose = func.call;
+      this.socket.onclose = func;
       return refreshStatus();
     };
 
     WSConnection.prototype.on_open = function(func) {
-      this.socket.onopen = func.call;
+      this.socket.onopen = func;
       return refreshStatus();
     };
 
@@ -35,9 +39,14 @@
       };
     };
 
+    /* 
+     ** até aqui
+    */
+
     WSConnection.prototype.refreshStatus = function() {
       var state;
       state = this.socket.readyState;
+      console.log(state);
       this.statusElmnt.removeClass();
       if (state === 0) {
         this.statusElmnt.addClass('connecting');
@@ -63,13 +72,20 @@
       var _this = this;
       this.listening = [];
       this.socket = new WSConnection(addr);
-      this.socket.on_msg = function(msg) {
+      this.socket.socket.onmessage = function(msg) {
+        msg = eval("(" + msg.data + ")");
         if (_this.listening[msg.name]) {
           _this.listening[msg.name].call(_this, msg.params);
         }
         if (!_this.listening[msg.name]) {
           return console.log('Nao estou ouvindo essa mensagem! ' + msg.name);
         }
+      };
+      this.socket.socket.onopen = function() {
+        return console.log('Abriu!');
+      };
+      this.socket.socket.onclose = function() {
+        return console.log('Fechou!');
       };
     }
 
@@ -87,6 +103,17 @@
 
   $(function() {
     var client;
+    $("#game").svg({
+      onLoad: function() {
+        var svg;
+        svg = $("#game").svg('get');
+        return svg.load('map.svg', {
+          addTo: true,
+          changeSize: false
+        });
+      },
+      settings: {}
+    });
     client = new Client("ws://192.168.1.102:3000/websocket");
     client.listen('print', function(msg) {
       var chat_window;

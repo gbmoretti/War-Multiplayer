@@ -1,4 +1,13 @@
 $ ->
+  #manipulando svg
+  $("#game").svg({
+    onLoad: ->
+      svg = $("#game").svg('get');
+      svg.load('map.svg', {addTo: true, changeSize: false});
+        
+    settings: {}
+    }) 
+  
   client = new Client("ws://192.168.1.102:3000/websocket")
   
   #mensagem para imprimir na tela do chat
@@ -29,4 +38,5 @@ $ ->
   #recebe lista de salas
   client.listen 'rooms_list', (msg) ->
     console.log('ROOMS_LIST', msg)
+
 

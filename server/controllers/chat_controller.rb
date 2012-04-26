@@ -8,7 +8,7 @@ class ChatController < AppController
   
   def closed_conn(conn)
     p = @app.get_client(conn)
-    Player.remove(p)
+    Player.remove(p) unless p.nil?
     @app.unbind_client(p)
     @app.broadcast(PlayerListMessage.new(Player.list),[p]);
     @app.broadcast(WarnMessage.new(p.to_s + " saiu..."))

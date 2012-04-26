@@ -1,5 +1,30 @@
 (function() {
-  var Client, WSConnection;
+  var Client, Modal, WSConnection;
+
+  Modal = (function() {
+
+    function Modal(modal) {
+      var _this = this;
+      this.modal = modal;
+      this.overlay = $('.modal-overlay');
+      $('.closebtn').click(function() {
+        return _this.close($(_this).parent());
+      });
+    }
+
+    Modal.prototype.open = function() {
+      this.overlay.show();
+      return this.modal.show();
+    };
+
+    Modal.prototype.close = function() {
+      this.modal.hide();
+      return this.overlay.hide();
+    };
+
+    return Modal;
+
+  })();
 
   WSConnection = (function() {
 
@@ -115,26 +140,56 @@
       settings: {}
     });
     client = new Client("ws://192.168.1.102:3000/websocket");
-    client.listen('print', function(msg) {
+    client.listen('chat', function(msg) {
       var chat_window;
       chat_window = $('div#chat');
-      return console.log('CHAT: ' + msg);
+      return chat_window.append("&lt;" + msg.author + "&gt; " + msg.msg + "<br/>");
     });
     client.listen('warn', function(msg) {
       var chat_window;
       chat_window = $('div#chat');
-      return console.log('WARN: ' + msg);
+      return chat_window.append("<span class=warn>" + msg.msg + "</span><br/>");
     });
     client.listen('set_nick', function(msg) {
-      console.log('OPEN_SET_NICK: ' + msg);
-      return this.send({
-        controller: 'set_nick',
-        action: 'set',
-        nick: 'CLIENTE_BURRO'
+      var l_el, nick_modal,
+        _this = this;
+      l_el = $('div#login');
+      nick_modal = new Modal($('div#login'));
+      nick_modal.open();
+      l_el.find('input[type=button]').click(function() {
+        var n;
+        n = l_el.find('input[type=text]').val();
+        if (n !== '') {
+          _this.send({
+            controller: 'set_nick',
+            action: 'set',
+            params: {
+              nick: n
+            }
+          });
+        }
+        return nick_modal.close();
       });
+      l_el.find('input[type=text]').keydown(function(eventObj) {
+        var n;
+        if (eventObj.keyCode === 13) {
+          n = l_el.find('input[type=text]').val();
+          if (n !== '') {
+            _this.send({
+              controller: 'set_nick',
+              action: 'set',
+              params: {
+                nick: n
+              }
+            });
+          }
+          return nick_modal.close();
+        }
+      });
+      return $('div#login').find('input[type=text]').focus();
     });
     client.listen('rooms', function(msg) {
-      return console.log('OPEN_ROOMS ' + msg);
+      return console.log('OPEN_ROOMS ' + msg.list);
     });
     client.listen('player_list', function(msg) {
       return console.log('PLAYER_LIST ' + msg);

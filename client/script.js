@@ -1,5 +1,5 @@
 (function() {
-  var AppController, ChatController, InitMessage, PlayerListController, SetNickController, TxtMessage, WSConnection;
+  var Client, WSConnection;
 
   WSConnection = (function() {
 
@@ -29,6 +29,7 @@
     WSConnection.prototype.on_message = function(func) {
       var _this = this;
       return this.socket.onmessage = function(msg) {
+        console.log(msg);
         msg = eval("(" + msg + ")");
         return func(msg);
       };
@@ -56,211 +57,63 @@
 
   })();
 
-  TxtMessage = (function() {
+  Client = (function() {
 
-    function TxtMessage(msg) {
-      this.controller = 'chat';
-      this.action = 'send_msg';
-      this.params = {
-        'msg': msg
-      };
-    }
-
-    return TxtMessage;
-
-  })();
-
-  ChatController = (function() {
-
-    function ChatController(app) {
+    function Client(addr) {
       var _this = this;
-      this.app = app;
-      this.controllerName = 'chat';
-      this.inputElmnt = $('div#chatinput input[type=text]');
-      this.chatElmnt = $('div#chat');
-      this.chatWindow = $('div#chat-window');
-      this.btnElmnt = $('div#btnchat');
-      this.chatWindow.hide(0);
-      this.inputElmnt.keydown(function(eventObject) {
-        if (eventObject.keyCode === 13) return _this.sendTxt();
-      });
-      this.btnElmnt.click(function(eventObject) {
-        return _this.chatWindow.toggle(0);
-      });
-    }
-
-    ChatController.prototype.txt = function(msg) {
-      this.chatElmnt.append('&lt' + msg.author + '&gt ' + msg.msg + '<br/>');
-      this.chatElmnt.scrollTop(this.chatElmnt.height());
-      return this.animBtn();
-    };
-
-    ChatController.prototype.warn = function(msg) {
-      this.chatElmnt.append('<span class="warn">' + msg.msg + '</span><br/>');
-      return this.chatElmnt.scrollTop(this.chatElmnt.height());
-    };
-
-    ChatController.prototype.sendTxt = function() {
-      var txt;
-      txt = this.inputElmnt.val();
-      this.app.conn.send(new TxtMessage(txt));
-      return this.inputElmnt.val('');
-    };
-
-    ChatController.prototype.animBtn = function() {
-      this.btnElmnt.animate({
-        'background-color': '#444'
-      }, 'slow');
-      return this.btnElmnt.animate({
-        'background-color': '#000'
-      }, 'slow');
-    };
-
-    return ChatController;
-
-  })();
-
-  PlayerListController = (function() {
-
-    function PlayerListController(app) {
-      this.app = app;
-      this.controllerName = 'playerList';
-      this.listElmnt = $('div#players');
-    }
-
-    PlayerListController.prototype.update = function(args) {
-      var nick, _i, _len, _ref, _results;
-      this.listElmnt.html('');
-      _ref = args.list;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        nick = _ref[_i];
-        _results.push(this.listElmnt.append("<div class='nick'>" + nick + "</div>"));
-      }
-      return _results;
-    };
-
-    return PlayerListController;
-
-  })();
-
-  InitMessage = (function() {
-
-    function InitMessage(nick) {
-      this.controller = 'set_nick';
-      this.action = 'set';
-      this.params = {
-        'nick': nick
+      this.listening = [];
+      this.socket = new WSConnection(addr);
+      this.socket.on_msg = function(msg) {
+        if (_this.listening[msg.name]) {
+          _this.listening[msg.name].call(_this, msg.params);
+        }
+        if (!_this.listening[msg.name]) {
+          return console.log('Nao estou ouvindo essa mensagem! ' + msg.name);
+        }
       };
     }
 
-    return InitMessage;
-
-  })();
-
-  SetNickController = (function() {
-
-    function SetNickController(app) {
-      var _this = this;
-      this.app = app;
-      this.controllerName = 'setNick';
-      this.modal = $('#login');
-      this.inputNick = $('#login input[type=text]');
-      this.btn = $('#login input[type=button]');
-      this.btn.click(function() {
-        return _this.setNick();
-      });
-      this.inputNick.keydown(function(eventObject) {
-        if (eventObject.keyCode === 13) return _this.setNick();
-      });
-    }
-
-    SetNickController.prototype.open = function() {
-      return this.app.openModal(this.modal);
+    Client.prototype.send = function(obj) {
+      return this.socket.send(obj);
     };
 
-    SetNickController.prototype.setNick = function() {
-      if (this.inputNick.val() !== '') {
-        this.app.user = this.inputNick.val();
-        this.app.conn.send(new InitMessage(this.app.user));
-        return this.app.closeModal(this.modal);
-      }
+    Client.prototype.listen = function(msg, func) {
+      return this.listening[msg] = func;
     };
 
-    return SetNickController;
-
-  })();
-
-  AppController = (function() {
-
-    function AppController(wsAddr) {
-      var self;
-      this.wsAddr = wsAddr;
-      this.conn = null;
-      this.user = 'nick';
-      this.controllers = {};
-      self = this;
-      $('.closebtn').click(function() {
-        return self.closeModal($(this).parent());
-      });
-    }
-
-    AppController.prototype.add_controller = function(obj) {
-      return this.controllers[obj.controllerName] = obj;
-    };
-
-    AppController.prototype.openModal = function(elmnt) {
-      $('.modal-overlay').show();
-      return elmnt.show();
-    };
-
-    AppController.prototype.closeModal = function(elmnt) {
-      elmnt.hide();
-      return $('.modal-overlay').hide();
-    };
-
-    AppController.prototype.start = function() {
-      var _this = this;
-      this.conn = new WSConnection(this.wsAddr);
-      this.conn.socket.onopen = function() {
-        return _this.conn.refreshStatus();
-      };
-      this.conn.socket.onclose = function() {
-        return _this.conn.refreshStatus();
-      };
-      return this.conn.socket.onmessage = function(msg) {
-        var c_name, controller, msgObj;
-        msgObj = eval("(" + msg.data + ")");
-        c_name = msgObj.controller;
-        console.log("" + c_name + "#" + msgObj.action + "(" + msgObj.params + ")");
-        controller = _this.controllers[c_name];
-        console.log(controller);
-        if (msgObj.params === '') controller[msgObj.action]();
-        if (msgObj.params !== '') return controller[msgObj.action](msgObj.params);
-      };
-    };
-
-    return AppController;
+    return Client;
 
   })();
 
   $(function() {
-    var app;
-    app = new AppController("ws://192.168.1.102:3000/websocket");
-    app.add_controller(new ChatController(app));
-    app.add_controller(new PlayerListController(app));
-    app.add_controller(new SetNickController(app));
-    app.start();
-    return $("#game").svg({
-      onLoad: function() {
-        var svg;
-        svg = $("#game").svg('get');
-        return svg.load('map.svg', {
-          addTo: true,
-          changeSize: false
-        });
-      },
-      settings: {}
+    var client;
+    client = new Client("ws://192.168.1.102:3000/websocket");
+    client.listen('print', function(msg) {
+      var chat_window;
+      chat_window = $('div#chat');
+      return console.log('CHAT: ' + msg);
+    });
+    client.listen('warn', function(msg) {
+      var chat_window;
+      chat_window = $('div#chat');
+      return console.log('WARN: ' + msg);
+    });
+    client.listen('set_nick', function(msg) {
+      console.log('OPEN_SET_NICK: ' + msg);
+      return this.send({
+        controller: 'set_nick',
+        action: 'set',
+        nick: 'CLIENTE_BURRO'
+      });
+    });
+    client.listen('rooms', function(msg) {
+      return console.log('OPEN_ROOMS ' + msg);
+    });
+    client.listen('player_list', function(msg) {
+      return console.log('PLAYER_LIST ' + msg);
+    });
+    return client.listen('rooms_list', function(msg) {
+      return console.log('ROOMS_LIST', msg);
     });
   });
 

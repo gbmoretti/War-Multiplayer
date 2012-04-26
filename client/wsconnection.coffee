@@ -1,9 +1,6 @@
 class WSConnection
   constructor: (@addr,@statusElmnt = $('div#status')) ->
-    #if $.browser.mozilla
-     # @socket = new MozWebSocket(@addr)
-    #else
-      @socket = new WebSocket(@addr)
+    @socket = new WebSocket(@addr)
       
   send: (obj) ->
     msg = JSON.stringify(obj)
@@ -20,6 +17,7 @@ class WSConnection
     
   on_message: (func) ->
     @socket.onmessage = (msg) =>
+      console.log(msg)
       msg = eval("(#{msg})")
       func(msg)
     

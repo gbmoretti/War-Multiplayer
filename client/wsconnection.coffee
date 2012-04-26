@@ -1,18 +1,22 @@
 class WSConnection
   constructor: (@addr,@statusElmnt = $('div#status')) ->
     @socket = new WebSocket(@addr)
+
       
   send: (obj) ->
     msg = JSON.stringify(obj)
     console.log "Enviando #{msg}"
     @socket.send(msg)
     
+  ###
+   ** por algum motivo bisonho isso nao funciona
+  ###
   on_close: (func) ->
-    @socket.onclose = func.call
+    @socket.onclose = func
     refreshStatus()
   
   on_open: (func) ->
-    @socket.onopen = func.call
+    @socket.onopen = func
     refreshStatus()
     
   on_message: (func) ->
@@ -21,8 +25,14 @@ class WSConnection
       msg = eval("(#{msg})")
       func(msg)
     
+  ### 
+   ** até aqui
+  ###
+  
+    
   refreshStatus: ->
     state = @socket.readyState
+    console.log(state)
     @statusElmnt.removeClass()
     if state == 0 #conectando  
       @statusElmnt.addClass('connecting')

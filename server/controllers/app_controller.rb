@@ -1,4 +1,3 @@
-
 class AppController
 
   attr_reader :app

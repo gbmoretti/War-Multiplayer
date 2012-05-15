@@ -11,6 +11,8 @@ class SetNickController
     @inputNick = $('#login input[type=text]')
     @btn = $('#login input[type=button]')
     
+    @inputNick.focus()
+    
     #chama método para setar nick ao clicar no botao do modal
     @btn.click () =>
       @setNick()

@@ -1,5 +1,5 @@
 (function() {
-  var AppController, ChatController, InitMessage, PlayerListController, SetNickController, TxtMessage, WSConnection;
+  var AppController, ChatController, InitMessage, PlayerListController, RoomsController, SetNickController, TxtMessage, WSConnection;
 
   WSConnection = (function() {
 
@@ -144,6 +144,39 @@
 
   })();
 
+  RoomsController = (function() {
+
+    function RoomsController(app) {
+      this.app = app;
+      this.controllerName = 'rooms';
+      this.modal = $('#rooms');
+      this.divList = this.modal.find('#lista');
+      this.list;
+    }
+
+    RoomsController.prototype.list = function(msg) {
+      var sala, _i, _len, _ref;
+      this.list = msg.list;
+      console.log(this.list.length);
+      _ref = this.list;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        sala = _ref[_i];
+        console.log(sala);
+      }
+      if (this.list.size === 0) {
+        this.divList.HTML('<li>Nenhuma sala encontrada</li>');
+      }
+      return this.open();
+    };
+
+    RoomsController.prototype.open = function(msg) {
+      return this.app.openModal(this.modal);
+    };
+
+    return RoomsController;
+
+  })();
+
   InitMessage = (function() {
 
     function InitMessage(nick) {
@@ -167,6 +200,7 @@
       this.modal = $('#login');
       this.inputNick = $('#login input[type=text]');
       this.btn = $('#login input[type=button]');
+      this.inputNick.focus();
       this.btn.click(function() {
         return _this.setNick();
       });
@@ -233,8 +267,8 @@
         msgObj = eval("(" + msg.data + ")");
         c_name = msgObj.controller;
         console.log("" + c_name + "#" + msgObj.action + "(" + msgObj.params + ")");
+        console.log(_this.controllers);
         controller = _this.controllers[c_name];
-        console.log(controller);
         if (msgObj.params === '') controller[msgObj.action]();
         if (msgObj.params !== '') return controller[msgObj.action](msgObj.params);
       };
@@ -246,10 +280,11 @@
 
   $(function() {
     var app;
-    app = new AppController("ws://192.168.1.102:3000/websocket");
+    app = new AppController("ws://localhost:3000/websocket");
     app.add_controller(new ChatController(app));
     app.add_controller(new PlayerListController(app));
     app.add_controller(new SetNickController(app));
+    app.add_controller(new RoomsController(app));
     app.start();
     return $("#game").svg({
       onLoad: function() {

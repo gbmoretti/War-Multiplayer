@@ -1,14 +1,18 @@
 class Room
   
-  def initilize(p,name)
+  def initialize(p,n)
     @players = [p]
     @initialized = false 
-    @owner = p  
-    @name = name
+    @owner = p
+    @name = n
   end
   
   def add_player(p)
-    @player.push(p)
+    @players.push(p)
+  end
+  
+  def to_s
+    @name
   end
   
 end

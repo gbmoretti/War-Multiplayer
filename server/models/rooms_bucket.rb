@@ -1,7 +1,11 @@
 class RoomsBucket < Bucket
 
-  def self.get_by_index(i)
-    super.bucket[i]
+  def self.get_instance
+    @@instance ||= self.new
+  end
+
+  def get_by_index(i)
+    @bucket[i]
   end
 
 end

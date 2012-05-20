@@ -1,19 +1,19 @@
 class Bucket
 
-  def self.bucket
-    @@bucket ||= []
+  def initialize
+    @bucket = []
+  end
+ 
+  def add(o)
+    @bucket.push(o)
   end
   
-  def self.add(o)
-    self.bucket.push(o)
-  end
-  
-  def self.rem(o)
-    self.bucket.delete(o)
+  def rem(o)
+    @bucket.delete(o)
   end
 
-  def self.list
-    self.bucket
+  def list
+    @bucket
   end
 
 end 

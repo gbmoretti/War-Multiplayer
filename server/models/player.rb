@@ -7,7 +7,7 @@ class Player
   end
   
   def to_s
-    nick
+    @nick
   end
   
   def ==(other)

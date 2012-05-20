@@ -1,10 +1,15 @@
 class SetNickController < AppController
 
+  def initialize(app)
+    super(app)
+    @players = PlayersBucket.get_instance
+  end
+
   def set(conn,args)
     p = Player.new(conn.sid,args['nick'])
-    PlayersBucket.add(p)
+    @players.add(p)
     @app.bind_client(conn,p)
-    @app.broadcast(PlayerListMessage.new(PlayersBucket.list));    
+    @app.broadcast(PlayerListMessage.new(@players.list));    
     @app.broadcast(WarnMessage.new(p.to_s + " acabou de entrar..."),[p])
     @app.send(p,WarnMessage.new("Bem vindo " + p.to_s))
     
@@ -15,7 +20,7 @@ class SetNickController < AppController
     end
     
     #chama controller de salas
-    @app.controllers[:rooms].show(p)
+    @app.controllers[:rooms].show(p) #deve ter uma forma mais "elegante" de se fazer isso
   end
   
   def new_conn(conn)

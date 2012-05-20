@@ -1,4 +1,9 @@
 class ChatController < AppController
+  
+  def initialize(app)
+    super(app)
+    @players = PlayersBucket.get_instance
+  end
     
   def send_msg(conn,args)
     p = @app.get_client(conn)
@@ -8,9 +13,9 @@ class ChatController < AppController
   
   def closed_conn(conn)
     p = @app.get_client(conn)
-    PlayersBucket.rem(p)
+    @players.rem(p)
     @app.unbind_client(p)
-    @app.broadcast(PlayerListMessage.new(PlayersBucket.list),[p]);
+    @app.broadcast(PlayerListMessage.new(@players.list),[p]);
     @app.broadcast(WarnMessage.new(p.to_s + " saiu..."))
   end
   

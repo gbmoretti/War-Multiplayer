@@ -1,5 +1,5 @@
 (function() {
-  var AppController, ChatController, InitMessage, PlayerListController, RoomsController, SetNickController, TxtMessage, WSConnection;
+  var AppController, ChatController, InitMessage, NewRoomMessage, PlayerListController, RoomsController, SetNickController, TxtMessage, WSConnection;
 
   WSConnection = (function() {
 
@@ -144,33 +144,60 @@
 
   })();
 
+  NewRoomMessage = (function() {
+
+    function NewRoomMessage(name) {
+      this.controller = 'rooms';
+      this.action = 'new_room';
+      this.params = {
+        'name': name
+      };
+    }
+
+    return NewRoomMessage;
+
+  })();
+
   RoomsController = (function() {
 
     function RoomsController(app) {
+      var _this = this;
       this.app = app;
       this.controllerName = 'rooms';
-      this.modal = $('#rooms');
-      this.divList = this.modal.find('#lista');
-      this.list;
+      this.modal = $('.modal-div#rooms');
+      this.listElmt = this.modal.find('ul');
+      this.btn = this.modal.find('button');
+      this.input = this.modal.find('input');
+      this.btn.click(function() {
+        if (_this.input.val !== '') return _this.newRoom(_this.input.val());
+      });
+      this.input.keydown(function(eventObject) {
+        if (eventObject.keyCode === 13) return _this.btn.click;
+      });
     }
 
     RoomsController.prototype.list = function(msg) {
       var sala, _i, _len, _ref;
       this.list = msg.list;
-      console.log(this.list.length);
       _ref = this.list;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         sala = _ref[_i];
         console.log(sala);
+        this.listElmt.append('<li id="sala">' + sala + '</li>');
       }
-      if (this.list.size === 0) {
-        this.divList.HTML('<li>Nenhuma sala encontrada</li>');
+      if (this.list.length === 0) {
+        this.listElmt.append('<li id="none">Nenhuma sala encontrada</li>');
       }
       return this.open();
     };
 
     RoomsController.prototype.open = function(msg) {
       return this.app.openModal(this.modal);
+    };
+
+    RoomsController.prototype.newRoom = function(name) {
+      console.log('Criando nova sala com o nome de ' + name);
+      return this.app.conn.send(new NewRoomMessage(name));
     };
 
     return RoomsController;

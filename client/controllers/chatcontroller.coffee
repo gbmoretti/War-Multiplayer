@@ -12,7 +12,7 @@ class ChatController
     @inputElmnt = $('div#chatinput input[type=text]') 
     @chatElmnt = $('div#chat')
     @chatWindow= $('div#chat-window')
-    @btnElmnt = $('div#btnchat')
+    @btnElmnt = $('#btnchat')
     
     @chatWindow.hide(0) #janela de chat inicia fechada
     

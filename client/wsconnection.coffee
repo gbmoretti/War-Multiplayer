@@ -28,13 +28,10 @@ class WSConnection
     @statusElmnt.removeClass()
     if state == 0 #conectando  
       @statusElmnt.addClass('connecting')
-      @statusElmnt.html('conectando')
     if state == 1 #conectado
       @statusElmnt.addClass('online')
-      @statusElmnt.html('conectado')
     if state == 2 or state == 3 #desconectando ou desconectado
       @statusElmnt.addClass('offline')
-      @statusElmnt.html('DESCONECTADO')
    
     
     

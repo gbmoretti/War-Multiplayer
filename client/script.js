@@ -38,18 +38,9 @@
       var state;
       state = this.socket.readyState;
       this.statusElmnt.removeClass();
-      if (state === 0) {
-        this.statusElmnt.addClass('connecting');
-        this.statusElmnt.html('conectando');
-      }
-      if (state === 1) {
-        this.statusElmnt.addClass('online');
-        this.statusElmnt.html('conectado');
-      }
-      if (state === 2 || state === 3) {
-        this.statusElmnt.addClass('offline');
-        return this.statusElmnt.html('DESCONECTADO');
-      }
+      if (state === 0) this.statusElmnt.addClass('connecting');
+      if (state === 1) this.statusElmnt.addClass('online');
+      if (state === 2 || state === 3) return this.statusElmnt.addClass('offline');
     };
 
     return WSConnection;
@@ -79,7 +70,7 @@
       this.inputElmnt = $('div#chatinput input[type=text]');
       this.chatElmnt = $('div#chat');
       this.chatWindow = $('div#chat-window');
-      this.btnElmnt = $('div#btnchat');
+      this.btnElmnt = $('#btnchat');
       this.chatWindow.hide(0);
       this.inputElmnt.keydown(function(eventObject) {
         if (eventObject.keyCode === 13) return _this.sendTxt();
@@ -307,7 +298,7 @@
 
   $(function() {
     var app;
-    app = new AppController("ws://localhost:3000/websocket");
+    app = new AppController("ws://192.168.132.137:3000/websocket");
     app.add_controller(new ChatController(app));
     app.add_controller(new PlayerListController(app));
     app.add_controller(new SetNickController(app));

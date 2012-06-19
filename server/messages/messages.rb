@@ -55,7 +55,19 @@ class ListRooms < Message
   def initialize(list)
     @controller = 'rooms'
     @action = 'list'
-    @params = { 'list' => list }
+    
+    #TODO: refatorar isso. Essa parte deve ficar no modelo (eu acho)
+    rooms = []
+    list.each do |r|
+      h = {'id' => r.id,       
+          'name' => r.name,
+          'owner' => r.owner,
+          'players' => r.players,
+          'size' => '8'}
+      rooms.push h
+    end
+    
+    @params = { 'list' => rooms }
   end
 end
 

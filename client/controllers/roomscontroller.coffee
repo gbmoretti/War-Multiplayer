@@ -4,6 +4,12 @@ class NewRoomMessage
     @action = 'new_room'
     @params = {'name': name}
 
+class JoinRoom
+  constructor: (sala) ->
+    @controller = 'rooms'
+    @action = 'join'
+    @params = {'room': sala}
+
 class RoomsController
   
   constructor: (@app) ->
@@ -12,19 +18,22 @@ class RoomsController
     @listElmt = @modal.find 'ul'
     @btn = @modal.find 'button'
     @input = @modal.find 'input'
-    
+    @linkJoin = @modal.find 'ul a'
+        
     @btn.click () =>      
       @newRoom(@input.val()) if @input.val != ''  
     
     @input.keydown (eventObject) =>
       @btn.click if eventObject.keyCode == 13
       
+    @linkJoin.live 'click', (o) =>
+      @joinRoom($(o.target).attr('sala'))
+    
   list: (msg) ->
     @list = msg.list
         
     for sala in @list
-      console.log sala 
-      @listElmt.append '<li id="sala">' + sala + '</li>'
+      @listElmt.append '<li class="sala">' + sala.name + ' <a href="#" class="join" sala=' + sala.id + '>entrar</a></li>'
     
     @listElmt.append '<li id="none">Nenhuma sala encontrada</li>' if @list.length == 0
        
@@ -37,5 +46,6 @@ class RoomsController
     console.log 'Criando nova sala com o nome de ' + name
     @app.conn.send new NewRoomMessage(name)
     
-    
+  joinRoom: (sala) ->
+    console.log 'Entrando na sala ' + sala    
     

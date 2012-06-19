@@ -4,7 +4,7 @@ class NewRoomMessage
     @action = 'new_room'
     @params = {'name': name}
 
-class JoinRoom
+class JoinRoomMessage
   constructor: (sala) ->
     @controller = 'rooms'
     @action = 'join'
@@ -43,9 +43,9 @@ class RoomsController
     @app.openModal @modal
     
   newRoom: (name) ->
-    console.log 'Criando nova sala com o nome de ' + name
     @app.conn.send new NewRoomMessage(name)
+    @app.closeModal @modal
     
   joinRoom: (sala) ->
-    console.log 'Entrando na sala ' + sala    
+    @app.conn.send new JoinRoomMessage(sala)    
     

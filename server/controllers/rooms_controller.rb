@@ -26,17 +26,19 @@ class RoomsController < AppController
     
     @rooms.add(room)
     
-    #e agora? :(
+    #chama controller pregame
+    @app.controllers[:pregame].show(p,room)
   end
   
   def join(conn,args)
     p = @app.get_client(conn)
-    room_i = args['room_id']
+    room_i = args['room'].to_i
     room = @rooms.get_by_index(room_i)
     
     room.add_player(p)
     
-    #e agora? :(    
+    #chama controller pregame
+    @app.controllers[:pregame].show(p,room)   
   end
 
 end

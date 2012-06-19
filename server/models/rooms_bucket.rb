@@ -7,7 +7,7 @@ class RoomsBucket < Bucket
   #sobrescrevendo o método add para atualizar atributo ID do objeto
   def add(o)
     super(o)
-    o.id = @bucket.size
+    o.id = @bucket.size-1
   end
 
   def get_by_index(i)

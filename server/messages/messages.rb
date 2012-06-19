@@ -56,18 +56,20 @@ class ListRooms < Message
     @controller = 'rooms'
     @action = 'list'
     
-    #TODO: refatorar isso. Essa parte deve ficar no modelo (eu acho)
     rooms = []
     list.each do |r|
-      h = {'id' => r.id,       
-          'name' => r.name,
-          'owner' => r.owner,
-          'players' => r.players,
-          'size' => '8'}
-      rooms.push h
+      rooms.push r.to_hash
     end
     
     @params = { 'list' => rooms }
+  end
+end
+
+class PregameShow < Message
+  def initialize(room)
+    @controller = 'pregame'
+    @action = 'open'
+    @params = room.to_hash
   end
 end
 

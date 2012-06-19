@@ -1,5 +1,5 @@
 (function() {
-  var AppController, ChatController, InitMessage, NewRoomMessage, PlayerListController, RoomsController, SetNickController, TxtMessage, WSConnection;
+  var AppController, ChatController, InitMessage, JoinRoomMessage, NewRoomMessage, PlayerListController, PregameController, RoomsController, SetNickController, TxtMessage, WSConnection;
 
   WSConnection = (function() {
 
@@ -135,6 +135,30 @@
 
   })();
 
+  PregameController = (function() {
+
+    function PregameController(app) {
+      this.app = app;
+      this.controllerName = 'pregame';
+      this.modal = $('.modal-div#pregame');
+      this.players = this.modal.find('ul#players');
+    }
+
+    PregameController.prototype.open = function(msg) {
+      var p, _i, _len, _ref;
+      this.modal.find('div#modal-title').html(msg.name);
+      _ref = msg.players;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        p = _ref[_i];
+        this.players.append("<li>" + p + " <div class=\"color\" style=\"background-color: red;\">&nbsp;</div> <div class=\"turn\">&nbsp;</div></li>");
+      }
+      return this.app.openModal(this.modal);
+    };
+
+    return PregameController;
+
+  })();
+
   NewRoomMessage = (function() {
 
     function NewRoomMessage(name) {
@@ -149,6 +173,20 @@
 
   })();
 
+  JoinRoomMessage = (function() {
+
+    function JoinRoomMessage(sala) {
+      this.controller = 'rooms';
+      this.action = 'join';
+      this.params = {
+        'room': sala
+      };
+    }
+
+    return JoinRoomMessage;
+
+  })();
+
   RoomsController = (function() {
 
     function RoomsController(app) {
@@ -159,11 +197,15 @@
       this.listElmt = this.modal.find('ul');
       this.btn = this.modal.find('button');
       this.input = this.modal.find('input');
+      this.linkJoin = this.modal.find('ul a');
       this.btn.click(function() {
         if (_this.input.val !== '') return _this.newRoom(_this.input.val());
       });
       this.input.keydown(function(eventObject) {
         if (eventObject.keyCode === 13) return _this.btn.click;
+      });
+      this.linkJoin.live('click', function(o) {
+        return _this.joinRoom($(o.target).attr('sala'));
       });
     }
 
@@ -173,8 +215,7 @@
       _ref = this.list;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         sala = _ref[_i];
-        console.log(sala);
-        this.listElmt.append('<li id="sala">' + sala + '</li>');
+        this.listElmt.append('<li class="sala">' + sala.name + ' <a href="#" class="join" sala=' + sala.id + '>entrar</a></li>');
       }
       if (this.list.length === 0) {
         this.listElmt.append('<li id="none">Nenhuma sala encontrada</li>');
@@ -187,8 +228,12 @@
     };
 
     RoomsController.prototype.newRoom = function(name) {
-      console.log('Criando nova sala com o nome de ' + name);
-      return this.app.conn.send(new NewRoomMessage(name));
+      this.app.conn.send(new NewRoomMessage(name));
+      return this.app.closeModal(this.modal);
+    };
+
+    RoomsController.prototype.joinRoom = function(sala) {
+      return this.app.conn.send(new JoinRoomMessage(sala));
     };
 
     return RoomsController;
@@ -303,6 +348,7 @@
     app.add_controller(new PlayerListController(app));
     app.add_controller(new SetNickController(app));
     app.add_controller(new RoomsController(app));
+    app.add_controller(new PregameController(app));
     app.start();
     return $("#game").svg({
       onLoad: function() {

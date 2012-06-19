@@ -6,6 +6,7 @@ $ ->
   app.add_controller new PlayerListController app
   app.add_controller new SetNickController app
   app.add_controller new RoomsController app
+  app.add_controller new PregameController app
   
   app.start()
   

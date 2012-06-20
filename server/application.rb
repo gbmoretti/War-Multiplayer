@@ -47,8 +47,13 @@ class Application
   end
   
   def send(o,msg)
+    array = o.is_a?(Array)
     @clients.each do |c|
-      c[:conn].send_msg(msg) if c[:obj] == o
+      if array
+        c[:conn].send_msg(msg) if o.include?(c[:obj])
+      else
+        c[:conn].send_msg(msg) if c[:obj] == o
+      end
     end
   end
   

@@ -35,9 +35,9 @@ class AppController
     @conn.socket.onmessage = (msg) => 
       msgObj = eval("(#{msg.data})")
       c_name = msgObj.controller
-      console.log "#{c_name}##{msgObj.action}(#{msgObj.params})"
-      console.log @controllers
+      #console.log "#{c_name}##{msgObj.action}(#{msgObj.params})"
       controller = @controllers[c_name]
+      console.log controller
       controller[msgObj.action]() if msgObj.params == ''
       controller[msgObj.action](msgObj.params) if msgObj.params != ''
            

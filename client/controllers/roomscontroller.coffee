@@ -19,9 +19,13 @@ class RoomsController
     @btn = @modal.find 'button'
     @input = @modal.find 'input'
     @linkJoin = @modal.find 'ul a'
+    @openBtn = $('#btnrooms')
         
     @btn.click () =>      
       @newRoom(@input.val()) if @input.val != ''  
+    
+    @openBtn.click () =>
+      @open(null)
     
     @input.keydown (eventObject) =>
       @btn.click if eventObject.keyCode == 13
@@ -30,15 +34,15 @@ class RoomsController
       @joinRoom($(o.target).attr('sala'))
     
   list: (msg) ->
-    @list = msg.list
+    list = msg.list
         
-    for sala in @list
+    console.log 'Olha eu aqui a lista'
+    @listElmt.html ''
+    for sala in list
       @listElmt.append '<li class="sala">' + sala.name + ' <a href="#" class="join" sala=' + sala.id + '>entrar</a></li>'
     
-    @listElmt.append '<li id="none">Nenhuma sala encontrada</li>' if @list.length == 0
+    @listElmt.append '<li id="none">Nenhuma sala encontrada</li>' if list.length == 0
        
-    @open()
-    
   open: (msg) ->
     @app.openModal @modal
     
@@ -47,5 +51,7 @@ class RoomsController
     @app.closeModal @modal
     
   joinRoom: (sala) ->
-    @app.conn.send new JoinRoomMessage(sala)    
+    @app.conn.send new JoinRoomMessage(sala)
+    @app.closeModal @modal
+        
     

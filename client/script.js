@@ -142,17 +142,27 @@
       this.controllerName = 'pregame';
       this.modal = $('.modal-div#pregame');
       this.players = this.modal.find('ul#players');
+      this.title = null;
     }
 
     PregameController.prototype.open = function(msg) {
-      var p, _i, _len, _ref;
-      this.modal.find('div#modal-title').html(msg.name);
-      _ref = msg.players;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        p = _ref[_i];
-        this.players.append("<li>" + p + " <div class=\"color\" style=\"background-color: red;\">&nbsp;</div> <div class=\"turn\">&nbsp;</div></li>");
-      }
       return this.app.openModal(this.modal);
+    };
+
+    PregameController.prototype.update = function(msg) {
+      this.modal.find('div#modal-title').html(msg.name);
+      this.players.html('');
+      return this.updateplayers(msg.players);
+    };
+
+    PregameController.prototype.updateplayers = function(list) {
+      var p, _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = list.length; _i < _len; _i++) {
+        p = list[_i];
+        _results.push(this.players.append("<li>" + p + " <div class=\"color\" style=\"background-color: red;\">&nbsp;</div> <div class=\"turn\">&nbsp;</div      ></li>"));
+      }
+      return _results;
     };
 
     return PregameController;
@@ -198,8 +208,12 @@
       this.btn = this.modal.find('button');
       this.input = this.modal.find('input');
       this.linkJoin = this.modal.find('ul a');
+      this.openBtn = $('#btnrooms');
       this.btn.click(function() {
         if (_this.input.val !== '') return _this.newRoom(_this.input.val());
+      });
+      this.openBtn.click(function() {
+        return _this.open(null);
       });
       this.input.keydown(function(eventObject) {
         if (eventObject.keyCode === 13) return _this.btn.click;
@@ -210,17 +224,17 @@
     }
 
     RoomsController.prototype.list = function(msg) {
-      var sala, _i, _len, _ref;
-      this.list = msg.list;
-      _ref = this.list;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        sala = _ref[_i];
+      var list, sala, _i, _len;
+      list = msg.list;
+      console.log('Olha eu aqui a lista');
+      this.listElmt.html('');
+      for (_i = 0, _len = list.length; _i < _len; _i++) {
+        sala = list[_i];
         this.listElmt.append('<li class="sala">' + sala.name + ' <a href="#" class="join" sala=' + sala.id + '>entrar</a></li>');
       }
-      if (this.list.length === 0) {
-        this.listElmt.append('<li id="none">Nenhuma sala encontrada</li>');
+      if (list.length === 0) {
+        return this.listElmt.append('<li id="none">Nenhuma sala encontrada</li>');
       }
-      return this.open();
     };
 
     RoomsController.prototype.open = function(msg) {
@@ -233,7 +247,8 @@
     };
 
     RoomsController.prototype.joinRoom = function(sala) {
-      return this.app.conn.send(new JoinRoomMessage(sala));
+      this.app.conn.send(new JoinRoomMessage(sala));
+      return this.app.closeModal(this.modal);
     };
 
     return RoomsController;
@@ -329,9 +344,8 @@
         var c_name, controller, msgObj;
         msgObj = eval("(" + msg.data + ")");
         c_name = msgObj.controller;
-        console.log("" + c_name + "#" + msgObj.action + "(" + msgObj.params + ")");
-        console.log(_this.controllers);
         controller = _this.controllers[c_name];
+        console.log(controller);
         if (msgObj.params === '') controller[msgObj.action]();
         if (msgObj.params !== '') return controller[msgObj.action](msgObj.params);
       };

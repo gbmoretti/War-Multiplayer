@@ -65,11 +65,26 @@ class ListRooms < Message
   end
 end
 
-class PregameShow < Message
+class OpenListRooms < Message
+  def initialize()
+    @controller = 'rooms'
+    @action = 'open'
+  end
+end
+
+class RoomUpdate < Message
   def initialize(room)
     @controller = 'pregame'
-    @action = 'open'
+    @action = 'update'
     @params = room.to_hash
+  end
+end
+
+class PregameShow < Message
+  def initialize()
+    @controller = 'pregame'
+    @action = 'open'
+    @params = ''
   end
 end
 

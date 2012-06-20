@@ -12,6 +12,7 @@ class RoomsController < AppController
   def show(p)
     conn = @app.get_conn(p)
     get_list(conn)
+    #@app.send(p,OpenListRooms.new)
   end
 
   def get_list(conn,args=nil)
@@ -26,8 +27,11 @@ class RoomsController < AppController
     
     @rooms.add(room)
     
+    #atualiza lista de salas de todos os clientes
+    @app.broadcast(ListRooms.new(@rooms.list),[p])
+    
     #chama controller pregame
-    @app.controllers[:pregame].show(p,room)
+    @app.controllers[:pregame].show(p,room)   
   end
   
   def join(conn,args)

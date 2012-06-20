@@ -8,8 +8,13 @@ class PregameController < AppController
     :pregame
   end
 
-  def show(player,room)
-    @app.send(player,PregameShow.new(room))
+  def show(player,room)  
+    #envia lista de jogadores atualizadas para todos os integrantes da sala
+    @app.send(room.players,RoomUpdate.new(room))
+  
+    #envia mensagem para abrir modal Pregame ao cliente que juntou-se a sala
+    @app.send(player,PregameShow.new)     
+    
   end
 
 end

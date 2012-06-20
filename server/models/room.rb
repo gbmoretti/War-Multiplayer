@@ -1,6 +1,7 @@
 class Room
   
   attr_accessor :id
+  attr_reader :players
     
   def initialize(p,n)
     @players = [p]

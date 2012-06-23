@@ -1,6 +1,4 @@
-#require 'rubygems'
 require 'rack/websocket'
-#require 'sprockets'
 
 require './load.rb'
 
@@ -14,12 +12,7 @@ app.add_c ChatController.new(app)
 app.add_c SetNickController.new(app)
 app.add_c RoomsController.new(app)
 app.add_c PregameController.new(app)
-
-#map '/assets' do
-#  environment = Sprockets::Environment.new
-#  environment.append_path './client'
-#  run environment
-#end
+app.add_c GameController.new(app)
 
 map '/websocket' do
   conn = ServerConnection.new(app)

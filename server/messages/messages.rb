@@ -81,11 +81,18 @@ class RoomUpdate < Message
 end
 
 class PregameShow < Message
-  def initialize()
+  def initialize
     @controller = 'pregame'
     @action = 'open'
     @params = ''
   end
 end
 
+class ColorsList < Message
+  def initialize(c)
+    @controller = 'game'
+    @action = 'colors'
+    @params = c
+  end
+end
 

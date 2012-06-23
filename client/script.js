@@ -1,5 +1,5 @@
 (function() {
-  var AppController, ChatController, InitMessage, JoinRoomMessage, NewRoomMessage, PlayerListController, PregameController, RoomsController, SetNickController, TxtMessage, WSConnection;
+  var AppController, ChatController, GameController, InitMessage, JoinRoomMessage, NewRoomMessage, PlayerListController, PregameController, RoomsController, SetNickController, TxtMessage, WSConnection;
 
   WSConnection = (function() {
 
@@ -111,6 +111,21 @@
 
   })();
 
+  GameController = (function() {
+
+    function GameController(app) {
+      this.app = app;
+      this.controllerName = 'game';
+    }
+
+    GameController.prototype.colors = function(msg) {
+      return this.colors = msg;
+    };
+
+    return GameController;
+
+  })();
+
   PlayerListController = (function() {
 
     function PlayerListController(app) {
@@ -138,11 +153,19 @@
   PregameController = (function() {
 
     function PregameController(app) {
+      var cs;
       this.app = app;
       this.controllerName = 'pregame';
       this.modal = $('.modal-div#pregame');
       this.players = this.modal.find('ul#players');
+      this.colorSelect = this.modal.find('select#colors');
       this.title = null;
+      cs = this.app.controllers;
+      console.log(cs);
+      console.log(cs['game']);
+      /*for k,color of @app.controllers['game'].colors
+        console.log k + ' => ' + color
+      */
     }
 
     PregameController.prototype.open = function(msg) {
@@ -226,7 +249,6 @@
     RoomsController.prototype.list = function(msg) {
       var list, sala, _i, _len;
       list = msg.list;
-      console.log('Olha eu aqui a lista');
       this.listElmt.html('');
       for (_i = 0, _len = list.length; _i < _len; _i++) {
         sala = list[_i];
@@ -345,7 +367,6 @@
         msgObj = eval("(" + msg.data + ")");
         c_name = msgObj.controller;
         controller = _this.controllers[c_name];
-        console.log(controller);
         if (msgObj.params === '') controller[msgObj.action]();
         if (msgObj.params !== '') return controller[msgObj.action](msgObj.params);
       };
@@ -363,6 +384,7 @@
     app.add_controller(new SetNickController(app));
     app.add_controller(new RoomsController(app));
     app.add_controller(new PregameController(app));
+    app.add_controller(new GameController(app));
     app.start();
     return $("#game").svg({
       onLoad: function() {

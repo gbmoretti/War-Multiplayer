@@ -4,8 +4,15 @@ class PregameController
     @controllerName = 'pregame'
     @modal = $('.modal-div#pregame')
     @players = @modal.find 'ul#players'
+    @colorSelect = @modal.find 'select#colors'
     @title = null
     
+    cs = @app.controllers
+    console.log cs
+    console.log cs['game']
+    
+    ###for k,color of @app.controllers['game'].colors
+      console.log k + ' => ' + color ###
     
   open: (msg) ->     
     @app.openModal @modal    

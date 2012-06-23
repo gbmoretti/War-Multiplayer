@@ -36,7 +36,6 @@ class RoomsController
   list: (msg) ->
     list = msg.list
         
-    console.log 'Olha eu aqui a lista'
     @listElmt.html ''
     for sala in list
       @listElmt.append '<li class="sala">' + sala.name + ' <a href="#" class="join" sala=' + sala.id + '>entrar</a></li>'

@@ -83,9 +83,7 @@ class Application
     p = msg['params']
     puts "#{c}##{a}(#{p})"   
     
-    o = get_client(conn)
-    
-    
-    @controllers[c].__send__ a, conn, p
+    #o = get_client(conn)   
+    @controllers[c].__send__ a, conn, p if @controllers[c].respond_to?(a)
   end
 end

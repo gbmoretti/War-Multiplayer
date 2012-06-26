@@ -1,5 +1,5 @@
 (function() {
-  var AppController, ChatController, GameController, InitMessage, JoinRoomMessage, NewRoomMessage, PlayerListController, PregameController, RoomsController, SetNickController, TxtMessage, WSConnection;
+  var AppController, ChangeColorMessage, ChatController, GameController, InitMessage, JoinRoomMessage, NewRoomMessage, PlayerListController, PregameController, RoomsController, SetNickController, TxtMessage, WSConnection;
 
   WSConnection = (function() {
 
@@ -116,10 +116,16 @@
     function GameController(app) {
       this.app = app;
       this.controllerName = 'game';
+      this.colors = null;
     }
 
-    GameController.prototype.colors = function(msg) {
-      return this.colors = msg;
+    GameController.prototype.set_colors = function(msg) {
+      console.log('Recebendo lista de cores');
+      return this.colors = msg.colors;
+    };
+
+    GameController.prototype.get_colors = function() {
+      return this.colors;
     };
 
     return GameController;
@@ -150,25 +156,44 @@
 
   })();
 
+  ChangeColorMessage = (function() {
+
+    function ChangeColorMessage(i) {
+      this.controller = 'pregame';
+      this.action = 'change_color';
+      this.params = {
+        'color': i
+      };
+    }
+
+    return ChangeColorMessage;
+
+  })();
+
   PregameController = (function() {
 
     function PregameController(app) {
-      var cs;
+      var _this = this;
       this.app = app;
       this.controllerName = 'pregame';
       this.modal = $('.modal-div#pregame');
       this.players = this.modal.find('ul#players');
-      this.colorSelect = this.modal.find('select#colors');
+      this.colorSelect = this.modal.find('select[name=colors]');
       this.title = null;
-      cs = this.app.controllers;
-      console.log(cs);
-      console.log(cs['game']);
-      /*for k,color of @app.controllers['game'].colors
-        console.log k + ' => ' + color
-      */
+      this.colorSelect.change(function(eventObject) {
+        var index;
+        index = $(eventObject.target).val();
+        return _this.app.conn.send(new ChangeColorMessage(index));
+      });
     }
 
     PregameController.prototype.open = function(msg) {
+      var color, i, _ref;
+      _ref = this.app.controllers['game'].get_colors();
+      for (i in _ref) {
+        color = _ref[i];
+        this.colorSelect.append("<option value=" + i + " style=\"color: " + color.hex + "\">" + color.name + "</option>");
+      }
       return this.app.openModal(this.modal);
     };
 
@@ -183,7 +208,7 @@
       _results = [];
       for (_i = 0, _len = list.length; _i < _len; _i++) {
         p = list[_i];
-        _results.push(this.players.append("<li>" + p + " <div class=\"color\" style=\"background-color: red;\">&nbsp;</div> <div class=\"turn\">&nbsp;</div      ></li>"));
+        _results.push(this.players.append("<li>" + p + " <div class=\"color\" style=\"background-color: red;\">&nbsp;</div> <div class=\"turn\">&nbsp;</div></li>"));
       }
       return _results;
     };
@@ -380,11 +405,11 @@
     var app;
     app = new AppController("ws://192.168.132.137:3000/websocket");
     app.add_controller(new ChatController(app));
+    app.add_controller(new GameController(app));
     app.add_controller(new PlayerListController(app));
     app.add_controller(new SetNickController(app));
     app.add_controller(new RoomsController(app));
     app.add_controller(new PregameController(app));
-    app.add_controller(new GameController(app));
     app.start();
     return $("#game").svg({
       onLoad: function() {

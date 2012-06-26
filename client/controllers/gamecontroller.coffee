@@ -2,6 +2,11 @@ class GameController
   
   constructor: (@app) ->
     @controllerName = 'game'
+    @colors = null    
         
-  colors: (msg) ->
-    @colors = msg
+  set_colors: (msg) ->
+    console.log 'Recebendo lista de cores'
+    @colors = msg.colors
+    
+  get_colors: () ->
+    @colors

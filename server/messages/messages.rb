@@ -91,7 +91,7 @@ end
 class ColorsList < Message
   def initialize(c)
     @controller = 'game'
-    @action = 'colors'
+    @action = 'set_colors'
     @params = c
   end
 end

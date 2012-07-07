@@ -5,7 +5,7 @@ require 'cgi'
 
 #classe pai de todas as mensagens enviadas ao cliente
 class Message < JSONable
-  
+    
   def each
     self.instance_variables.each do |v|
       puts "Message#each: #{v}"
@@ -58,7 +58,25 @@ class ListRooms < Message
     
     rooms = []
     list.each do |r|
-      rooms.push r.to_hash
+      players = []
+      
+      r.players.each do |p|
+        players.push({
+            'nick' => p.nick,
+            'color' => p.color,
+            'ready' => p.ready
+          }
+        )
+      end
+      
+      rooms.push({
+        'id' => r.id,       
+        'name' => r.name,
+        'owner' => r.owner,
+        'size' => '8',
+        'players' => players
+        }
+      )
     end
     
     @params = { 'list' => rooms }
@@ -66,7 +84,7 @@ class ListRooms < Message
 end
 
 class OpenListRooms < Message
-  def initialize()
+  def initialize
     @controller = 'rooms'
     @action = 'open'
   end
@@ -76,7 +94,38 @@ class RoomUpdate < Message
   def initialize(room)
     @controller = 'pregame'
     @action = 'update'
-    @params = room.to_hash
+    
+    players = []
+      
+    room.players.each do |p|
+      players.push({
+          'nick' => p.nick,
+          'color' => p.color,
+          'ready' => p.ready
+        }
+      )
+    end
+    
+    @params = {
+      'id' => room.id,       
+      'name' => room.name,
+      'owner' => room.owner,
+      'size' => '8',
+      'players' => players
+      }
+  end
+end
+
+class PlayerUpdate < Message
+  def initialize(p,i)
+    @controller = 'pregame'
+    @action = 'update_player'
+    @params = {
+      'index' => i,
+      'nick' => p.nick,
+      'color' => p.color,
+      'ready' => p.ready
+    }
   end
 end
 

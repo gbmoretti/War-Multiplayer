@@ -1,0 +1,10 @@
+{
+  "territories": {
+    "1": {
+      "nome": "Brasil",
+      "vizinhos": [3, 5]
+    }
+    
+    
+  }
+}

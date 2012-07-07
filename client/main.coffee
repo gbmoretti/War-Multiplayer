@@ -1,5 +1,5 @@
 $ ->
-  app = new AppController("ws://192.168.132.137:3000/websocket") 
+  app = new AppController("ws://192.168.1.102:3000/websocket") 
   
   #adiciona os controllers da aplicação
   

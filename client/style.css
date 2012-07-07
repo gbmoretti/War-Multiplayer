@@ -103,7 +103,7 @@ div.info {
   display: inline-block;
 }
 
-/*div#playerlist*/ div.turn {
+/*div#playerlist*/ div.turn, .ready-state {
   width: 5px;
   height: 5px;
   margin: 0px 5px 0px 5px;
@@ -223,8 +223,13 @@ div.closebtn {
   cursor: pointer;
 }
 
+.ready-state#true {
+  background-color: #000;
+}
 
-
+.ready-state#false {
+  background-color: #FFF;
+}
 
 
 

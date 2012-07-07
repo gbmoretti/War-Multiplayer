@@ -9,7 +9,18 @@ class PregameController < AppController
   end
 
   def change_color(conn,msg)
+    p = @app.get_client(conn)
+    p.color = msg['color']
     
+    @app.send(p.room.players,PlayerUpdate.new(p,p.room.get_index(p)))
+    
+  end
+
+  def toggle_state(conn,msg)
+    p = @app.get_client(conn)
+    p.ready = !p.ready
+    
+    @app.send(p.room.players,PlayerUpdate.new(p,p.room.get_index(p)))
   end
 
   def show(player,room)  

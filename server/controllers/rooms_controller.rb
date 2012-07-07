@@ -26,6 +26,7 @@ class RoomsController < AppController
     room = Room.new(p,name)
     
     @rooms.add(room)
+    p.room = room
     
     #atualiza lista de salas de todos os clientes
     @app.broadcast(ListRooms.new(@rooms.list),[p])
@@ -40,6 +41,7 @@ class RoomsController < AppController
     room = @rooms.get_by_index(room_i)
     
     room.add_player(p)
+    p.room = room
     
     #chama controller pregame
     @app.controllers[:pregame].show(p,room)   

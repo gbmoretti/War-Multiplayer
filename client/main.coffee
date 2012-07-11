@@ -11,20 +11,33 @@ $ ->
   app.add_controller new PregameController app
   
   
-  app.start()
+  #app.start()
   
   
-  #manipulando svg
+  
+ #manipulando svg
   $("#game").svg({
     onLoad: ->
-      svg = $("#game").svg('get');
-      svg.load('map.svg', {addTo: true,  changeSize: false});        
-        
+      svg = $("#game").svg('get')
+      svg.load('map.svg', {addTo: true,  changeSize: false})        
+       
     settings: {}
-    })  
+    })
+    
+  svg = $("#game").svg('get') 
 
-  
-
-     
-
+  $('path').live 'click', () ->
+    c = $(this)
+    console.log 'Clicou! ' + c.attr('id')
+    c.attr('fill','#00DD00')
+    
+  $('path').live 'mouseenter', () ->
+    c = $(this)
+    c.attr('fill','#45DD54')
+    
+  $('path').live 'mouseleave', () ->
+    c = $(this)
+    c.attr('fill','#FFFFFF')
+    
+    
     

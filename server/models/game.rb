@@ -9,4 +9,8 @@ class Game
     JSON.parse(File.open(File.expand_path('server/data/war/colors.json'), 'rb') { |file| file.read })    
   end
 
+  def territories
+    JSON.parse(File.open(File.expand_path('server/data/war/territories.json'), 'rb') { |file| file.read })  
+  end
+
 end

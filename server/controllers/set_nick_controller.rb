@@ -9,14 +9,14 @@ class SetNickController < AppController
     p = Player.new(conn.sid,args['nick'])
     @players.add(p)
     @app.bind_client(conn,p)
-    @app.broadcast(PlayerListMessage.new(@players.list));    
-    @app.broadcast(WarnMessage.new(p.to_s + " acabou de entrar..."),[p])
-    @app.send(p,WarnMessage.new("Bem vindo " + p.to_s))
+    @app.broadcast(Message.new('playerList','update',{'list' => @players.list}));    
+    @app.broadcast(Message.new('chat','warn',{'msg' => CGI::escapeHTML(p.to_s) + " acabou de entrar..."}),[p])
+    @app.send(p,Message.new('chat','warn',{'msg' => "Bem vindo " + CGI::escapeHTML(p.to_s)}))
     
     #Mostra as ultimas 5 mensagens
     ChatLog.get.each do |m|
       m = JSON.parse(m)
-      @app.send(p,TxtMessage.new(m['author'],m['msg']))
+      @app.send(p,Message.new('chat','txt',{'author' => CGI::escapeHTML(m['author']), 'msg' => CGI::escapeHTML(m['msg'])}))
     end
     
     #chama controller de salas
@@ -24,7 +24,7 @@ class SetNickController < AppController
   end
   
   def new_conn(conn)
-    conn.send_msg(SetNewNick.new)
+    conn.send_msg(Message.new('setNick','open'))
   end
   
   def name

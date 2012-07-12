@@ -7,16 +7,20 @@ class ChatController < AppController
     
   def send_msg(conn,args)
     p = @app.get_client(conn)
-    @app.broadcast(TxtMessage.new(p,args['msg']));
-    log(p.nick,args['msg']);
+    @app.broadcast(Message.new('chat','txt',
+          {'author' => CGI::escapeHTML(p.to_s), 'msg' => CGI::escapeHTML(args['msg'])}
+          ))
+    log(p.nick,args['msg'])
   end
   
   def closed_conn(conn)
     p = @app.get_client(conn)
     @players.rem(p)
     @app.unbind_client(p)
-    @app.broadcast(PlayerListMessage.new(@players.list),[p]);
-    @app.broadcast(WarnMessage.new(p.to_s + " saiu..."))
+    @app.broadcast(Message.new('playerList','update',
+          {'list' => @players.list}),[p]);
+    @app.broadcast(Message.new('chat','warn',
+          {'msg' => CGI::escapeHTML(p.to_s) + " saiu..."}))
   end
   
   def name

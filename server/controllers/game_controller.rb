@@ -14,7 +14,7 @@ class GameController < AppController
   end
   
   def get_colors(conn)
-    conn.send_msg(ColorsList.new(@game.colors))
+    conn.send_msg(Message.new('game','set_colors',@game.colors))
   end
   
 end

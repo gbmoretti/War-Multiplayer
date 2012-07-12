@@ -14,7 +14,7 @@
     },
     "4": {
       "nome": "Vancouver",
-      "vizinhos": [1, 2, 5, 7, 8]
+      "vizinhos": [1, 2, 5, 7]
     },
     "5": {
       "nome": "Ottawa",
@@ -22,7 +22,7 @@
     },
     "6": {
       "nome": "Labrador",
-      "vizinhos": [5, 3]
+      "vizinhos": [3, 5, 8]
     },
     "7": {
       "nome": "California",
@@ -78,7 +78,7 @@
     },
     "20": {
       "nome": "Moscou",
-      "vizinhos": [14, 16, 19, 21, 25, 30]
+      "vizinhos": [16, 17, 19, 21, 25, 30]
     },    
     "21": {
       "nome": "Omsk",
@@ -106,7 +106,7 @@
     },
     "27": {
       "nome": "Mongólia",
-      "vizinhos": [22, 26, 24, 28]
+      "vizinhos": [22, 26, 24, 28, 29]
     },
     "28": {
       "nome": "Japão",
@@ -118,7 +118,7 @@
     },
     "30": {
       "nome": "Oriente Médio",
-      "vizinhos": [19, 20, 25, 31]
+      "vizinhos": [19, 20, 25, 31, 34]
     },
     "31": {
       "nome": "Índia",
@@ -146,7 +146,7 @@
     },    
     "37": {
       "nome": "África do Sul",
-      "vizinhos": [36, 38]
+      "vizinhos": [36, 35, 38]
     },
     "38": {
       "nome": "Madagascar",

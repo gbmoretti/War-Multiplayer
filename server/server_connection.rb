@@ -26,7 +26,7 @@ class ServerConnection < Rack::WebSocket::Application
   def on_message(env,msg) #chamado quando recebe um mensagem
     @sid = env['rack.session.options'][:id]
     msg = JSON.parse(msg)
-    msg.each { |k,v| msg[k] = CGI.escapeHTML(v) if msg[k].respond_to?(:gsub) }
+    msg.each { |k,v| msg[k] = CGI::escapeHTML(v) if msg[k].respond_to?(:gsub) }
     puts '<== ' << msg.to_s    
     @@app.message(msg, self)      
   end

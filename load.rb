@@ -2,6 +2,7 @@
 #TODO: Use Autoload gem
 
 require 'redis'
+require 'cgi'
 
 SERVER_DIR = "./server/"
 

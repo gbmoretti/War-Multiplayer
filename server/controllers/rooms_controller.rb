@@ -17,7 +17,7 @@ class RoomsController < AppController
 
   def get_list(conn,args=nil)
     player = @app.get_client(conn)   
-    @app.send(player,Message.new('rooms','list',list_rooms))
+    @app.send(player,Message.new('rooms','list',{'list' => list_rooms}))
   end
   
   def new_room(conn,args)
@@ -29,7 +29,7 @@ class RoomsController < AppController
     p.room = room
     
     #atualiza lista de salas de todos os clientes
-    @app.broadcast(Message.new('rooms','list',list_rooms),[p])
+    @app.broadcast(Message.new('rooms','list',{'list' => list_rooms}),[p])
     
     #chama controller pregame
     @app.controllers[:pregame].show(p,room)   

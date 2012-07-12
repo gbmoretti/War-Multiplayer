@@ -11,7 +11,7 @@ $ ->
   app.add_controller new PregameController app
   
   
-  #app.start()
+  app.start()
   
   
   

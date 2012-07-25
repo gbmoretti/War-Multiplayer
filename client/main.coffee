@@ -4,7 +4,7 @@ $ ->
   #adiciona os controllers da aplicação
   
   @app.add_controller new ChatController @app
-  @app.add_controller new GameController @app  
+  @app.add_controller new DefinitionsController @app  
   @app.add_controller new PlayerListController @app
   @app.add_controller new SetNickController @app
   @app.add_controller new RoomsController @app 

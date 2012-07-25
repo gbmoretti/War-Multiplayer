@@ -1,7 +1,7 @@
-class GameController
+class DefinitionsController
   
   constructor: (@app) ->
-    @controllerName = 'game'
+    @controllerName = 'definitions'
     @colors = null
     @territories = null  
   

@@ -33,7 +33,7 @@ class PregameController
   open: (msg) ->  
     #atualiza lista de cores
     @colorSelect.html ''
-    for i,color of @app.controllers['game'].get_colors()
+    for i,color of @app.controllers['definitions'].get_colors()
       @colorSelect.append("<option value=#{i} style=\"color: #{color.hex}\">#{color.name}</option>")
     
     @app.openModal @modal    
@@ -57,8 +57,7 @@ class PregameController
   update_list: (list) ->
     @players.html ''
     for p in @list
-      colors = @app.controllers['game'].get_colors()
-      console.log(p)
+      colors = @app.controllers['definitions'].get_colors()
       hex = colors[p.color].hex
       @players.append "<li>#{p.nick} <div class=\"color\" style=\"background-color: #{hex}\">&nbsp;</div> <div class=\"ready-state\" id=#{p.ready}>&nbsp;</div></li>"
   

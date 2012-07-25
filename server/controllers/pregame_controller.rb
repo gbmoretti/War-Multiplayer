@@ -14,7 +14,7 @@ class PregameController < AppController
     unless p.room.nil?
       p.room.remove_player(p)
       if p.room.players.count < 1 #remove sala se nao houver mais jogadores conectados nela
-        RoomsBucket.get_instance.rem(p.room)
+        RoomsCollection.get_instance.rem(p.room)
         @app.controllers[:rooms].update_list #envia lista atualizada para todos os jogadores conectados
       end
       update_list(p)
@@ -33,7 +33,14 @@ class PregameController < AppController
     p = @app.get_client(conn)
     p.ready = !p.ready
     
-    update_player(p)    
+    update_player(p)
+    
+    #verifica se existem pelo menos dois jogadores na sala e se estao todos prontos, e inicia partida
+    room = p.room
+    if room.players.count > 1 and room.all_ready?
+      puts "TODOS PRONTO NA SALA #{room.to_s}"
+    end
+        
   end
 
   def show(player,room)  

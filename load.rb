@@ -13,9 +13,11 @@ require SERVER_DIR + "models/player.rb"
 require SERVER_DIR + "models/chat_log.rb"
 require SERVER_DIR + "models/room.rb"
 require SERVER_DIR + "models/definitions.rb"
+require SERVER_DIR + "models/game.rb"
 require SERVER_DIR + "models/collection.rb"
 require SERVER_DIR + "models/players_collection.rb"
 require SERVER_DIR + "models/rooms_collection.rb"
+require SERVER_DIR + "models/games_collection.rb"
 
 require SERVER_DIR + "server_connection.rb"
 

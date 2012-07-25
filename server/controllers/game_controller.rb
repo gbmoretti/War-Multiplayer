@@ -8,4 +8,8 @@ class GameController < AppController
     :game
   end
 
+  def start_game(room)
+    game = Game.new(room)
+  end
+
 end

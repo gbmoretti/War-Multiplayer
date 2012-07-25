@@ -17,6 +17,9 @@ class Player
   def ==(other)
     @sid == other.sid
   end
-    
+  
+  def ready?
+    @ready
+  end  
    
 end

@@ -22,6 +22,12 @@ class Room
     @players.find_index(p)
   end
   
+  def all_ready?
+    flag = false
+    @players.each { |p| flag = true unless p.ready? }
+    !flag
+  end
+  
   def to_s
     @name
   end

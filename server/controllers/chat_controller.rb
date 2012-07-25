@@ -15,8 +15,6 @@ class ChatController < AppController
   
   def closed_conn(conn)
     p = @app.get_client(conn)
-    @players.rem(p)
-    @app.unbind_client(p)
     @app.broadcast(Message.new('playerList','update',
           {'list' => @players.list}),[p]);
     @app.broadcast(Message.new('chat','warn',

@@ -5,6 +5,7 @@ class Application
   def initialize
     @controllers = {}
     @clients = []
+    @players = PlayersBucket.get_instance
     puts 'Aplicacao WarApp iniciada...'
   end
   
@@ -73,6 +74,12 @@ class Application
       v.closed_conn(conn) if v.respond_to?(:closed_conn)
     end
     #########
+    
+    p = get_client(conn)
+    unless p.nil?
+      @players.rem(p)
+      unbind_client(p)
+    end
   end
   
   #actions

@@ -2,7 +2,7 @@ class RoomsController < AppController
 
   def initialize(app)
     super(app)
-    @rooms = RoomsBucket.get_instance
+    @rooms = RoomsColletion.get_instance
   end
 
   def name

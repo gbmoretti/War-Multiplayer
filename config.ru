@@ -12,7 +12,7 @@ app.add_c ChatController.new(app)
 app.add_c SetNickController.new(app)
 app.add_c RoomsController.new(app)
 app.add_c PregameController.new(app)
-app.add_c GameController.new(app)
+app.add_c DefinitionsController.new(app)
 
 map '/websocket' do
   conn = ServerConnection.new(app)

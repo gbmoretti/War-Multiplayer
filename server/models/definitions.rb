@@ -1,4 +1,4 @@
-class Game
+class Definitions
 
   #singleton? acho que sim...
   def self.get_instance

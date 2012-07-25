@@ -1,4 +1,4 @@
-class PlayersBucket < Bucket
+class PlayersColletion < Colletion
 
   def self.get_instance
     @@instance ||= self.new

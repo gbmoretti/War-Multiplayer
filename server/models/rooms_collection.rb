@@ -1,4 +1,4 @@
-class RoomsBucket < Bucket
+class RoomsColletion < Colletion
 
   def self.get_instance
     @@instance ||= self.new

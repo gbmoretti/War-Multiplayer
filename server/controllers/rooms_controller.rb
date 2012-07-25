@@ -20,6 +20,10 @@ class RoomsController < AppController
     @app.send(player,Message.new('rooms','list',{'list' => list_rooms}))
   end
   
+  def update_list
+    @app.broadcast(Message.new('rooms','list',{'list' => list_rooms}))
+  end
+  
   def new_room(conn,args)
     p = @app.get_client(conn)
     name = args['name'] == '' ? 'No name' : args['name']

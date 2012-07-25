@@ -1,4 +1,4 @@
-class Colletion
+class Collection
 
   def initialize
     @bucket = []

@@ -2,7 +2,7 @@ class SetNickController < AppController
 
   def initialize(app)
     super(app)
-    @players = PlayersColletion.get_instance
+    @players = PlayersCollection.get_instance
   end
 
   def set(conn,args)

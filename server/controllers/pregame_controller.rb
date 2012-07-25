@@ -38,7 +38,7 @@ class PregameController < AppController
     #verifica se existem pelo menos dois jogadores na sala e se estao todos prontos, e inicia partida
     room = p.room
     if room.players.count > 1 and room.all_ready?
-      puts "TODOS PRONTO NA SALA #{room.to_s}"
+      puts "Iniciando partida na sala #{room.to_s}..."
     end
         
   end

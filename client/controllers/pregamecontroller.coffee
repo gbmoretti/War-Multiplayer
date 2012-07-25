@@ -37,6 +37,9 @@ class PregameController
       @colorSelect.append("<option value=#{i} style=\"color: #{color.hex}\">#{color.name}</option>")
     
     @app.openModal @modal    
+  
+  close: (msg) ->
+    @app.closeModal @modal
     
   update: (msg) ->
     @modal.find('div#modal-title').html msg.name

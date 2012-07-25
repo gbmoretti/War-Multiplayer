@@ -1,5 +1,4 @@
 class Room
-  
   attr_accessor :id
   attr_reader :players, :name, :owner
     
@@ -15,17 +14,13 @@ class Room
     @players.push(p)
   end
   
+  def remove_player(p)
+    @players.delete(p)
+  end
+  
   def get_index(p)
     @players.find_index(p)
   end
-  
-  #def to_hash
-  #  {'id' => @id,       
-  #   'name' => @name,
-  #   'owner' => @owner,
-  #   'players' => @players,
-  #   'size' => '8'}
-  #end
   
   def to_s
     @name

@@ -5,7 +5,7 @@ class Application
   def initialize
     @controllers = {}
     @clients = []
-    @players = PlayersColletion.get_instance #talvez isso esteja errado (arquiterualmente falando)
+    @players = PlayersCollection.get_instance #talvez isso esteja errado (arquiterualmente falando)
     puts 'Aplicacao WarApp iniciada...'
   end
   

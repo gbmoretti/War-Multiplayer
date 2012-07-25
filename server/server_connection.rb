@@ -27,7 +27,7 @@ class ServerConnection < Rack::WebSocket::Application
     @sid = env['rack.session.options'][:id]
     msg = JSON.parse(msg)
     msg.each { |k,v| msg[k] = CGI::escapeHTML(v) if msg[k].respond_to?(:gsub) }
-    puts '<== ' << msg.to_s    
+    #puts '<== ' << msg.to_s    
     @@app.message(msg, self)      
   end
   
@@ -40,7 +40,7 @@ class ServerConnection < Rack::WebSocket::Application
   
   def send_msg(msg)
     msg = msg.to_json
-    puts '==> ' + msg
+    #puts '==> ' + msg
     send_data(msg);
   end
 end

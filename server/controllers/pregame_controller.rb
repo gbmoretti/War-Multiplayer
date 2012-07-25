@@ -8,24 +8,43 @@ class PregameController < AppController
     :pregame
   end
 
+  def closed_conn(conn)
+    p = @app.get_client(conn)
+    
+    unless p.room.nil?
+      p.room.remove_player(p)
+      if p.room.players.count < 1 #remove sala se nao houver mais jogadores conectados nela
+        RoomsBucket.get_instance.rem(p.room)
+        @app.controllers[:rooms].update_list #envia lista atualizada para todos os jogadores conectados
+      end
+      update_list(p)
+    end 
+   
+  end
+
   def change_color(conn,msg)
     p = @app.get_client(conn)
     p.color = msg['color']
     
-    @app.send(p.room.players,Message.new('pregame','update_player',{
-      'index' => p.room.get_index(p),
-      'nick' => p.nick,
-      'color' => p.color,
-      'ready' => p.ready
-    }))
-    
+    update_player(p)    
   end
-
 
   def toggle_state(conn,msg)
     p = @app.get_client(conn)
     p.ready = !p.ready
     
+    update_player(p)    
+  end
+
+  def show(player,room)  
+    update_list(player)
+  
+    #envia mensagem para abrir modal Pregame ao cliente que juntou-se a sala
+    @app.send(player,Message.new('pregame','open'))    
+  end
+  
+  private
+  def update_player(p)
     @app.send(p.room.players,Message.new('pregame','update_player',{
       'index' => p.room.get_index(p),
       'nick' => p.nick,
@@ -33,10 +52,11 @@ class PregameController < AppController
       'ready' => p.ready
     }))
   end
-
-  def show(player,room)  
-    #envia lista de jogadores atualizadas para todos os integrantes da sala
+  
+  def update_list(player)
+    room = player.room
     
+    #envia lista de jogadores atualizadas para todos os integrantes da sala    
     players = []
       
     room.players.each do |p|
@@ -57,8 +77,6 @@ class PregameController < AppController
       }
     
     @app.send(room.players,Message.new('pregame','update',params))
-  
-    #envia mensagem para abrir modal Pregame ao cliente que juntou-se a sala
-    @app.send(player,Message.new('pregame','open'))    
   end
+  
 end

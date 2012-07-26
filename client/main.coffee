@@ -9,6 +9,7 @@ $ ->
   @app.add_controller new SetNickController @app
   @app.add_controller new RoomsController @app 
   @app.add_controller new PregameController @app
+  @app.add_controller new GameController @app
   
   
   @app.start()

@@ -31,11 +31,11 @@ class DefinitionsController
   
   faz_pintura: () ->
     for id,cor of @pintar
-      $('#' + id).attr('fill', cor)
+      $('#' + id).attr('stroke', cor)
       
   apaga_pintura: () ->
     for id,cor of @pintar
-      $('#' + id).attr('fill', '#FFFFFF')
+      $('#' + id).attr('stroke', '#000000')
       
     @pintar = {}
       

@@ -59,7 +59,7 @@ div#chatinput input[type=text] {
 
 div#game {
   height: 95%;
-  background-color: #CCC;
+  background-color: #00CCFF;
   margin: 0;
 }
 
@@ -70,6 +70,7 @@ div#rightbar {
   border-left: solid 2px #000;
   top: 0px;
   left: 85%;
+  background-color: #CCC;
 }
 
 div.info {

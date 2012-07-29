@@ -37,7 +37,7 @@ class Game
 
   def add_fake_player(name,room)
     fake = Player.new(1,name)
-    fake.color = Random.rand(4)+1
+    fake.color = Random.rand(6)+1
     fake.ready = true
     fake.room = room
     fake.id = Random.rand(96)+4

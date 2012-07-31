@@ -21,7 +21,6 @@ class GameController
     
   update_players: (msg) ->
     @players = msg
-    console.log($('text'))
     @update_rightbar()
     
   update_rightbar: ->
@@ -37,8 +36,8 @@ class GameController
     $('path#' + id).attr('fill', color) 
   
   change_troops: (id,troops) ->
-    #o = $('text#' + id)
+    o = $('#l' + id)
     #console.log(o)
-    #$('text#' + id + ' tspan').html troops  
+    o.find('tspan').html troops  
      
 

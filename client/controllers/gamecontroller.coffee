@@ -5,6 +5,9 @@ class GameController
     @roomname = null
     @rightbar = $('div#rightbar')
     
+  update_status: (msg) ->
+    console.log msg.bonus
+  
   update_territories: (msg) ->
     max = msg.length
     i = 0

@@ -7,7 +7,7 @@ class Territory
     @id = id
     @name = nome
     @owner = owner if owner.is_a?(Player)
-    @troops = 0
+    @troops = 1
   end
 
   def to_hash

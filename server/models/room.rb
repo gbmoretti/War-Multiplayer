@@ -1,13 +1,13 @@
 class Room
-  attr_accessor :id
+  attr_accessor :id, :game
   attr_reader :players, :name, :owner
     
   def initialize(p,n)
     @players = [p]
-    @initialized = false 
     @owner = p
     @name = n
     @id = nil
+    @game = nil
   end
   
   def add_player(p)

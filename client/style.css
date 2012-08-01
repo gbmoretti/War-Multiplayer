@@ -36,6 +36,7 @@ div#chat {
   font-size: 75%;
   font-family: 'Lucida Console', Monaco, monospace;
   overflow: auto;
+  word-wrap: break-word; /* CSS3 */
   color: #000;
 }
 
@@ -65,7 +66,7 @@ div#game {
 
 div#rightbar {
   position: absolute;
-  width: 14.5%;
+  width: 15%;
   height: 95%;
   border-left: solid 2px #000;
   top: 0px;
@@ -115,6 +116,7 @@ div.info {
 div#texto-objetivo {
   font-size: 75%;
   text-align: justify;
+  padding-right: 6px;
 }
 
 div.status-line {
@@ -232,5 +234,27 @@ div.closebtn {
   background-color: #FFF;
 }
 
+.evento {
+  font-size: 75%;
+  border-bottom: solid 1px #000;
+  padding-top: 2%;
+  padding-bottom: 1%;
+}
 
+.phase-line {
+  margin: 1%;
+  margin-right: 3%;
+  border: solid 1px #000;
+  font-size: 75%;
+  padding: 0.5% 0% 0.5% 2%;
+}
+
+.phase-line.active {
+  background-color: #0C0;
+}
+
+.phase-line.possibnext {
+  background-color: #8B8;
+  cursor: pointer;
+}
 

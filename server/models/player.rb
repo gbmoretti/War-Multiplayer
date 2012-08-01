@@ -6,10 +6,10 @@ class Player
 
   #phase constants
   AGUARDANDO   = 0
-  DISTRIBUICAO = 1
-  ATAQUE       = 2
-  MOVIMENTACAO = 3
-  TROCA        = 4
+  TROCA        = 1
+  DISTRIBUICAO = 2
+  ATAQUE       = 3
+  MOVIMENTACAO = 4  
   
   def initialize(sid,nick)    
     @sid = sid
@@ -24,6 +24,10 @@ class Player
   def ready?
     @ready
   end  
+  
+  def turn?
+    @phase != AGUARDANDO 
+  end
   
   def get_troops
     return @room.game.get_troops_by_player(self) unless @room.nil? || @room.game.nil?

@@ -4,9 +4,43 @@ class GameController
     @controllerName = 'game'
     @roomname = null
     @rightbar = $('div#rightbar')
+    @territories = null
+    @cards = null
+    @objective = null
+    @phase = null
     
   update_status: (msg) ->
-    console.log msg.bonus
+    @territories = msg.territories
+    @phase = msg.phase
+    
+    #atualiza status   
+    status_bar = @rightbar.find('div#player-status .content')
+    status_bar.html ''
+    
+    status_bar.append "<div class=\"status-line\">Exércitos: #{msg.troops}</div>"
+    status_bar.append "<div class=\"status-line\">Bônus: #{msg.bonus}</div>"
+    status_bar.append "<div class=\"status-line\">Territórios: #{@territories.length}</div>"      
+    
+    #atualiza cartas
+    @cards = msg.cards
+    str = "<div class=\"status-line\">Cartas: #{@cards}</div>"
+    status_bar.append str
+  
+    #atualiza fase
+    phase_line = @rightbar.find('div.phase-line')
+    phase_line.each( (i,o) ->
+      o = $(o)
+      o.removeClass('active')
+      o.removeClass('possibnext')
+    )
+    
+    @rightbar.find('div.phase-line#phase' + @phase).addClass('active')  
+    
+  update_objective: (msg) ->
+    @objective = msg.objective
+    
+    objective_bar = @rightbar.find('div#objetivo #texto-objetivo')
+    objective_bar.html @objective
   
   update_territories: (msg) ->
     max = msg.length
@@ -31,9 +65,12 @@ class GameController
     pl.html "<div id=\"title\">#{@roomname}</div>"
     for id,player of @players
       color = @app.controllers['definitions'].colors[player.color]
-      pl.append "<div class=player>#{player.nick}</div>
+      player_line = "<div class=player>#{player.nick}</div>
       <div class=\"color\" style=\"background-color: #{color.hex};\"></div>
-      <div class=\"turn\"></div>"
+      <div class=\"turn\""
+      player_line += " id=\"active\"" if player.turn 
+      player_line += "></div>"
+      pl.append player_line
    
   change_color: (id,color) ->
     $('path#' + id).attr('fill', color) 

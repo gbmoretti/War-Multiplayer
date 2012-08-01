@@ -25,21 +25,28 @@ class GameController < AppController
     #end
     #enviando apenas para o jogador real por enquanto
     update_status(game.jogador) 
+    update_objective(game.jogador)
     
   end
   
   
-  private
   def update_status(player)
     @app.send(player,Message.new('game','update_status',
       {
         'phase' => player.phase,
-        'objective' => nil,
-        'cards' => [],
+        'cards' => 'Nao implementado ainda :(',
         'territories' => player.get_territories,
         'troops' => player.get_troops,
         'bonus' => player.get_bonus
       }))
+  end
+  
+  def update_objective(player)
+    @app.send(player,Message.new('game','update_objective',
+      {
+        'objective' => 'Nao implementado ainda :('
+      }
+    ))
   end
   
   def update_territories(game)
@@ -47,7 +54,7 @@ class GameController < AppController
     game.territories.each do |t| 
       param.push t.to_hash
     end
-    puts param.inspect 
+ 
     @app.send(game.jogador,Message.new('game','update_territories',param))
   end
   
@@ -57,7 +64,7 @@ class GameController < AppController
       param.update({p.id => {
         'nick' => p.nick,
         'color' => p.color,
-        'turn' => false          
+        'turn' => p.turn?          
         }})
     end 
     

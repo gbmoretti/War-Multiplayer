@@ -20,6 +20,9 @@ class Game
     #carrega territorios
     load_territories   
     
+    #seta fase de aguardo para todos os jogadores
+    @players.each { |p| p.phase = Player::AGUARDANDO }
+    
     #muda fase do 1o jogador da lista
     @players[0].phase = Player::DISTRIBUICAO
         

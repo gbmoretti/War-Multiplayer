@@ -2,19 +2,19 @@
   "colors": {
     "1": {
       "name": "Vermelho",
-      "hex": "#FF0000"
+      "hex": "#DD0000"
     },
     "2": {
       "name": "Azul",
-      "hex": "#0000FF"
+      "hex": "#0000DD"
     },
     "3": {
       "name": "Verde",
-      "hex": "#00FF00"
+      "hex": "#00DD00"
     },
     "4": {
       "name": "Branco",
-      "hex": "#EEEEEE"
+      "hex": "#DDDDDD"
     },
     "5": {
       "name": "Preto",

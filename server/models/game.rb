@@ -1,11 +1,11 @@
 class Game
 
-  attr_reader :territories, :players, :jogador
+  attr_reader :territories, :players, :jogador, :turn, :round
 
   def initialize(room)
     @players = room.players
     @jogador = @players[0] #TIRA ISSO DAQUI DEPOIS
-    @turn = 1
+    @turn = -1
     @round = 1
     
     #cria 2 players fakes só para testes
@@ -22,11 +22,15 @@ class Game
     
     #seta fase de aguardo para todos os jogadores
     @players.each { |p| p.phase = Player::AGUARDANDO }
-    
-    #muda fase do 1o jogador da lista
-    @players[0].phase = Player::DISTRIBUICAO
-        
+            
   end  
+
+  def next_player_and_phase
+    @turn += 1    
+    next_player = @players[@turn]
+    next_player.next_phase!    
+    next_player
+  end
 
   def get_territories_by_player(player)
     r = []

@@ -27,15 +27,47 @@ class GameController < AppController
     update_status(game.jogador) 
     update_objective(game.jogador)
     
+    next_phase(game)
+    
   end
   
+  def next_phase(game)
+    player = game.next_player_and_phase
+    phase = player.phase
+    
+    puts "Game#next_phase #{player} #{phase}"
+     
+    case phase
+      when Player::AGUARDANDO
+        puts "1 "
+        if game.round == 1
+          puts "Primeiro round, nao ha troca"
+          player.phase = Player::DISTRIBUICAO
+          distribuition(player)
+        end
+      when Player::TROCA
+        if game.round == 1
+          puts "Primeiro round, nao ha troca"
+          player.phase = Player::DISTRIBUICAO
+          distribuition(player)
+        end
+      when Player::DISTRIBUICAO        
+        distribuition(player)
+     end
+  end
+  
+  def distribuition(player)
+    puts "Jogador #{player} na fase de distribuicao"
+    update_status(player)
+    @app.send(player,Message.new('game','distribuition',{'bonus' => player.get_bonus}))
+  end
   
   def update_status(player)
     @app.send(player,Message.new('game','update_status',
       {
         'phase' => player.phase,
         'cards' => 'Nao implementado ainda :(',
-        'territories' => player.get_territories,
+        'territories' => player.get_territories.map { |t| t.to_hash },
         'troops' => player.get_troops,
         'bonus' => player.get_bonus
       }))

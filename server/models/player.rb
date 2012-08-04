@@ -10,6 +10,7 @@ class Player
   DISTRIBUICAO = 2
   ATAQUE       = 3
   MOVIMENTACAO = 4  
+  N_PHASES     = 5
   
   def initialize(sid,nick)    
     @sid = sid
@@ -42,6 +43,10 @@ class Player
   def get_bonus
     return @room.game.get_bonus_by_player(self) unless @room.nil? || @room.game.nil?
     nil
+  end
+  
+  def next_phase!
+    @phase = (@phase + 1) % N_PHASES
   end
   
   def to_s

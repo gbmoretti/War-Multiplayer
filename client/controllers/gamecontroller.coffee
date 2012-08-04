@@ -8,7 +8,31 @@ class GameController
     @cards = null
     @objective = null
     @phase = null
+  
+  
+  #fases
+  distribuition: (msg) ->
+    bonus = msg.bonus
     
+    @app.controllers['action'].open('Distribuição',"Você tem #{bonus} tropas para distribuir. Clique nos países para colocar as tropas.")
+  
+    #adiciona evento de clique nos paises que pertecem a esse jogador
+    for i,t of @territories
+      $('path#' + t.id).hover( 
+        (o) -> #handler in
+          console.log $(this)
+          $(this).attr('stroke-width',2)
+        ,
+        (o) -> #handler out
+          $(this).attr('stroke-width',1)        
+        )
+      $('path#' + t.id).click((o) ->
+        @add_troop(t.id)
+      )
+  
+  add_troop: (id) ->
+    #como eu vou adicionar tropa agora? :(
+  
   update_status: (msg) ->
     @territories = msg.territories
     @phase = msg.phase

@@ -113,11 +113,28 @@ div.info {
   display: inline-block;
 }
 
-div#texto-objetivo {
+div.info#playerlist {
+  height: 25%; 
+}
+
+div.info#player-status {
+  height: 20%;
+}
+
+div.info#phase {
+  height: 25%;
+}
+
+div.info#events {
+  height: 20%;
+}
+
+div#objetivo .content {
   font-size: 75%;
   text-align: justify;
   padding-right: 6px;
 }
+
 
 div.status-line {
   font-size: 90%;
@@ -256,5 +273,23 @@ div.closebtn {
 .phase-line.possibnext {
   background-color: #8B8;
   cursor: pointer;
+}
+
+div.content {
+  overflow: hidden;
+}
+
+div#action {
+  position: absolute;
+  top: 77%;
+  left: 25%;
+  height: 13%;
+  width: 35%;
+  background-color: #DDD;
+  border: solid 1px #000;
+  border-radius: 5px;
+  padding: 0.3%;
+  text-align: left;
+  z-index: 95;
 }
 

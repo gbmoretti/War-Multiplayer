@@ -10,7 +10,7 @@ $ ->
   @app.add_controller new RoomsController @app 
   @app.add_controller new PregameController @app
   @app.add_controller new GameController @app
-  
+  @app.add_controller new ActionController @app
   
   @app.start()
     

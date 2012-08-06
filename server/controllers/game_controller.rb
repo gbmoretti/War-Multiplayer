@@ -39,15 +39,12 @@ class GameController < AppController
      
     case phase
       when Player::AGUARDANDO
-        puts "1 "
         if game.round == 1
-          puts "Primeiro round, nao ha troca"
           player.phase = Player::DISTRIBUICAO
           distribuition(player)
         end
       when Player::TROCA
         if game.round == 1
-          puts "Primeiro round, nao ha troca"
           player.phase = Player::DISTRIBUICAO
           distribuition(player)
         end

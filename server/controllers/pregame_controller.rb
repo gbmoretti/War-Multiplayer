@@ -11,7 +11,7 @@ class PregameController < AppController
   def closed_conn(conn)
     p = @app.get_client(conn)
     
-    unless p.room.nil?
+    unless p.nil? or p.room.nil?
       p.room.remove_player(p)
       if p.room.players.count < 1 #remove sala se nao houver mais jogadores conectados nela
         RoomsCollection.get_instance.rem(p.room)

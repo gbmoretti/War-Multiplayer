@@ -1,6 +1,6 @@
 class Distribuition
 
-  constructor: (@bonus,@territories,@actionController) ->
+  constructor: (@bonus,@territories,@actionController,@callBack) ->
     @distribuition = {}
     
     @update_action()
@@ -15,26 +15,26 @@ class Distribuition
         (o) -> #handler out
           $(this).attr('stroke-width',1)        
         )
-      #evento do clique      
+      #evento do clique    
       $('path#' + t.id).click((o) =>
-        @add_troop(t.id)
+        @add_troop(o.currentTarget.id)
       )
   
   add_troop: (id) ->
     if @bonus > 0
-      console.log "Adicionando +1 tropa no territorio #{id}"
-      @bonus -= 1
-      @distribuition[id] += 1
+      @bonus--
+      @distribuition[id] = @distribuition[id] + 1
       o = $('#l' + id + " tspan")
-      console.log(o)
-      o.html "99"
-      @update_action    
+      x = o.text()
+      o.text(parseInt(x) + 1)
+      @update_action()
+    
+    @callBack.call(@distribuition) if @bonus == 0       
     
       
-  update_action: () ->
+  update_action: (b) ->
     msg = "Você tem #{@bonus} tropas para distribuir. Clique nos países para colocar as tropas." if @bonus > 0
     msg = "Acabou essa fase. Passando para a proxima..." if @bonus == 0
-    
     @actionController.open('Distribuição',msg)
     
       

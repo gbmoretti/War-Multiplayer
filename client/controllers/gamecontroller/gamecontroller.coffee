@@ -14,9 +14,11 @@ class GameController
   distribuition: (msg) ->
     bonus = msg.bonus
     
-    distribution = new Distribuition(bonus,@territories,@app.controllers['action'])
-    
-    #espera pelo fim da distribuicao? como?
+    distribution = new Distribuition(bonus,@territories,@app.controllers['action'], 
+    ((d) ->
+      console.log(d))
+    )
+   
   
   update_status: (msg) ->
     @territories = msg.territories
@@ -82,11 +84,16 @@ class GameController
       pl.append player_line
    
   change_color: (id,color) ->
-    $('path#' + id).attr('fill', color) 
+    $('path#' + id).attr('fill', color)
+    
+    #muda a cor do tspan se nao ficar legivel em preto
+    if color ==  '#0000DD' || color == '#333333'
+      console.log $('#l' + id + ' tspan')
+      $('#l' + id + ' tspan').attr('fill','#FFFFFF')
+      $('#l' + id + ' tspan').attr('stroke','#FFFFFF')
   
   change_troops: (id,troops) ->
     o = $('#l' + id)
-    #console.log(o)
-    o.find('tspan').html troops  
+    o.find('tspan').text troops  
      
 

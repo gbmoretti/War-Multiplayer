@@ -1,6 +1,6 @@
-class Distribuition
+class Distribution
 
-  constructor: (@bonus,@territories,@actionController,@callBack) ->
+  constructor: (@bonus,@territories,@actionController,@callBackContext,@callBackFunction) ->
     @distribuition = {}
     
     @update_action()
@@ -23,18 +23,21 @@ class Distribuition
   add_troop: (id) ->
     if @bonus > 0
       @bonus--
+      @distribuition[id] = 0 if @distribuition[id] == undefined
       @distribuition[id] = @distribuition[id] + 1
       o = $('#l' + id + " tspan")
       x = o.text()
       o.text(parseInt(x) + 1)
       @update_action()
     
-    @callBack.call(@distribuition) if @bonus == 0       
-    
+    if @bonus == 0    
+      for i,t of @territories
+         $('path#' + t.id).attr('stroke-width',1) 
+      $('path').off("hover click") #retira eventos dos paises
+      @callBackFunction.call(@callBackContext,@distribuition)       
       
   update_action: (b) ->
     msg = "Você tem #{@bonus} tropas para distribuir. Clique nos países para colocar as tropas." if @bonus > 0
-    msg = "Acabou essa fase. Passando para a proxima..." if @bonus == 0
     @actionController.open('Distribuição',msg)
     
       

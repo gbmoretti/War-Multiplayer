@@ -1,3 +1,9 @@
+class EndDistributionMessage
+  constructor: (d) ->
+    @controller = 'game'
+    @action = 'distribution_end'
+    @params = {'territories': d}
+
 class GameController
   
   constructor: (@app) ->
@@ -11,13 +17,13 @@ class GameController
   
   
   #fases
-  distribuition: (msg) ->
+  distribution: (msg) ->
     bonus = msg.bonus
     
-    distribution = new Distribuition(bonus,@territories,@app.controllers['action'], 
+    distribution = new Distribution(bonus,@territories,@app.controllers['action'],this, 
     ((d) ->
-      console.log(d))
-    )
+      @app.conn.send(new EndDistributionMessage(d))
+    ))
    
   
   update_status: (msg) ->
@@ -88,7 +94,6 @@ class GameController
     
     #muda a cor do tspan se nao ficar legivel em preto
     if color ==  '#0000DD' || color == '#333333'
-      console.log $('#l' + id + ' tspan')
       $('#l' + id + ' tspan').attr('fill','#FFFFFF')
       $('#l' + id + ' tspan').attr('stroke','#FFFFFF')
   

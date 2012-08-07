@@ -56,7 +56,11 @@ class GameController < AppController
   def distribuition(player)
     puts "Jogador #{player} na fase de distribuicao"
     update_status(player)
-    @app.send(player,Message.new('game','distribuition',{'bonus' => player.get_bonus}))
+    @app.send(player,Message.new('game','distribution',{'bonus' => player.get_bonus}))
+  end
+  
+  def distribution_end(msg)
+    msg.territories.each { |k,v| puts k + "=>" + v }
   end
   
   def update_status(player)

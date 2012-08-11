@@ -41,7 +41,7 @@ class RoomsController < AppController
   
   def join(conn,args)
     p = @app.get_client(conn)
-    room_i = args['room'].to_i
+    room_i = args['room'].to_i-1
     room = @rooms.get_by_index(room_i)
     
     room.add_player(p)

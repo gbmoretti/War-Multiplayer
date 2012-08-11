@@ -34,6 +34,7 @@ class Distribution
       for i,t of @territories
          $('path#' + t.id).attr('stroke-width',1) 
       $('path').off("hover click") #retira eventos dos paises
+      @actionController.close()
       @callBackFunction.call(@callBackContext,@distribuition)       
       
   update_action: (b) ->

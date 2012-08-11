@@ -14,18 +14,19 @@ class GameController < AppController
         
     @games.add(game)
     room.game = game
-    #atualiza nome da sala
-    @app.send(game.jogador,Message.new('game','update_room_name',{'name' => room.name}))
+    #atualiza nome da sala e id
+    @app.send(game.players,Message.new('game','update_room_data',{'name' => room.name, 'id' => room.id}))
     
     update_players(game)
     update_territories(game)
     
-    #@players.each do |player|
-    #  update_status(player)
-    #end
+    game.players.each do |player|
+      update_status(player)
+      update_objective(player)
+    end
     #enviando apenas para o jogador real por enquanto
-    update_status(game.jogador) 
-    update_objective(game.jogador)
+    #update_status(game.jogador) 
+    #update_objective(game.jogador)
     
     next_phase(game)
     
@@ -35,32 +36,28 @@ class GameController < AppController
     player = game.next_player_and_phase
     phase = player.phase
     
-    puts "Game#next_phase #{player} #{phase}"
+    puts "Game#next_phase #{player} #{phase} -- round: #{game.round} turn: #{game.turn}"
      
     case phase
       when Player::AGUARDANDO
-        if game.round == 1
-          player.phase = Player::DISTRIBUICAO
-          distribuition(player)
-        end
+        
       when Player::TROCA
-        if game.round == 1
-          player.phase = Player::DISTRIBUICAO
-          distribuition(player)
-        end
+        
       when Player::DISTRIBUICAO        
         distribuition(player)
      end
   end
   
   def distribuition(player)
-    puts "Jogador #{player} na fase de distribuicao"
     update_status(player)
     @app.send(player,Message.new('game','distribution',{'bonus' => player.get_bonus}))
   end
   
-  def distribution_end(msg)
-    msg.territories.each { |k,v| puts k + "=>" + v }
+  def distribution_end(conn,msg)
+    game = @games.get(msg['id'])
+    game.distribuition(msg['territories']) #atualiza territorios no modelo
+    update_territories(game) #envia atualizacao de territorio para todos os jogadores
+    next_phase(game)
   end
   
   def update_status(player)
@@ -88,7 +85,7 @@ class GameController < AppController
       param.push t.to_hash
     end
  
-    @app.send(game.jogador,Message.new('game','update_territories',param))
+    @app.send(game.players,Message.new('game','update_territories',param))
   end
   
   def update_players(game)
@@ -101,7 +98,7 @@ class GameController < AppController
         }})
     end 
     
-    @app.send(game.jogador,Message.new('game','update_players',param))
+    @app.send(game.players,Message.new('game','update_players',param))
   end
 
 end

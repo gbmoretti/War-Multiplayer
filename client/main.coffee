@@ -1,5 +1,6 @@
 $ ->
-  @app = new AppController("ws://192.168.1.102:3000/websocket") 
+  host = $(location).attr('host')
+  @app = new AppController("ws://#{host}/websocket") 
   
   #carrega o mapa SVG
   $("#game").svg({

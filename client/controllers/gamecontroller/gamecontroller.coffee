@@ -1,13 +1,14 @@
 class EndDistributionMessage
-  constructor: (d) ->
+  constructor: (id,d) ->
     @controller = 'game'
     @action = 'distribution_end'
-    @params = {'territories': d}
+    @params = {'id': id, 'territories': d}
 
 class GameController
   
   constructor: (@app) ->
     @controllerName = 'game'
+    @roomid = null
     @roomname = null
     @rightbar = $('div#rightbar')
     @territories = null
@@ -22,7 +23,7 @@ class GameController
     
     distribution = new Distribution(bonus,@territories,@app.controllers['action'],this, 
     ((d) ->
-      @app.conn.send(new EndDistributionMessage(d))
+      @app.conn.send(new EndDistributionMessage(@roomid,d))
     ))
    
   
@@ -70,8 +71,9 @@ class GameController
       @change_troops(t.id,t.troops)
       i++
   
-  update_room_name: (msg) ->
+  update_room_data: (msg) ->
     @roomname = msg.name
+    @roomid = msg.id
     
   update_players: (msg) ->
     @players = msg

@@ -1,21 +1,23 @@
 class Game
 
   attr_reader :territories, :players, :jogador, :turn, :round
+  attr_accessor :id
 
   def initialize(room)
     @players = room.players
     @jogador = @players[0] #TIRA ISSO DAQUI DEPOIS
     @turn = -1
     @round = 1
+    @id = nil
     
     #cria 2 players fakes só para testes
-    if @players.count == 1
-      add_fake_player('bot1',room)
-      add_fake_player('bot2',room)
-    end
+    #if @players.count == 1
+    #  add_fake_player('bot1',room)
+    #  add_fake_player('bot2',room)
+    #end
     
     #sorteia ordem dos jogadores
-    #@players.shuffle! não posso dar shuffle pq o jogador real tem q ser sempre o 1o
+    @players.shuffle! #não posso dar shuffle pq o jogador real tem q ser sempre o 1o
     
     #carrega territorios
     load_territories   
@@ -26,10 +28,24 @@ class Game
   end  
 
   def next_player_and_phase
-    @turn += 1    
+    @round += 1 if @turn == @players.size-1
+       
+    @turn = (@turn + 1) % (@players.size)
+    
     next_player = @players[@turn]
-    next_player.next_phase!    
+    if @round == 1      
+      next_player.phase = Player::DISTRIBUICAO
+    else
+      next_player.next_phase!
+    end     
     next_player
+  end
+
+  def distribuition(territories)
+    territories.each do |id,t|
+      territory = @territories[id.to_i-1]
+      territory.troops += t
+    end    
   end
 
   def get_territories_by_player(player)

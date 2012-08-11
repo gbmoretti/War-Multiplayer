@@ -17,4 +17,9 @@ class Collection
     @bucket
   end
 
+  def get(id)
+    i = @bucket.index { |o| o.id == id }
+    @bucket[i] unless i.nil?   
+  end
+
 end 

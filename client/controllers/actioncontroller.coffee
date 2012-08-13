@@ -6,10 +6,6 @@ class ActionController
     @modal.hide()    
     
   open: (title,msg) ->
-    
-    @modal.find('#msg').html("")
-    @modal.find('#modal-title').html("")
-    
     @modal.find('#modal-title').html(title)
     @modal.find('#msg').html(msg)
     @modal.show()

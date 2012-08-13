@@ -29,16 +29,27 @@ class Game
 
   def next_player_and_phase
     @round += 1 if @turn == @players.size-1
-       
-    @turn = (@turn + 1) % (@players.size)
     
-    next_player = @players[@turn]
-    if @round == 1      
-      next_player.phase = Player::DISTRIBUICAO
+    player = @players[@turn]    
+    
+    if @round == 1
+      player.phase = Player::AGUARDANDO unless player.nil?
+      player = next_player      
     else
-      next_player.next_phase!
+      player.next_phase!
+      if player.phase == Player::AGUARDANDO
+        player = next_player
+      end
     end     
-    next_player
+    
+    return player
+  end
+
+  def next_player
+      @turn = (@turn + 1) % (@players.size)
+      next_player = @players[@turn]
+      next_player.phase = Player::DISTRIBUICAO
+      next_player
   end
 
   def distribuition(territories)

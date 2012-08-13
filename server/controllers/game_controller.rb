@@ -36,6 +36,12 @@ class GameController < AppController
     player = game.next_player_and_phase
     phase = player.phase
     
+    #atualiza status dos jogadores
+    update_players(game)
+    game.players.each do |p|
+      update_status(p)
+    end
+    
     puts "Game#next_phase #{player} #{phase} -- round: #{game.round} turn: #{game.turn}"
      
     case phase

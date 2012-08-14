@@ -45,17 +45,16 @@ class GameController < AppController
     puts "Game#next_phase #{player} #{phase} -- round: #{game.round} turn: #{game.turn}"
      
     case phase
-      when Player::AGUARDANDO
-        
       when Player::TROCA
-        
+        next_phase(game)
       when Player::DISTRIBUICAO        
         distribuition(player)
+	    when Player::ATAQUE
+        attack(player)
      end
   end
   
   def distribuition(player)
-    update_status(player)
     @app.send(player,Message.new('game','distribution',{'bonus' => player.get_bonus}))
   end
   
@@ -66,6 +65,10 @@ class GameController < AppController
     next_phase(game)
   end
   
+  def attack(player)
+    @app.send(player,Message.new('game','attack')) 
+  end
+
   def update_status(player)
     @app.send(player,Message.new('game','update_status',
       {

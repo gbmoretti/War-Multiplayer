@@ -6,8 +6,7 @@ class WSConnection
       @socket = new WebSocket(@addr)
       
   send: (obj) ->
-    msg = JSON.stringify(obj)
-    console.log "Enviando #{msg}"
+    msg = JSON.stringify(obj)    
     @socket.send(msg)
     
   on_close: (func) ->
@@ -20,7 +19,8 @@ class WSConnection
     
   on_message: (func) ->
     @socket.onmessage = (msg) =>
-      msg = eval("(#{msg})")
+      console.log "Recebendo #{msg}"
+      msg = eval("(#{msg})")      
       func(msg)
     
   refreshStatus: ->

@@ -44,7 +44,11 @@ class Player
     return @room.game.get_bonus_by_player(self) unless @room.nil? || @room.game.nil?
     nil
   end
-  
+ 
+	def get_cards
+    nil
+  end
+
   def next_phase!
     @phase = (@phase + 1) % N_PHASES
   end

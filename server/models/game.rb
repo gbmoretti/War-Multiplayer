@@ -6,7 +6,7 @@ class Game
   def initialize(room)
     @players = room.players
     @jogador = @players[0] #TIRA ISSO DAQUI DEPOIS
-    @turn = -1
+    @turn = 0
     @round = 1
     @id = nil
     
@@ -32,16 +32,11 @@ class Game
     
     player = @players[@turn]    
     
-    if @round == 1
-      player.phase = Player::AGUARDANDO unless player.nil?
-      player = next_player      
-    else
-      player.next_phase!
-      if player.phase == Player::AGUARDANDO
-        player = next_player
-      end
-    end     
-    
+    player.next_phase!
+    if player.phase == Player::AGUARDANDO
+      player = next_player
+    end
+       
     return player
   end
 

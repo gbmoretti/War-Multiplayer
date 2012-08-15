@@ -41,7 +41,7 @@ class Attack
     for id in @territories_id
       $('#' + id).hover(
        (o) ->  #handler in
-          $(this).attr('stroke-width',2)
+          $(this).attr('stroke-width',2) unless $(this).find("tspan").text() == 1
         ,
         (o) -> #handler out
           $(this).attr('stroke-width',1) unless $(this).attr('id') == self.origin_id
@@ -49,8 +49,9 @@ class Attack
 
       
       $('#' + id).click((o) ->
-        self.origin_id = $(this).attr('id')
-        self.chooseDestiny()
+        if $(this).find("tspan").text() != 1
+          self.origin_id = $(this).attr('id')
+          self.chooseDestiny()
       )
 
   chooseDestiny: () ->
@@ -71,6 +72,8 @@ class Attack
       )
 
       $('#' + t).click((o) ->
+        if self.allTerritories[$(this).attr('id')].owner == self.app.controllers['game'].playerid
+          self.chooseOrigin()
         self.destiny_id = $(this).attr('id')
         self.attackWindow()
       )

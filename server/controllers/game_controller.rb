@@ -84,6 +84,7 @@ class GameController < AppController
   def update_status(player)
     @app.send(player,Message.new('game','update_status',
       {
+        'id' => player.id,        
         'phase' => player.phase,
         'cards' => 'Nao implementado ainda :(',
         'territories' => player.get_territories.map { |t| t.to_hash },

@@ -14,6 +14,7 @@ class GameController
   constructor: (@app) ->
     @controllerName = 'game'
     @roomid = null
+    @playerid = null
     @roomname = null
     @rightbar = $('div#rightbar')
     @territories = null
@@ -43,6 +44,7 @@ class GameController
   update_status: (msg) ->
     @territories = msg.territories
     @phase = msg.phase
+    @playerid = msg.id
 
     #atualiza status
     status_bar = @rightbar.find('div#player-status .content')

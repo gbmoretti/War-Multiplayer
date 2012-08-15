@@ -32,10 +32,13 @@ class GameController
     ))
 
   attack: (msg) ->
-    attack = new Attack(@app,@app.controllers['definitions'].get_territories(),@territories,@app.controllers['action'],this,
+    @attack = new Attack(@app,@app.controllers['definitions'].get_territories(),@territories,@app.controllers['action'],this,
     (() ->
       @app.conn.send(new EndAttackMessage(@roomid))
     ))
+
+  attack_result: (msg) ->
+    @attack.attackWindow(msg)
 
   update_status: (msg) ->
     @territories = msg.territories

@@ -54,6 +54,63 @@ class Game
     end    
   end
 
+  def attack(attacker_id,defender_id,n_troops)
+    result = {}
+    result['atk'] = {}
+    result['def'] = {}
+    
+    atk_territory = @territories[attacker_id.to_i-1]
+    def_territory = @territories[defender_id.to_i-1]
+    
+    troops_atk = n_troops.to_i
+    troops_def = def_territory.troops > 3 ? 3 : def_territory.troops
+    
+    atk_dices = play_dices(troops_atk).sort.reverse
+    def_dices = play_dices(troops_def).sort.reverse 
+    
+    result['atk']['dice'] = atk_dices
+    result['def']['dice'] = def_dices
+    result['atk']['lost'] = 0
+    result['def']['lost'] = 0
+    result['winner'] = nil
+    
+    max = troops_atk > troops_def ? troops_def : troops_atk
+    max.times do |i|
+      result['atk']['lost'] += 1 if atk_dices[i] <= def_dices[i]
+      result['def']['lost'] += 1 unless atk_dices[i] <= def_dices[i]
+    end
+    
+    troops_in_atk_t = atk_territory.troops - result['atk']['lost']
+    troops_in_def_t = def_territory.troops - result['def']['lost']
+    atk_territory.troops = troops_in_atk_t
+    def_territory.troops = troops_in_def_t
+    
+    result['winner'] = 'def' if troops_in_atk_t == 1 
+    result['winner'] = 'atk' if troops_in_def_t == 0
+    
+    if result['winner'] == 'atk'
+      def_territory.owner = atk_territory.owner
+      move_troops(attacker_id,defender_id,troops_atk-result['atk']['lost']) 
+    end
+    
+    return result
+  end
+
+  def play_dices(n)
+    r = Array.new(3) { 0 } #cria um vetor de 3 posicoes com valor inicial 0
+    n.times { |i| r[i] = Random.rand(5)+1 }
+    r
+  end
+
+  def move_troops(origin,destiny,qtd)
+    t_origin = @territories[origin.to_i-1]
+    t_destiny = @territories[destiny.to_i-1]
+    
+    puts "Movendo #{qtd} de tropas"
+    t_origin.troops -= qtd
+    t_destiny.troops += qtd
+  end
+
   def get_territories_by_player(player)
     r = []
     @territories.each do |t|

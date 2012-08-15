@@ -69,6 +69,18 @@ class GameController < AppController
     @app.send(player,Message.new('game','attack')) 
   end
 
+  def attack_order(conn,msg)
+    p = @app.get_client(conn)
+    game = p.room.game
+    
+    return nil unless p.phase == Player::ATAQUE
+    
+    result = game.attack(msg['origin'], msg['destiny'], msg['qtd'])    
+    update_territories(game)
+    update_status(p)
+    @app.send(p,Message.new('game','attack_result',result))
+  end
+
   def update_status(player)
     @app.send(player,Message.new('game','update_status',
       {

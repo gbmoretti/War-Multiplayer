@@ -21,6 +21,7 @@ class GameController
     @cards = null
     @objective = null
     @phase = null
+    @attackController = null
 
 
   #fases
@@ -33,13 +34,14 @@ class GameController
     ))
 
   attack: (msg) ->
-    @attack = new Attack(@app,@app.controllers['definitions'].get_territories(),@territories,@app.controllers['action'],this,
+    @attackController = new Attack(@app,@app.controllers['definitions'].get_territories(),@territories,@app.controllers['action'],this,
     (() ->
       @app.conn.send(new EndAttackMessage(@roomid))
+      @attackController = null
     ))
 
   attack_result: (msg) ->
-    @attack.attackWindow(msg)
+    @attackController.attackWindow(msg)
 
   update_status: (msg) ->
     @territories = msg.territories
@@ -68,6 +70,8 @@ class GameController
     )
 
     @rightbar.find('div.phase-line#phase' + @phase).addClass('active')
+    #atualiza territorios do controller de ataque se ele estiver ativo
+    @attackController.updateTerritories_id(@territories) unless @attackController == null 
 
   update_objective: (msg) ->
     @objective = msg.objective

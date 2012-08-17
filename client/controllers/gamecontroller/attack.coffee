@@ -1,16 +1,13 @@
 class AttackMessage
   constructor: (origin,destiny,qtd) ->
-    console.log "Attack order!"
     @controller = 'game'
     @action = 'attack_order'
     @params = {'origin': origin, 'destiny': destiny, 'qtd': qtd}
 
 class Attack
   constructor: (@app,@allTerritories,@territories,@actionController,@callBackContext,@callBackFunction) ->
-    @territories_id = []
-    for t in @territories
-      @territories_id.push(t.id)
-
+    
+    
     @modal = $('.modal-div#attack')
     @nomeAtk = @modal.find '#nome_atk'
     @nomeDef = @modal.find '#nome_def'
@@ -19,11 +16,20 @@ class Attack
     @selectTroops = @modal.find '#qtd_troops'
     @atkButton = @modal.find '#btnattack'
     @resultDiv = @modal.find '#result'
+    @territories_id = null
     
     @modal.find('.closebtn').click =>
       @reset()
     
+    @updateTerritories_id(@territories)
+    
     @chooseOrigin()
+
+  updateTerritories_id: (territories) ->
+    @territories_id = []
+    for t in territories
+      @territories_id.push(t.id)
+    console.log "Territorios: #{@territories_id.length}"
 
   reset: () ->
     console.log "Chamaram o reset!"
@@ -103,8 +109,7 @@ class Attack
     @atkButton.off("click") #primeiro desliga o evento anterior pois o JQuery empilha os eventhandlers
     @atkButton.html("Atacar!")
     @atkButton.click =>
-      @app.conn.send new AttackMessage(@origin_id,@destiny_id,@selectTroops.val())
-    
+      @app.conn.send new AttackMessage(@origin_id,@destiny_id,@selectTroops.val())    
     
     if result != null
       html = "Resultados do último ataque:<br/>"

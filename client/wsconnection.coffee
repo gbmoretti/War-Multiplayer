@@ -6,7 +6,8 @@ class WSConnection
       @socket = new WebSocket(@addr)
       
   send: (obj) ->
-    msg = JSON.stringify(obj)    
+    msg = JSON.stringify(obj)
+    console.log "Enviando: " + msg
     @socket.send(msg)
     
   on_close: (func) ->

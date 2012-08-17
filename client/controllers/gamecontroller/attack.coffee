@@ -18,8 +18,13 @@ class Attack
     @resultDiv = @modal.find '#result'
     @territories_id = null
     
+    @divEndPhase = "<div style=\"text-align: right\"><button id=\"endphase\">Terminar fase</button></div>"
+    
     @modal.find('.closebtn').click =>
       @reset()
+    
+    $('button#endphase').live 'click', =>
+      @callBackFunction.call(@callBackContext,null)
     
     @updateTerritories_id(@territories)
     
@@ -29,10 +34,8 @@ class Attack
     @territories_id = []
     for t in territories
       @territories_id.push(t.id)
-    console.log "Territorios: #{@territories_id.length}"
 
   reset: () ->
-    console.log "Chamaram o reset!"
     $('path').off("hover click") #retira eventos dos territorios
     $('path').attr('stroke-width',1)
     @chooseOrigin()
@@ -41,7 +44,7 @@ class Attack
     self = this
     @origin_id = null
     @destiny_id = null
-    @actionController.open("Ataque","Escolha um território para ser a origem do ataque")
+    @actionController.open("Ataque","Escolha um território para ser a origem do ataque" + @divEndPhase)
 
     #marcando bordas
     for id in @territories_id
@@ -64,7 +67,7 @@ class Attack
     $('path').off("hover click") #retira eventos dos territorios
     self = this
     nome = @allTerritories[@origin_id].nome
-    @actionController.open("Ataque","Escolha um território alvo<br/>Atacando de <b>#{nome}</b>")
+    @actionController.open("Ataque","Escolha um território alvo<br/>Atacando de <b>#{nome}</b>" + @divEndPhase)
 
     #adiciona evento os vizinhos do pais de origem
     

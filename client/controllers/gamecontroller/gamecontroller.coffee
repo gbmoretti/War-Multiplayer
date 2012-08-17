@@ -30,14 +30,18 @@ class GameController
 
     distribution = new Distribution(bonus,@territories,@app.controllers['action'],this,
     ((d) ->
-      @app.conn.send(new EndDistributionMessage(@roomid,d))
+      a = new EndDistributionMessage(@roomid,d)
+      console.log a
+      @app.conn.send(a)
     ))
 
   attack: (msg) ->
     @attackController = new Attack(@app,@app.controllers['definitions'].get_territories(),@territories,@app.controllers['action'],this,
-    (() ->
-      @app.conn.send(new EndAttackMessage(@roomid))
-      @attackController = null
+    (() =>
+      a = new EndAttackMessage(@roomid)
+      console.log a
+      @app.conn.send(a)
+      #@attackController = null
     ))
 
   attack_result: (msg) ->

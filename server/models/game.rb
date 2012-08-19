@@ -1,3 +1,4 @@
+
 class Game
 
   attr_reader :territories, :players, :jogador, :turn, :round

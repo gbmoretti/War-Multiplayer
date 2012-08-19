@@ -5,7 +5,7 @@ class EndDistributionMessage
     @params = {'id': id, 'territories': d}
 
 class EndAttackMessage
-  construction: (id) ->
+  constructor: (id) ->
     @controller = 'game'
     @action = 'attack_end'
     @params = {'id': id}
@@ -26,26 +26,27 @@ class GameController
 
   #fases
   distribution: (msg) ->
-    bonus = msg.bonus
-
-    distribution = new Distribution(bonus,@territories,@app.controllers['action'],this,
+    distribution = new Distribution(msg.bonus,@territories,@app.controllers['action'],this,
     ((d) ->
-      a = new EndDistributionMessage(@roomid,d)
-      console.log a
-      @app.conn.send(a)
+      @app.conn.send(new EndDistributionMessage(@roomid,d))
     ))
 
   attack: (msg) ->
     @attackController = new Attack(@app,@app.controllers['definitions'].get_territories(),@territories,@app.controllers['action'],this,
-    (() =>
-      a = new EndAttackMessage(@roomid)
-      console.log a
-      @app.conn.send(a)
-      #@attackController = null
+    (() ->
+      @app.conn.send(new EndAttackMessage(@roomid))
+      @attackController = null
     ))
 
   attack_result: (msg) ->
     @attackController.attackWindow(msg)
+
+  movement: (msg) ->
+    movement = new Movement(@territories,@app.controllers['action'],this,
+    ((m_in,m_out) ->
+      console.log m_in
+      console.log m_out
+    ))
 
   update_status: (msg) ->
     @territories = msg.territories

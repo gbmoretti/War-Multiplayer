@@ -47,10 +47,12 @@ class GameController < AppController
     case phase
       when Player::TROCA
         next_phase(game)
-      when Player::DISTRIBUICAO        
+      when Player::DISTRIBUICAO
         distribuition(player)
 	    when Player::ATAQUE
         attack(player)
+      when Player::MOVIMENTACAO
+        movement(player)
      end
   end
   
@@ -79,6 +81,21 @@ class GameController < AppController
     update_territories(game)
     update_status(p)
     @app.send(p,Message.new('game','attack_result',result))
+  end
+
+  def attack_end(conn, msg)
+    p = @app.get_client(conn)
+    
+    return nil unless p.phase == Player::ATAQUE
+    
+    next_phase(p.game)
+  end
+
+  def movement(player)
+    @app.send(player,Message.new('game','movement'))
+  end
+  
+  def movement_end(conn,msg)
   end
 
   def update_status(player)

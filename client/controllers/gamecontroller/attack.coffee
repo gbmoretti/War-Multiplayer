@@ -5,9 +5,7 @@ class AttackMessage
     @params = {'origin': origin, 'destiny': destiny, 'qtd': qtd}
 
 class Attack
-  constructor: (@app,@allTerritories,@territories,@actionController,@callBackContext,@callBackFunction) ->
-    
-    
+  constructor: (@app,@allTerritories,@territories,@actionController,@callBackContext,@callBackFunction) ->   
     @modal = $('.modal-div#attack')
     @nomeAtk = @modal.find '#nome_atk'
     @nomeDef = @modal.find '#nome_def'

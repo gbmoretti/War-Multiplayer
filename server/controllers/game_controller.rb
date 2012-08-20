@@ -85,10 +85,10 @@ class GameController < AppController
 
   def attack_end(conn, msg)
     p = @app.get_client(conn)
-    
+    game = @games.get(msg['id'])
     return nil unless p.phase == Player::ATAQUE
     
-    next_phase(p.game)
+    next_phase(game)
   end
 
   def movement(player)

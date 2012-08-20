@@ -35,12 +35,10 @@ class AppController
       msgObj = eval("(#{msg.data})")
       c_name = msgObj.controller
       controller = @controllers[c_name]
-      try 
-        controller[msgObj.action]() if msgObj.params == ''
-        controller[msgObj.action](msgObj.params) if msgObj.params != ''
-      catch error
-        console.log "Erro ao chamar #{c_name}##{msgObj.action}"
-        console.error error.message
+      
+      controller[msgObj.action]() if msgObj.params == ''
+      controller[msgObj.action](msgObj.params) if msgObj.params != ''
+      
       
       
       

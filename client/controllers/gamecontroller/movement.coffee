@@ -1,4 +1,4 @@
-class Attack
+class Movement
   constructor: (@territories,@actionController,@callBackContext,@callBackFunction) ->
     @territories_id = null
     @movement_out = {}
@@ -14,7 +14,8 @@ class Attack
     #gera um vetor com a quantidade atual de tropas para saber quantas o jogador pode movimentar
     @total_movement = {}
     for t in @territories_id
-      @total_movement[t] = parseInt($('#l' + t + ' tspan').text()) -1
+      @total_movement[t] = parseInt($('#l' + t + ' tspan').text())
+      @total_movement[t] -= 1
     
     @chooseOrigin()
 
@@ -33,19 +34,20 @@ class Attack
     @origin_id = null
     @destiny_id = null
     @actionController.open("Movimentação","Escolha um território para mover tropas" + @divEndPhase)
+    console.log "To aqui"
 
     #marcando bordas
     for id in @territories_id
       $('#' + id).hover(
        (o) ->  #handler in
-          $(this).attr('stroke-width',2) unless @total_movement[id] == 0
+          $(this).attr('stroke-width',2) unless self.total_movement[id] == 0
         ,
         (o) -> #handler out
           $(this).attr('stroke-width',1) unless $(this).attr('id') == self.origin_id
       )
 
       $('#' + id).click((o) ->
-        if @total_movement[id] > 1
+        if self.total_movement[id] != undefined and self.total_movement[id] > 1
           self.origin_id = $(this).attr('id')
           self.chooseDestiny()
       )
@@ -55,6 +57,8 @@ class Attack
     self = this
     nome = @allTerritories[@origin_id].nome
     @actionController.open("Movimentação","Clique em um território vizinho para receber uma tropa." + @divEndPhase)
+
+    console.log "To no movement"
 
     #adiciona evento os vizinhos do pais de origem
     

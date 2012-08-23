@@ -9,6 +9,12 @@ class EndAttackMessage
     @controller = 'game'
     @action = 'attack_end'
     @params = {'id': id}
+    
+class EndMovementMessage
+  constructor: (id,m) ->
+    @controller = 'game'
+    @action = 'movement_end'
+    @params = {'id': id, 'm': m}
 
 class GameController
   constructor: (@app) ->
@@ -29,6 +35,7 @@ class GameController
     distribution = new Distribution(msg.bonus,@territories,@app.controllers['action'],this,
     ((d) ->
       @app.conn.send(new EndDistributionMessage(@roomid,d))
+      distribution = null
     ))
 
   attack: (msg) ->
@@ -42,10 +49,9 @@ class GameController
     @attackController.attackWindow(msg)
 
   movement: (msg) ->
-    movement = new Movement(@territories,@app.controllers['action'],this,
-    ((m_in,m_out) ->
-      console.log m_in
-      console.log m_out
+    movement = new Movement(@territories,@app.controllers['definitions'].get_territories(),@app.controllers['action'],this,
+    ((m) ->
+      @app.conn.send(new EndMovementMessage(@roomid,m))
     ))
 
   update_status: (msg) ->

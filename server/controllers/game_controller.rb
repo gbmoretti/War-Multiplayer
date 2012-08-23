@@ -5,6 +5,13 @@ class GameController < AppController
     @games = GamesCollection.get_instance
   end
   
+  def closed_conn(conn)
+    player = @app.get_client(conn)
+    game = player.room.game
+    
+    game.remove_player(player)    
+  end
+  
   def name
     :game
   end
@@ -49,7 +56,7 @@ class GameController < AppController
         next_phase(game)
       when Player::DISTRIBUICAO
         distribuition(player)
-	    when Player::ATAQUE
+      when Player::ATAQUE
         attack(player)
       when Player::MOVIMENTACAO
         movement(player)
@@ -58,9 +65,11 @@ class GameController < AppController
   
   def distribuition(player)
     @app.send(player,Message.new('game','distribution',{'bonus' => player.get_bonus}))
+    puts "enviei mensagem de distribuicao"
   end
   
   def distribution_end(conn,msg)
+    puts "recebi final da distribuicao"
     game = @games.get(msg['id'])
     game.distribuition(msg['territories']) #atualiza territorios no modelo
     update_territories(game) #envia atualizacao de territorio para todos os jogadores
@@ -68,6 +77,7 @@ class GameController < AppController
   end
   
   def attack(player)
+    update_status(player)
     @app.send(player,Message.new('game','attack')) 
   end
 
@@ -96,12 +106,21 @@ class GameController < AppController
   end
   
   def movement_end(conn,msg)
+    game = @games.get(msg['id'])
+    msg['m'].each do |origin,v|
+      v.each do |destiny,qtd|
+        game.move_troops(origin,destiny,qtd)
+      end 
+    end
+    
+    update_territories(game)
+    next_phase(game)
   end
 
   def update_status(player)
     @app.send(player,Message.new('game','update_status',
       {
-        'id' => player.id,        
+        'id' => player.id,
         'phase' => player.phase,
         'cards' => 'Nao implementado ainda :(',
         'territories' => player.get_territories.map { |t| t.to_hash },

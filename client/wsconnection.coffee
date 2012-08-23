@@ -7,7 +7,6 @@ class WSConnection
       
   send: (obj) ->
     msg = JSON.stringify(obj)
-    console.log "Enviando: " + msg
     @socket.send(msg)
     
   on_close: (func) ->
@@ -20,7 +19,6 @@ class WSConnection
     
   on_message: (func) ->
     @socket.onmessage = (msg) =>
-      console.log "Recebendo #{msg}"
       msg = eval("(#{msg})")      
       func(msg)
     

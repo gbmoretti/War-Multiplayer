@@ -16,17 +16,22 @@ class Attack
     @resultDiv = @modal.find '#result'
     @territories_id = null
     
-    @divEndPhase = "<div style=\"text-align: right\"><button id=\"endphase\">Terminar fase</button></div>"
+    @divEndPhase = "<div style=\"text-align: right\"><button id=\"endattack\">Terminar fase</button></div>"
     
     @modal.find('.closebtn').click =>
       @reset()
     
-    $('button#endphase').live 'click', =>
-      @callBackFunction.call(@callBackContext,null)
+    $(document).on 'click', 'button#endattack', =>
+      @endPhase()
     
     @updateTerritories_id(@territories)
     
     @chooseOrigin()
+
+  endPhase: () ->
+    $('button#endattack').off("click")
+    $("path").off("hover click")
+    @callBackFunction.call(@callBackContext,null)
 
   updateTerritories_id: (territories) ->
     @territories_id = []
@@ -68,7 +73,6 @@ class Attack
     @actionController.open("Ataque","Escolha um território alvo<br/>Atacando de <b>#{nome}</b>" + @divEndPhase)
 
     #adiciona evento os vizinhos do pais de origem
-    
     for t in @allTerritories[@origin_id].vizinhos
       $('#' + t).hover(
         (o) -> #handler in
@@ -79,6 +83,7 @@ class Attack
       )
 
       $('#' + t).click((o) ->
+        console.log "Nao fui desligada"
         if self.allTerritories[$(this).attr('id')].owner == self.app.controllers['game'].playerid
           self.chooseOrigin()
         self.destiny_id = $(this).attr('id')

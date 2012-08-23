@@ -28,13 +28,16 @@ class Game
             
   end  
 
+  def remove_player(p)
+    @players.delete(p)
+  end
+
   def next_player_and_phase
-    @round += 1 if @turn == @players.size-1
-    
     player = @players[@turn]    
     
     player.next_phase!
     if player.phase == Player::AGUARDANDO
+      @round += 1 if @turn == @players.size-1
       player = next_player
     end
        
@@ -44,7 +47,7 @@ class Game
   def next_player
       @turn = (@turn + 1) % (@players.size)
       next_player = @players[@turn]
-      next_player.phase = Player::DISTRIBUICAO
+      next_player.phase = Player::TROCA
       next_player
   end
 
@@ -56,44 +59,53 @@ class Game
   end
 
   def attack(attacker_id,defender_id,n_troops)
-    result = {}
+    result = {} #hash com os dados do resultado da jogada
     result['atk'] = {}
     result['def'] = {}
     
+    #pega os objetos do territorio atacante e do alvo
     atk_territory = @territories[attacker_id.to_i-1]
     def_territory = @territories[defender_id.to_i-1]
     
+    #quantidade de tropas dos territorios
     troops_atk = n_troops.to_i
     troops_def = def_territory.troops > 3 ? 3 : def_territory.troops
     
+    #joga os dados, e ordena
     atk_dices = play_dices(troops_atk).sort.reverse
     def_dices = play_dices(troops_def).sort.reverse 
     
+    #salva resultado dos dados no hash de resultado
     result['atk']['dice'] = atk_dices
     result['def']['dice'] = def_dices
     result['atk']['lost'] = 0
     result['def']['lost'] = 0
     result['winner'] = nil
     
+    #calcula perdas
     max = troops_atk > troops_def ? troops_def : troops_atk
     max.times do |i|
       result['atk']['lost'] += 1 if atk_dices[i] <= def_dices[i]
       result['def']['lost'] += 1 unless atk_dices[i] <= def_dices[i]
     end
     
+    #calcula quantidade de tropas nos territorios
     troops_in_atk_t = atk_territory.troops - result['atk']['lost']
     troops_in_def_t = def_territory.troops - result['def']['lost']
     atk_territory.troops = troops_in_atk_t
     def_territory.troops = troops_in_def_t
     
+    #verifica se houve algum vencedor na batalha
     result['winner'] = 'def' if troops_in_atk_t == 1 
     result['winner'] = 'atk' if troops_in_def_t == 0
     
+    #se atacante venceu troca o dono do territorio alvo e move tropas pra la
     if result['winner'] == 'atk'
       def_territory.owner = atk_territory.owner
       move_troops(attacker_id,defender_id,troops_atk-result['atk']['lost']) 
     end
     
+    #retorna o resultado
     return result
   end
 
@@ -107,7 +119,6 @@ class Game
     t_origin = @territories[origin.to_i-1]
     t_destiny = @territories[destiny.to_i-1]
     
-    puts "Movendo #{qtd} de tropas"
     t_origin.troops -= qtd
     t_destiny.troops += qtd
   end
@@ -140,7 +151,7 @@ class Game
     
     i = 0
     t['territories'].each do |k,v|    
-      @territories[(k.to_i)-1] = Territory.new(k,v['nome'],@players[i%@players.count])
+      @territories[(k.to_i)-1] = Territory.new(k,v['nome'],@players[i%@players.count],v['vizinhos'])
       i += 1
     end
         

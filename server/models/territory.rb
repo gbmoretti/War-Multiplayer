@@ -3,18 +3,21 @@ class Territory
   attr_reader :name, :id
   attr_accessor :owner, :troops
 
-  def initialize(id,nome,owner)
+  def initialize(id,nome,owner,vizinhos)
     @id = id
     @name = nome
     @owner = owner if owner.is_a?(Player)
     @troops = 1
+    @vizinhos = vizinhos
   end
 
   def to_hash
     {
       'id' => id,
       'owner' => owner.id,
-      'troops' => troops
+      'troops' => troops,
+      'nome' => @name,
+      'vizinhos' => @vizinhos
     }
   end
 

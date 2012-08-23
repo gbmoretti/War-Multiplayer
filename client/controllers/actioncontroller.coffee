@@ -11,5 +11,5 @@ class ActionController
     @modal.show()
     
   close: () ->
+    @modal.find("#msg").html("Vazio")
     @modal.hide()
-    

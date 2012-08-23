@@ -19,6 +19,8 @@ class Distribution
       $('path#' + t.id).click((o) =>
         @add_troop(o.currentTarget.id)
       )
+    
+    console.log "INICIANDO DISTRIBUICAO"
   
   add_troop: (id) ->
     if @bonus > 0
@@ -35,10 +37,11 @@ class Distribution
          $('path#' + t.id).attr('stroke-width',1) 
       $('path').off("hover click") #retira eventos dos paises
       @actionController.close()
+      console.log "FINALIZANDO DISTRIBUICAO"
       @callBackFunction.call(@callBackContext,@distribuition)       
       
   update_action: (b) ->
-    msg = "Você tem #{@bonus} tropas para distribuir. Clique nos países para colocar as tropas." if @bonus > 0
+    msg = "Você tem #{@bonus} tropas para distribuir. Clique nos países para colocar as tropas."
     @actionController.open('Distribuição',msg)
     
       

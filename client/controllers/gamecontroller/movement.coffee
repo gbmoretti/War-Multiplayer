@@ -1,23 +1,28 @@
 class Movement
-  constructor: (@territories,@actionController,@callBackContext,@callBackFunction) ->
+  constructor: (@territories,@allTerritories,@actionController,@callBackContext,@callBackFunction) ->
     @territories_id = null
-    @movement_out = {}
-    @movement_in = {}
+    @movement = {}
     
-    @divEndPhase = "<div style=\"text-align: right\"><button id=\"endphase\">Terminar fase</button></div>"
+    @divEndPhase = "<div style=\"text-align: right\"><button id=\"endmovement\">Terminar fase</button></div>"
         
-    $('button#endphase').live 'click', =>
-      @callBackFunction.call(@callBackContext,@movement_in,@movement_out)
+    $(document).on 'click', 'button#endmovement', =>
+      @endPhase()
     
     @updateTerritories_id(@territories)
     
     #gera um vetor com a quantidade atual de tropas para saber quantas o jogador pode movimentar
     @total_movement = {}
-    for t in @territories_id
-      @total_movement[t] = parseInt($('#l' + t + ' tspan').text())
-      @total_movement[t] -= 1
+    for t in @territories
+      @total_movement[t.id] = parseInt($('#l' + t.id + ' tspan').text())
+      @total_movement[t.id] -= 1
     
     @chooseOrigin()
+
+  endPhase: () ->
+    $('button#endmovement').off("click")
+    $("path").off("hover click")
+    @actionController.close()
+    @callBackFunction.call(@callBackContext,@movement)
 
   updateTerritories_id: (territories) ->
     @territories_id = []
@@ -34,20 +39,23 @@ class Movement
     @origin_id = null
     @destiny_id = null
     @actionController.open("Movimentação","Escolha um território para mover tropas" + @divEndPhase)
-    console.log "To aqui"
+
+    $("path").off("hover click")
 
     #marcando bordas
     for id in @territories_id
       $('#' + id).hover(
        (o) ->  #handler in
-          $(this).attr('stroke-width',2) unless self.total_movement[id] == 0
+          t_id = $(this).attr('id')
+          $(this).attr('stroke-width',2) unless self.total_movement[t_id] == 0
         ,
         (o) -> #handler out
           $(this).attr('stroke-width',1) unless $(this).attr('id') == self.origin_id
       )
 
       $('#' + id).click((o) ->
-        if self.total_movement[id] != undefined and self.total_movement[id] > 1
+        t_id = $(this).attr('id')
+        if self.total_movement[t_id] != undefined or self.total_movement[t_id] > 1
           self.origin_id = $(this).attr('id')
           self.chooseDestiny()
       )
@@ -56,12 +64,9 @@ class Movement
     $('path').off("hover click") #retira eventos dos territorios
     self = this
     nome = @allTerritories[@origin_id].nome
-    @actionController.open("Movimentação","Clique em um território vizinho para receber uma tropa." + @divEndPhase)
-
-    console.log "To no movement"
-
-    #adiciona evento os vizinhos do pais de origem
+    @actionController.open("Movimentação","Clique em um território vizinho ao #{nome} para receber uma tropa." + @divEndPhase)
     
+    #adiciona evento aos vizinhos do pais de origem    
     for t in @allTerritories[@origin_id].vizinhos
       if $.inArray(t,@territories_id)
         $('#' + t).hover(
@@ -73,17 +78,32 @@ class Movement
         )
 
         $('#' + t).click((o) ->
-          if self.allTerritories[$(this).attr('id')].owner == self.app.controllers['game'].playerid
-            self.chooseOrigin()
+          if $(this).attr('id') == self.origin_id
+            self.reset()
+          
           self.destiny_id = $(this).attr('id')
-          self.move(origin_id,destiny_id)
+          self.move(self.origin_id,self.destiny_id)
         )
     
   move: (origin,destiny) ->
-    @movement_out[origin] = 0 unless @movement_out[origin] == undefined
-    @movement_in[destiny] = 0 unless @movement_in[destiny] == undefined
+    return @reset() if @total_movement[origin] == 0
     
-    @movement_out[origin] += 1
-    @movement_in[destiny] += 1
+    @total_movement[origin] -= 1
+    
+    @movement[origin] = {} unless @movement[origin] != undefined
+    @movement[origin][destiny] = 0 unless @movement[origin][destiny] != undefined
+    @movement[origin][destiny] += 1
+   
+    t = $("#l" + origin + " tspan")
+    total = parseInt(t.text())
+    total -= 1
+    t.text(total)
+    t = $("#l" + destiny + " tspan")
+    total = parseInt(t.text())
+    total += 1
+    t.text(total)
+    
+    @chooseDestiny()
+    
 
  

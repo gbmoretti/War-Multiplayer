@@ -33,7 +33,7 @@ class Game
   end
 
   def next_player_and_phase
-    player = @players[@turn]    
+    player = @players[@turn]
     
     player.next_phase!
     if player.phase == Player::AGUARDANDO
@@ -141,7 +141,9 @@ class Game
 
   def get_bonus_by_player(player)
     territories = get_territories_by_player(player).count
-    return (territories /2).to_i
+    bonus = (territories /2).to_i
+    return bonus if bonus > 3
+    return 3 #retorna 3 se o bonus for igual a menor a 3 
   end
 
   def load_territories

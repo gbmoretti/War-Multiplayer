@@ -5,6 +5,7 @@ class Movement
     
     @divEndPhase = "<div style=\"text-align: right\"><button id=\"endmovement\">Terminar fase</button></div>"
         
+    $(document).off("click", 'button#endmovement')
     $(document).on 'click', 'button#endmovement', =>
       @endPhase()
     
@@ -84,6 +85,10 @@ class Movement
           self.destiny_id = $(this).attr('id')
           self.move(self.origin_id,self.destiny_id)
         )
+    
+    #adiciona evento de clique no pais de origem para parar movimentacao
+    $('#' + @origin_id).click -> 
+      self.reset()
     
   move: (origin,destiny) ->
     return @reset() if @total_movement[origin] == 0

@@ -34,7 +34,7 @@ class GameController < AppController
     #enviando apenas para o jogador real por enquanto
     #update_status(game.jogador) 
     #update_objective(game.jogador)
-    
+
     next_phase(game)
     
   end
@@ -65,11 +65,9 @@ class GameController < AppController
   
   def distribuition(player)
     @app.send(player,Message.new('game','distribution',{'bonus' => player.get_bonus}))
-    puts "enviei mensagem de distribuicao"
   end
   
   def distribution_end(conn,msg)
-    puts "recebi final da distribuicao"
     game = @games.get(msg['id'])
     game.distribuition(msg['territories']) #atualiza territorios no modelo
     update_territories(game) #envia atualizacao de territorio para todos os jogadores
@@ -87,7 +85,7 @@ class GameController < AppController
     
     return nil unless p.phase == Player::ATAQUE
     
-    result = game.attack(msg['origin'], msg['destiny'], msg['qtd'])    
+    result = game.attack(msg['origin'],msg['destiny'],msg['qtd'])    
     update_territories(game)
     update_status(p)
     @app.send(p,Message.new('game','attack_result',result))
@@ -152,7 +150,7 @@ class GameController < AppController
       param.update({p.id => {
         'nick' => p.nick,
         'color' => p.color,
-        'turn' => p.turn?          
+        'turn' => p.turn? 
         }})
     end 
     

@@ -83,12 +83,15 @@ class Attack
       )
 
       $('#' + t).click((o) ->
-        console.log "Nao fui desligada"
         if self.allTerritories[$(this).attr('id')].owner == self.app.controllers['game'].playerid
-          self.chooseOrigin()
+          self.reset()
         self.destiny_id = $(this).attr('id')
         self.attackWindow()
       )
+      
+    #adiciona evento no pais de origem para desselecionar origem
+    $('#' + @origin_id).click ->
+      self.reset()
 
   attackWindow: (result=null) ->
     $('path').off("hover click") #retira eventos dos territorios

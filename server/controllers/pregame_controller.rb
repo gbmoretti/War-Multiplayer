@@ -41,6 +41,7 @@ class PregameController < AppController
     #if room.all_ready?
       @app.send(room.players,Message.new('pregame','close'))
       puts "Iniciando partida na sala #{room.to_s}..."
+      puts "Para os jogadores #{room.players.inspect}"
       @app.controllers[:game].start_game(room)
     end
         

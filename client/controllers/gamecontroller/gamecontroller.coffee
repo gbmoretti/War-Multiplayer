@@ -123,12 +123,13 @@ class GameController
 
   change_color: (id,color) ->
     $('path#' + id).attr('fill', color)
-
     #muda a cor do tspan se nao ficar legivel em preto
-    if color ==  '#0000DD' || color == '#333333'
+    if color == '#0000DD' or color == '#333333'
+      #console.log "mudando cor #{color}"
       $('#l' + id + ' tspan').attr('fill','#FFFFFF')
       $('#l' + id + ' tspan').attr('stroke','#FFFFFF')
 
   change_troops: (id,troops) ->
     o = $('#l' + id)
     o.find('tspan').text troops  
+    

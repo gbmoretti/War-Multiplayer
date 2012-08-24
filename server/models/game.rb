@@ -111,7 +111,7 @@ class Game
 
   def play_dices(n)
     r = Array.new(3) { 0 } #cria um vetor de 3 posicoes com valor inicial 0
-    n.times { |i| r[i] = Random.rand(5)+1 }
+    n.times { |i| r[i] = Random.rand(1..6) }
     r
   end
 

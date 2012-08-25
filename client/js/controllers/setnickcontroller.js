@@ -1,4 +1,4 @@
-
+/* controlador de 'login'. No caso, apenas a escolha do nick */
   var InitMessage, SetNickController;
 
   InitMessage = (function() {

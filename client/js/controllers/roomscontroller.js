@@ -1,4 +1,4 @@
-
+/* controlador de lista de salas */
   var JoinRoomMessage, NewRoomMessage, RoomsController;
 
   NewRoomMessage = (function() {

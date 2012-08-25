@@ -1,4 +1,6 @@
-
+/*
+Classe responsavel pelos eventos da fase de movimentação
+*/
   var Movement;
 
   Movement = (function() {
@@ -6,8 +8,8 @@
     function Movement(territories, allTerritories, actionController, callBackContext, callBackFunction) {
       var t, _i, _len, _ref,
         _this = this;
-      this.territories = territories;
-      this.allTerritories = allTerritories;
+      this.territories = territories; //territorios do jogador
+      this.allTerritories = allTerritories; //todos os territorios do jogo
       this.actionController = actionController;
       this.callBackContext = callBackContext;
       this.callBackFunction = callBackFunction;
@@ -28,7 +30,8 @@
       }
       this.chooseOrigin();
     }
-
+    
+    //termina a fase e chama funcao callback
     Movement.prototype.endPhase = function() {
       $('button#endmovement').off("click");
       $("path").off("hover click");
@@ -36,6 +39,7 @@
       return this.callBackFunction.call(this.callBackContext, this.movement);
     };
 
+    //atualiza vetor de id's dos territorios que o jogador é o dono
     Movement.prototype.updateTerritories_id = function(territories) {
       var t, _i, _len, _results;
       this.territories_id = [];
@@ -47,12 +51,14 @@
       return _results;
     };
 
+    //reinicia a fase
     Movement.prototype.reset = function() {
       $('path').off("hover click");
       $('path').attr('stroke-width', 1);
       return this.chooseOrigin();
     };
 
+    //método para escolher territorio origem
     Movement.prototype.chooseOrigin = function() {
       var id, self, _i, _len, _ref, _results;
       self = this;
@@ -87,6 +93,7 @@
       return _results;
     };
 
+    //método para escolher territorio destino
     Movement.prototype.chooseDestiny = function() {
       var nome, self, t, _i, _len, _ref;
       $('path').off("hover click");
@@ -118,6 +125,7 @@
       });
     };
 
+    //executa a movimentação
     Movement.prototype.move = function(origin, destiny) {
       var t, total;
       if (this.total_movement[origin] === 0) {

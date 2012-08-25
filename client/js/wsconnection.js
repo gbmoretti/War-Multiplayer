@@ -1,3 +1,7 @@
+/* 
+Classe que representa a conexão do cliente (navegador) com o servidor War
+*/
+
   var WSConnection;
 
   WSConnection = (function() {

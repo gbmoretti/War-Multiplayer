@@ -1,3 +1,7 @@
+/* 
+Classe responsavel por manipular os eventos durante a fase de distribuição
+*/
+
   var Distribution;
 
   Distribution = (function() {
@@ -6,11 +10,11 @@
       var i, t, _ref,
         _this = this;
       this.bonus = bonus;
-      this.territories = territories;
-      this.actionController = actionController;
-      this.callBackContext = callBackContext;
-      this.callBackFunction = callBackFunction;
-      this.distribuition = {};
+      this.territories = territories; //vetor com os territorios do jogador
+      this.actionController = actionController; //controller da janela de ação
+      this.callBackContext = callBackContext; //contexto em que a funcao callback sera chamada
+      this.callBackFunction = callBackFunction; //funcao callback
+      this.distribuition = {}; //vetor que guarda as movimentações feita pelo jogador
       this.update_action();
       _ref = this.territories;
       for (i in _ref) {
@@ -26,6 +30,7 @@
       }
     }
 
+    //adiciona uma tropa no territorio com id 'id'
     Distribution.prototype.add_troop = function(id) {
       var i, o, t, x, _ref;
       if (this.bonus > 0) {
@@ -51,6 +56,7 @@
       }
     };
 
+    //atualiza janela de ação
     Distribution.prototype.update_action = function(b) {
       var msg;
       msg = "Você tem " + this.bonus + " tropas para distribuir. Clique nos países para colocar as tropas.";

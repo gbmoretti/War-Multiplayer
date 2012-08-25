@@ -1,3 +1,6 @@
+/*
+Controller game. Responsavel por por manipular os eventos em todas as fases do jogo
+*/
 
   var EndAttackMessage, EndDistributionMessage, EndMovementMessage, GameController;
 
@@ -61,6 +64,7 @@
       this.attackController = null;
     }
 
+    //método chamado para iniciar a fase de distribuição
     GameController.prototype.distribution = function(msg) {
       var distribution;
       return distribution = new Distribution(msg.bonus, this.territories, this.app.controllers['action'], this, (function(d) {
@@ -69,6 +73,7 @@
       }));
     };
 
+    //chamado para iniciar fase de ataque
     GameController.prototype.attack = function(msg) {
       return this.attackController = new Attack(this.app, this.app.controllers['definitions'].get_territories(), this.territories, this.app.controllers['action'], this, (function() {
         this.app.conn.send(new EndAttackMessage(this.roomid));
@@ -76,10 +81,12 @@
       }));
     };
 
+    //recebe resultado do ataque e reenvia para classe de ataque (Attack)
     GameController.prototype.attack_result = function(msg) {
       return this.attackController.attackWindow(msg);
     };
 
+    //chamado para iniciar fase de movimentação
     GameController.prototype.movement = function(msg) {
       var movement;
       return movement = new Movement(this.territories, this.app.controllers['definitions'].get_territories(), this.app.controllers['action'], this, (function(m) {
@@ -87,6 +94,7 @@
       }));
     };
 
+    //recebe informações do jogador
     GameController.prototype.update_status = function(msg) {
       var phase_line, status_bar, str;
       this.territories = msg.territories;
@@ -112,6 +120,7 @@
       }
     };
 
+    //recebe objetivo
     GameController.prototype.update_objective = function(msg) {
       var objective_bar;
       this.objective = msg.objective;
@@ -119,6 +128,7 @@
       return objective_bar.html(this.objective);
     };
 
+    //recebe dados do mapa
     GameController.prototype.update_territories = function(msg) {
       var color, i, max, owner, t, _results;
       max = msg.length;
@@ -135,16 +145,19 @@
       return _results;
     };
 
+    //recebe dados da sala
     GameController.prototype.update_room_data = function(msg) {
       this.roomname = msg.name;
       return this.roomid = msg.id;
     };
 
+    //recebe dados dos outros jogadores da sala
     GameController.prototype.update_players = function(msg) {
       this.players = msg;
       return this.update_rightbar();
     };
 
+    //atualiza barra lateral direita
     GameController.prototype.update_rightbar = function() {
       var color, id, pl, player, player_line, _ref, _results;
       pl = this.rightbar.find('div#playerslist');
@@ -164,6 +177,7 @@
       return _results;
     };
 
+    //responsavel por mudar a cor de um territorio e, se for o caso, mudar a cor do texto
     GameController.prototype.change_color = function(id, color) {
       $('path#' + id).attr('fill', color);
       if (color === '#0000DD' || color === '#333333') {
@@ -172,6 +186,7 @@
       }
     };
 
+    //muda quantidade de tropas em um territorio
     GameController.prototype.change_troops = function(id, troops) {
       var o;
       o = $('#l' + id);

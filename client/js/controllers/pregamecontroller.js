@@ -1,3 +1,4 @@
+/* controlador da janela pré-jogo, onde se definem os jogadores e as cores */
   var ChangeColorMessage, PregameController, ToggleStateMessage;
 
   ChangeColorMessage = (function() {

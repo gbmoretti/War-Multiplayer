@@ -1,4 +1,6 @@
-
+/*
+Classe responsavel por manipular os eventos durante a fase de ataque
+*/
   var Attack, AttackMessage;
 
   AttackMessage = (function() {
@@ -22,12 +24,12 @@
     function Attack(app, allTerritories, territories, actionController, callBackContext, callBackFunction) {
       var _this = this;
       this.app = app;
-      this.allTerritories = allTerritories;
-      this.territories = territories;
-      this.actionController = actionController;
-      this.callBackContext = callBackContext;
-      this.callBackFunction = callBackFunction;
-      this.modal = $('.modal-div#attack');
+      this.allTerritories = allTerritories; //todos os territorios do jogo
+      this.territories = territories; //territorios que o jogador possui
+      this.actionController = actionController; //controller da janela de mensagem
+      this.callBackContext = callBackContext; //contexto em que a funcao callback sera chamada
+      this.callBackFunction = callBackFunction; //funcao callback
+      this.modal = $('.modal-div#attack'); //janela de status do ataque
       this.nomeAtk = this.modal.find('#nome_atk');
       this.nomeDef = this.modal.find('#nome_def');
       this.troopsAtk = this.modal.find('#troops_atk');
@@ -47,12 +49,14 @@
       this.chooseOrigin();
     }
 
+    //método chamado quando a fase é terminada. Desliga os eventos e chama a função de callback
     Attack.prototype.endPhase = function() {
       $('button#endattack').off("click");
       $("path").off("hover click");
       return this.callBackFunction.call(this.callBackContext, null);
     };
 
+    //atualiza vetor territories_id com os id's dos territorios que o jogador possiu
     Attack.prototype.updateTerritories_id = function(territories) {
       var t, _i, _len, _results;
       this.territories_id = [];
@@ -64,12 +68,14 @@
       return _results;
     };
 
+    //recomeça a fase de ataque
     Attack.prototype.reset = function() {
       $('path').off("hover click");
       $('path').attr('stroke-width', 1);
       return this.chooseOrigin();
     };
 
+    //método para escolhar territorio de origem do ataque
     Attack.prototype.chooseOrigin = function() {
       var id, self, _i, _len, _ref, _results;
       self = this;
@@ -99,6 +105,7 @@
       return _results;
     };
 
+    //método para escolher territorio alvo do ataque
     Attack.prototype.chooseDestiny = function() {
       var nome, self, t, _i, _len, _ref;
       $('path').off("hover click");
@@ -128,6 +135,7 @@
       });
     };
 
+    //janela de status do ataque
     Attack.prototype.attackWindow = function(result) {
       var html, qtd_troops,
         _this = this;

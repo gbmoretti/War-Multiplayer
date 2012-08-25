@@ -1,3 +1,8 @@
+/*
+Arquivo principal da aplicação. Carrega o plugin SVG do JQuery, inicia o AppController e registra os
+controllers.
+*/
+
 $(document).ready(function() {
   var host, svg;
 

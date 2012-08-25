@@ -34,7 +34,7 @@ class RoomsController < AppController
     
     #atualiza lista de salas de todos os clientes
     @app.broadcast(Message.new('rooms','list',{'list' => list_rooms}),[p])
-    
+    puts "enviando lista de salas #{list_rooms.inspect}"
     #chama controller pregame
     @app.controllers[:pregame].show(p,room)   
   end
@@ -75,7 +75,8 @@ class RoomsController < AppController
         }
       )
       
-      return rooms
+      
     end
+    return rooms
   end
 end

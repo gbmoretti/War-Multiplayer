@@ -9,7 +9,10 @@ class GameController < AppController
     player = @app.get_client(conn)
     game = player.room.game
     
-    game.remove_player(player)    
+    @app.send(game.players,Message.new('warn','${player} foi desconectado. Encerrando partida.'))
+    
+    game.end_game
+    
   end
   
   def name
@@ -49,7 +52,7 @@ class GameController < AppController
       update_status(p)
     end
     
-    puts "Game#next_phase #{player} #{phase} -- round: #{game.round} turn: #{game.turn}"
+    #puts "Game#next_phase #{player} #{phase} -- round: #{game.round} turn: #{game.turn}"
      
     case phase
       when Player::TROCA

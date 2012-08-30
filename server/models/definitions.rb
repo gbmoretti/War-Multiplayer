@@ -6,11 +6,15 @@ class Definitions
   end
 
   def colors
-    JSON.parse(File.open(File.expand_path('server/data/war/colors.json'), 'rb') { |file| file.read })    
+    JSON.parse(File.open(File.expand_path('server/data/war/colors.json'), 'rb') { |file| file.read })
   end
 
   def territories
     JSON.parse(File.open(File.expand_path('server/data/war/territories.json'), 'rb') { |file| file.read })  
+  end
+  
+  def regions
+    JSON.parse(File.open(File.expand_path('server/data/war/regions.json'), 'rb') { |file| file.read })  
   end
 
 end

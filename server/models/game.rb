@@ -5,31 +5,31 @@ class Game
   attr_accessor :id
 
   def initialize(room)
+    puts room.players.inspect
     @players = room.players
-    @jogador = @players[0] #TIRA ISSO DAQUI DEPOIS
     @turn = 0
     @round = 1
     @id = nil
-    
-    #cria 2 players fakes só para testes
-    #if @players.count == 1
-    #  add_fake_player('bot1',room)
-    #  add_fake_player('bot2',room)
-    #end
+    @regions = []
+    @territories = [] 
     
     #sorteia ordem dos jogadores
-    @players.shuffle! #não posso dar shuffle pq o jogador real tem q ser sempre o 1o
+    @players.shuffle! 
     
     #carrega territorios
-    load_territories   
+    load_data   
     
     #seta fase de aguardo para todos os jogadores
     @players.each { |p| p.phase = Player::AGUARDANDO }
             
   end  
 
-  def remove_player(p)
-    @players.delete(p)
+  #def remove_player(p)
+  #  @players.delete(p)
+  #end
+
+  def end_game
+    puts "Jogo encerrado..."
   end
 
   def next_player_and_phase
@@ -140,33 +140,43 @@ class Game
   end
 
   def get_bonus_by_player(player)
+    #bonus por territorio
     territories = get_territories_by_player(player).count
     bonus = (territories /2).to_i
+    
+    #bonus por continente
+    @regions.each do |r|
+      is_owner = true
+      r.territories.each do |t|
+        if @territories[(t.to_i)-1].owner != player
+          is_owner = false
+          break
+        end
+      end
+      puts "+#{r.bonus} para #{player} por ter #{r.name}" if is_owner 
+      bonus += r.bonus if is_owner 
+    end
+    
     return bonus if bonus > 3
     return 3 #retorna 3 se o bonus for igual a menor a 3 
   end
 
-  def load_territories
-    @territories = []
+  def load_data
     defs = Definitions.get_instance
-    t = defs.territories
     
+    t = defs.territories
     i = 0
     t['territories'].each do |k,v|    
       @territories[(k.to_i)-1] = Territory.new(k,v['nome'],@players[i%@players.count],v['vizinhos'])
       i += 1
     end
-        
-  end
-
-  def add_fake_player(name,room)
-    fake = Player.new(1,name)
-    fake.color = Random.rand(6)+1
-    fake.ready = true
-    fake.room = room
-    fake.id = Random.rand(96)+4
-        
-    @players.push fake
+    
+    r = defs.regions
+    i = 0
+    r['regions'].each do |k,v|
+      @regions[(k.to_i)-1] = Region.new(k,v['nome'],v['territorios'],v['bonus'])
+    end    
+    
   end
 
 end

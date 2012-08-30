@@ -7,12 +7,15 @@ class GameController < AppController
   
   def closed_conn(conn)
     player = @app.get_client(conn)
-    game = player.room.game
-    
-    @app.send(game.players,Message.new('warn','${player} foi desconectado. Encerrando partida.'))
-    
-    game.end_game
-    
+    unless player.nil?
+      game = player.room.game
+      unless game.nil?
+        @app.send(game.players,Message.new('warn','#{player} foi desconectado. Encerrando partida.'))
+        
+        game.end_game
+        @games.rem(game)
+      end
+    end
   end
   
   def name
@@ -21,7 +24,7 @@ class GameController < AppController
 
   def start_game(room)
     game = Game.new(room)
-        
+    
     @games.add(game)
     room.game = game
     #atualiza nome da sala e id

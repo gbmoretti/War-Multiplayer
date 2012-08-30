@@ -1,7 +1,6 @@
 
 #TODO: Use Autoload gem
 
-require 'redis'
 require 'cgi'
 
 SERVER_DIR = "./server/"
@@ -15,6 +14,7 @@ require SERVER_DIR + "models/room.rb"
 require SERVER_DIR + "models/definitions.rb"
 require SERVER_DIR + "models/territory.rb"
 require SERVER_DIR + "models/game.rb"
+require SERVER_DIR + "models/region.rb"
 require SERVER_DIR + "models/collection.rb"
 require SERVER_DIR + "models/players_collection.rb"
 require SERVER_DIR + "models/rooms_collection.rb"

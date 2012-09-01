@@ -10,6 +10,7 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
       var i, t, _ref,
         _this = this;
       this.bonus = bonus;
+
       this.territories = territories; //vetor com os territorios do jogador
       this.actionController = actionController; //controller da janela de ação
       this.callBackContext = callBackContext; //contexto em que a funcao callback sera chamada
@@ -32,9 +33,22 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
 
     //adiciona uma tropa no territorio com id 'id'
     Distribution.prototype.add_troop = function(id) {
-      var i, o, t, x, _ref;
-      if (this.bonus > 0) {
-        this.bonus--;
+      var i, o, t, x, _ref, territory, sum_bonus;
+      
+      sum_bonus = 0;
+      _ref = this.bonus;
+      for(i in _ref) {      
+        sum_bonus += parseInt(_ref[i]); 
+      }
+
+      if (sum_bonus > 0) {
+        region = this.territories[id].region;
+        if (this.bonus[region] != undefined || this.bonus[region] != 0) {
+          this.bonus[region]--;
+        }else {
+          this.bonus['troops']--;
+        }
+        
         if (this.distribuition[id] === void 0) {
           this.distribuition[id] = 0;
         }
@@ -44,7 +58,7 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
         o.text(parseInt(x) + 1);
         this.update_action();
       }
-      if (this.bonus === 0) {
+      if (sum_bonus === 0) {
         _ref = this.territories;
         for (i in _ref) {
           t = _ref[i];
@@ -58,8 +72,21 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
 
     //atualiza janela de ação
     Distribution.prototype.update_action = function(b) {
-      var msg;
-      msg = "Você tem " + this.bonus + " tropas para distribuir. Clique nos países para colocar as tropas.";
+      var msg, bonus, i;
+      
+      
+      msg = "Você tem " + this.bonus['troops'] + " tropas para distribuir em qualquer território.";
+      
+      bonus = $.extend(true, {}, this.bonus); //clonando objeto
+      delete bonus['troops'];
+      if(Object.keys(bonus).length > 0) {
+        msg += "<br/>E ";
+        
+        for(i in bonus) {
+          msg += bonus[i] + " em " + i + ". ";
+        }
+      }
+      
       return this.actionController.open('Distribuição', msg);
     };
 

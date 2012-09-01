@@ -140,9 +140,11 @@ class Game
   end
 
   def get_bonus_by_player(player)
+    bonus = {}
+    
     #bonus por territorio
     territories = get_territories_by_player(player).count
-    bonus = (territories /2).to_i
+    bonus['troops'] = (territories /2).to_i
     
     #bonus por continente
     @regions.each do |r|
@@ -154,11 +156,11 @@ class Game
         end
       end
       puts "+#{r.bonus} para #{player} por ter #{r.name}" if is_owner 
-      bonus += r.bonus if is_owner 
+      bonus[r.id] = r.bonus if is_owner 
     end
     
-    return bonus if bonus > 3
-    return 3 #retorna 3 se o bonus for igual a menor a 3 
+    bonus['troops'] = 3 unless bonus['troops'] > 3
+    return bonus 
   end
 
   def load_data

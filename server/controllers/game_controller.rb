@@ -55,8 +55,6 @@ class GameController < AppController
       update_status(p)
     end
     
-    #puts "Game#next_phase #{player} #{phase} -- round: #{game.round} turn: #{game.turn}"
-     
     case phase
       when Player::TROCA
         next_phase(game)

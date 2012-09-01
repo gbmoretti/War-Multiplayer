@@ -16,8 +16,10 @@ class PregameController < AppController
       if p.room.players.count < 1 #remove sala se nao houver mais jogadores conectados nela
         RoomsCollection.get_instance.rem(p.room)
         @app.controllers[:rooms].update_list #envia lista atualizada para todos os jogadores conectados
+      else
+        update_list(p.room)
       end
-      update_list(p)
+      
     end 
    
   end
@@ -26,7 +28,7 @@ class PregameController < AppController
     p = @app.get_client(conn)
     p.color = msg['color']
     
-    update_player(p)    
+    update_player(p)
   end
 
   def toggle_state(conn,msg)
@@ -48,10 +50,10 @@ class PregameController < AppController
   end
 
   def show(player,room)  
-    update_list(player)
+    update_list(room)
   
     #envia mensagem para abrir modal Pregame ao cliente que juntou-se a sala
-    @app.send(player,Message.new('pregame','open'))    
+    @app.send(player,Message.new('pregame','open'))
   end
   
   private
@@ -64,9 +66,7 @@ class PregameController < AppController
     }))
   end
   
-  def update_list(player)
-    room = player.room
-    
+  def update_list(room)
     #envia lista de jogadores atualizadas para todos os integrantes da sala    
     players = []
       

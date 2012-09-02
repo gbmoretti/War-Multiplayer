@@ -12,7 +12,7 @@ class DefinitionsController < AppController
   def new_conn(conn)
     get_colors(conn)
     get_territories(conn)
-    get_regions(conn) 
+    get_regions(conn)
   end
   
   def get_colors(conn)

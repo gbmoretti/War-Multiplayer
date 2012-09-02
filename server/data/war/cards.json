@@ -1,0 +1,224 @@
+{
+  "cards": {
+     "1": {
+      "nome": "Alaska",
+      "simbolo": 1,
+      "territorio": 1
+    },
+    "2": {
+      "nome": "Mackenzie",
+      "simbolo": 2,
+      "territorio": 2
+    },
+    "3": {
+      "nome": "Groelândia",
+      "simbolo": 3,
+      "territorio": 3
+    },
+    "4": {
+      "nome": "Vancouver",
+      "simbolo": 1,
+      "territorio": 4
+    },
+    "5": {
+      "nome": "Ottawa",
+      "simbolo": 2,
+      "territorio": 5
+    },
+    "6": {
+      "nome": "Labrador",
+      "simbolo": 3,
+      "territorio": 6
+    },
+    "7": {
+      "nome": "California",
+      "simbolo": 1,
+      "territorio": 7
+    },
+    "8": {
+      "nome": "Nova York",
+      "simbolo": 2,
+      "territorio": 8
+    },
+    "9": {
+      "nome": "México",
+      "simbolo": 3,
+      "territorio": 9
+    },
+    "10": {
+      "nome": "Colômbia",
+      "simbolo": 1,
+      "territorio": 10
+    },    
+    "11": {
+      "nome": "Brasil",
+      "simbolo": 2,
+      "territorio": 11
+    },
+    "12": {
+      "nome": "Bolivia",
+      "simbolo": 3,
+      "territorio": 12
+    },
+    "13": {
+      "nome": "Uruguai",
+      "simbolo": 1,
+      "territorio": 13
+    },
+    "14": {
+      "nome": "Islândia",
+      "simbolo": 2,
+      "territorio": 14
+    },
+    "15": {
+      "nome": "Inglaterra",
+      "simbolo": 3,
+      "territorio": 15
+    },
+    "16": {
+      "nome": "Alemanha",
+      "simbolo": 1,
+      "territorio": 16
+    },
+    "17": {
+      "nome": "Suécia",
+      "simbolo": 2,
+      "territorio": 17
+    },
+    "18": { 
+      "nome": "França",
+      "simbolo": 3,
+      "territorio": 18
+    },
+    "19": {
+      "nome": "Polônia",
+      "simbolo": 1,
+      "territorio": 19
+    },
+    "20": {
+      "nome": "Moscou",
+      "simbolo": 2,
+      "territorio": 20
+    },    
+    "21": {
+      "nome": "Omsk",
+      "simbolo": 3,
+      "territorio": 21
+    },
+    "22": {
+      "nome": "Dudinka",
+      "simbolo": 1,
+      "territorio": 22
+    },
+    "23": {
+      "nome": "Sibéria",
+      "simbolo": 2,
+      "territorio": 23
+    },
+    "24": {
+      "nome": "Vladivostok",
+      "simbolo": 3,
+      "territorio": 24
+    },
+    "25": {
+      "nome": "Aral",
+      "simbolo": 1,
+      "territorio": 25
+    },
+    "26": {
+      "nome": "Tchita",
+      "simbolo": 2,
+      "territorio": 26
+    },
+    "27": {
+      "nome": "Mongólia",
+      "simbolo": 3,
+      "territorio": 27
+    },
+    "28": {
+      "nome": "Japão",
+      "simbolo": 1,
+      "territorio": 28
+    },
+    "29": {
+      "nome": "China",
+      "simbolo": 2,
+      "territorio": 29
+    },
+    "30": {
+      "nome": "Oriente Médio",
+      "simbolo": 3,
+      "territorio": 30
+    },
+    "31": {
+      "nome": "Índia",
+      "simbolo": 1,
+      "territorio": 31
+    },
+    "32": {
+      "nome": "Vietnã",
+      "simbolo": 2,
+      "territorio": 32
+    },
+    "33": {
+      "nome": "Argélia",
+      "simbolo": 3,
+      "territorio": 33
+    },
+    "34": {
+      "nome": "Egito",
+      "simbolo": 1,
+      "territorio": 34
+    },
+    "35": {
+      "nome": "Sudão",
+      "simbolo": 2,
+      "territorio": 35
+    },
+    "36": {
+      "nome": "Congo",
+      "simbolo": 3,
+      "territorio": 36
+    },    
+    "37": {
+      "nome": "África do Sul",
+      "simbolo": 1,
+      "territorio": 37
+    },
+    "38": {
+      "nome": "Madagascar",
+      "simbolo": 2,
+      "territorio": 38
+    },
+    "39": {
+      "nome": "Sumatra",
+      "simbolo": 3,
+      "territorio": 39
+    },
+    "40": {
+      "nome": "Borneo",
+      "simbolo": 1,
+      "territorio": 40
+    },
+    "41": {
+      "nome": "Nova Guiné",
+      "simbolo": 2,
+      "territorio": 41
+    },
+    "42": {
+      "nome": "Austrália",
+      "simbolo": 3,
+      "territorio": 42
+    },
+    "43": {
+      "nome": "Coringa",
+      "simbolo": 0,
+      "territorio": 0
+    },
+    "44": {
+      "nome": "Coringa",
+      "simbolo": 0,
+      "territorio": 0
+    }
+  }
+}

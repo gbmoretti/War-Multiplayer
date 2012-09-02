@@ -12,12 +12,16 @@ class Game
     @id = nil
     @regions = []
     @territories = [] 
+    @cards = []
     
     #sorteia ordem dos jogadores
     @players.shuffle! 
     
-    #carrega territorios
+    #carrega territorios, regioes e cartas
     load_data   
+    
+    #embaralha cartas
+    @cards.shuffle!
     
     #seta fase de aguardo para todos os jogadores
     @players.each { |p| p.phase = Player::AGUARDANDO }
@@ -163,6 +167,10 @@ class Game
     return bonus 
   end
 
+  def push_card(player)
+    player.cards.push(@cards.pop)
+  end
+
   def load_data
     defs = Definitions.get_instance
     
@@ -174,11 +182,14 @@ class Game
     end
     
     r = defs.regions
-    i = 0
     r['regions'].each do |k,v|
       @regions[(k.to_i)-1] = Region.new(k,v['nome'],v['territorios'],v['bonus'])
     end    
     
+    c = defs.cards
+    c['cards'].each do |k,v|
+      @cards[(k.to_i)-1] = Card.new(k,v['nome'],v['territorio'],v['simbolo'])
+    end   
   end
 
 end

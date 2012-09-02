@@ -64,6 +64,14 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
       this.attackController = null;
     }
 
+    //método chamado para iniciar a fase de troca
+    GameController.prototype.cards_phase = function(msg) {
+      var cards;
+      cards = new Cards(this.cards,this.app,this,function(bonus) {
+        console.log("Bonus da troca: " + bonus)
+      })
+    };
+
     //método chamado para iniciar a fase de distribuição
     GameController.prototype.distribution = function(msg) {
       var distribution, allTerritories, regions;
@@ -98,14 +106,17 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
 
     //recebe informações do jogador
     GameController.prototype.update_status = function(msg) {
-      var phase_line, status_bar, str, i, b;
+      var phase_line, status_bar, str, i, b, card;
       this.territories = msg.territories;
       this.phase = msg.phase;
       this.playerid = msg.id;
+      
+      //exercitos
       status_bar = this.rightbar.find('div#player-status .content');
       status_bar.html('');
       status_bar.append("<div class=\"status-line\">Exércitos: " + msg.troops + "</div>");
       
+      //bonus
       str = "<div class=\"status-line\">Bônus: " + msg.bonus['troops'];
       delete msg.bonus['troops'];
       for(i in msg.bonus) { //percorre todos os bonus por continente do jogador
@@ -114,10 +125,21 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
       }
       str += "</div>" 
       status_bar.append(str);
+      
+      //quantidade de territorios
       status_bar.append("<div class=\"status-line\">Territórios: " + this.territories.length + "</div>");
+      
+      //cartas
       this.cards = msg.cards;
-      str = "<div class=\"status-line\">Cartas: " + this.cards + "</div>";
+      str = "<div class=\"status-line\">Cartas: ";
+      for(i in msg.cards) {
+        card = msg.cards[i];
+        str += "<div class=\"card simbolo" + card.simbolo + "\">" + card.nome + "</div>";
+      }
+      str += "</div>";
       status_bar.append(str);
+      
+      
       phase_line = this.rightbar.find('div.phase-line');
       phase_line.each(function(i, o) {
         o = $(o);

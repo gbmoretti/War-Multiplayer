@@ -18,6 +18,7 @@
   <script src="js/controllers/gamecontroller/movement.js" type="text/javascript"></script> 
   <script src="js/controllers/gamecontroller/attack.js" type="text/javascript"></script> 
   <script src="js/controllers/gamecontroller/distribution.js" type="text/javascript"></script> 
+  <script src="js/controllers/gamecontroller/cards.js" type="text/javascript"></script>
   <script src="js/controllers/gamecontroller/gamecontroller.js" type="text/javascript"></script> 
   <script src="js/main.js" type="text/javascript"></script>
   
@@ -167,12 +168,21 @@
     <div id="result">      
     </div>
     <hr>    
-    Atacar com <select id="qtd_troops"></select> tropas <button id="btnattack">Atacar!</button>    
-    
-    
-    
+    Atacar com <select id="qtd_troops"></select> tropas <button id="btnattack">Atacar!</button>
   </div>
   
+  <div class="modal-div" id="cards">
+    <div class="closebtn">x</div>
+    <div id="modal-title">Troca de cartas</div>
+    
+    <div id="cards-list">
+    </div>
+    
+    <div style="text-align: right;">
+      <button id="trocar">Trocar!</button>
+      <button id="terminar">Terminar fase</button>
+    </div>
+  </div>
   
 </body>
 

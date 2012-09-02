@@ -293,3 +293,22 @@ div#action {
   z-index: 95;
 }
 
+div.card {
+  display: inline-block;
+  padding-left: 12px;
+  background-position: left center;
+  background-repeat: no-repeat;
+}
+
+div.card.simbolo1 {
+  background-image: url('circulo.png');  
+}
+
+div.card.simbolo2 {
+  background-image: url('quadrado.png');  
+}
+
+div.card.simbolo3 {
+  background-image: url('triangulo.png');  
+}
+

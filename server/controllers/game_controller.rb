@@ -57,7 +57,7 @@ class GameController < AppController
     
     case phase
       when Player::TROCA
-        next_phase(game)
+        cards(player)
       when Player::DISTRIBUICAO
         distribuition(player)
       when Player::ATAQUE
@@ -65,6 +65,10 @@ class GameController < AppController
       when Player::MOVIMENTACAO
         movement(player)
      end
+  end
+  
+  def cards(player)
+    @app.send(player,Message.new('game','cards_phase'))
   end
   
   def distribuition(player)
@@ -100,6 +104,9 @@ class GameController < AppController
     game = @games.get(msg['id'])
     return nil unless p.phase == Player::ATAQUE
     
+    #fazer a verificacao aqui se o jogador conquistou pelo menos 1 territorio
+    game.push_card(p)
+    
     next_phase(game)
   end
 
@@ -124,7 +131,7 @@ class GameController < AppController
       {
         'id' => player.id,
         'phase' => player.phase,
-        'cards' => 'Nao implementado ainda :(',
+        'cards' => player.cards.map { |c| c.to_hash },
         'territories' => player.get_territories.map { |t| t.to_hash },
         'troops' => player.get_troops,
         'bonus' => player.get_bonus

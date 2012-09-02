@@ -2,7 +2,7 @@
 
 class Player
   attr_reader :sid, :nick
-  attr_accessor :color, :ready, :room, :id, :phase
+  attr_accessor :color, :ready, :room, :id, :phase, :cards
 
   #phase constants
   AGUARDANDO   = 0
@@ -12,13 +12,14 @@ class Player
   MOVIMENTACAO = 4  
   N_PHASES     = 5
   
-  def initialize(sid,nick)    
+  def initialize(sid,nick)
     @sid = sid
     @nick = nick
     @color = 1
     @ready = false
     @room = nil
     @phase = nil
+    @cards = []
     @id = -1
   end
   

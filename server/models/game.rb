@@ -169,7 +169,7 @@ class Game
     t = defs.territories
     i = 0
     t['territories'].each do |k,v|    
-      @territories[(k.to_i)-1] = Territory.new(k,v['nome'],@players[i%@players.count],v['vizinhos'])
+      @territories[(k.to_i)-1] = Territory.new(k,v['nome'],@players[i%@players.count],v['vizinhos'],v['region'])
       i += 1
     end
     

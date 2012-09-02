@@ -11,7 +11,8 @@ class DefinitionsController < AppController
   
   def new_conn(conn)
     get_colors(conn)
-    get_territories(conn)  
+    get_territories(conn)
+    get_regions(conn) 
   end
   
   def get_colors(conn)
@@ -20,6 +21,10 @@ class DefinitionsController < AppController
   
   def get_territories(conn)
     conn.send_msg(Message.new('definitions','set_territories',@defs.territories))
+  end
+  
+  def get_regions(conn)
+    conn.send_msg(Message.new('definitions','set_regions',@defs.regions))
   end
   
 end

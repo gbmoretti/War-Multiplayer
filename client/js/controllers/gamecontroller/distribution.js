@@ -6,12 +6,14 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
 
   Distribution = (function() {
 
-    function Distribution(bonus, territories, actionController, callBackContext, callBackFunction) {
+    function Distribution(bonus, territories, allTerritories, regions, actionController, callBackContext, callBackFunction) {
       var i, t, _ref,
         _this = this;
       this.bonus = bonus;
 
       this.territories = territories; //vetor com os territorios do jogador
+      this.allTerritories = allTerritories; //vetor com todos os territorios do tabuleiro
+      this.regions = regions //vetor com todas as regioes do jogo
       this.actionController = actionController; //controller da janela de ação
       this.callBackContext = callBackContext; //contexto em que a funcao callback sera chamada
       this.callBackFunction = callBackFunction; //funcao callback
@@ -26,7 +28,7 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
           return $(this).attr('stroke-width', 1);
         });
         $('path#' + t.id).click(function(o) {
-          return _this.add_troop(o.currentTarget.id);
+          return _this.add_troop($(this).attr('id'));
         });
       }
     }
@@ -40,19 +42,21 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
       for(i in _ref) {      
         sum_bonus += parseInt(_ref[i]); 
       }
-
+      
+      territory = this.allTerritories[id];
+      
       if (sum_bonus > 0) {
-        region = this.territories[id].region;
-        if (this.bonus[region] != undefined || this.bonus[region] != 0) {
+        region = territory.region;
+        if (this.bonus[region] !== void 0 && this.bonus[region] !== 0) {
           this.bonus[region]--;
-        }else {
+        }else if (this.bonus['troops'] > 0) {
           this.bonus['troops']--;
         }
         
         if (this.distribuition[id] === void 0) {
           this.distribuition[id] = 0;
         }
-        this.distribuition[id] = this.distribuition[id] + 1;
+        this.distribuition[id]++;
         o = $('#l' + id + " tspan");
         x = o.text();
         o.text(parseInt(x) + 1);
@@ -83,7 +87,7 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
         msg += "<br/>E ";
         
         for(i in bonus) {
-          msg += bonus[i] + " em " + i + ". ";
+          msg += bonus[i] + " em " + this.regions[i].nome + ". ";
         }
       }
       

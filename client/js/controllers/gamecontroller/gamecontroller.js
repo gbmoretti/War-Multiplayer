@@ -66,8 +66,10 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
 
     //método chamado para iniciar a fase de distribuição
     GameController.prototype.distribution = function(msg) {
-      var distribution;
-      return distribution = new Distribution(msg.bonus, this.territories, this.app.controllers['action'], this, (function(d) {
+      var distribution, allTerritories, regions;
+      allTerritories = this.app.controllers['definitions'].get_territories();
+      regions = this.app.controllers['definitions'].get_regions();
+      return distribution = new Distribution(msg.bonus, this.territories, allTerritories, regions, this.app.controllers['action'], this, (function(d) {
         this.app.conn.send(new EndDistributionMessage(this.roomid, d));
         return distribution = null;
       }));
@@ -96,14 +98,22 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
 
     //recebe informações do jogador
     GameController.prototype.update_status = function(msg) {
-      var phase_line, status_bar, str;
+      var phase_line, status_bar, str, i, b;
       this.territories = msg.territories;
       this.phase = msg.phase;
       this.playerid = msg.id;
       status_bar = this.rightbar.find('div#player-status .content');
       status_bar.html('');
       status_bar.append("<div class=\"status-line\">Exércitos: " + msg.troops + "</div>");
-      status_bar.append("<div class=\"status-line\">Bônus: " + msg.bonus + "</div>");
+      
+      str = "<div class=\"status-line\">Bônus: " + msg.bonus['troops'];
+      delete msg.bonus['troops'];
+      for(i in msg.bonus) { //percorre todos os bonus por continente do jogador
+        b = msg.bonus[i];
+        str += " +" + b;
+      }
+      str += "</div>" 
+      status_bar.append(str);
       status_bar.append("<div class=\"status-line\">Territórios: " + this.territories.length + "</div>");
       this.cards = msg.cards;
       str = "<div class=\"status-line\">Cartas: " + this.cards + "</div>";

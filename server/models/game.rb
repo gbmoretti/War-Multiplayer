@@ -127,6 +127,33 @@ class Game
     t_destiny.troops += qtd
   end
 
+  def exchange(cards)
+    array_c = []
+    cards.each { |c| array_c.push(get_card_by_id(c)) }
+    
+    #verifica se a troca é valida
+    valida = false
+    if array_c.size == 3
+      if array_c[0].simbolo == array_c[1].simbolo && array_c[0].simbolo == array_c[2].simbolo && array_c[1].simbolo == array_c[2].simbolo
+        valida = true 
+      elsif array_c[0].simbolo != array_c[1].simbolo && array_c[0].simbolo != array_c[2].simbolo && array_c[1].simbolo != array_c[2].simbolo
+        valida = true
+      end
+    end
+    puts "Valida? #{valida}"
+  end
+
+  def get_card_by_id(id)
+    c = nil
+    cards = Definitions.get_instance.cards
+    cards.each do |card|
+      c = card if card['id'] == id
+      break if card['id'] == id
+    end
+    puts "carta:" + c.to_s
+    return c
+  end
+
   def get_territories_by_player(player)
     r = []
     @territories.each do |t|

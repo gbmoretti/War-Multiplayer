@@ -35,7 +35,7 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
 
     //adiciona uma tropa no territorio com id 'id'
     Distribution.prototype.add_troop = function(id) {
-      var i, o, t, x, _ref, territory, sum_bonus;
+      var i, o, t, x, _ref, territory, sum_bonus, flag;
       
       sum_bonus = 0;
       _ref = this.bonus;
@@ -46,21 +46,28 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
       territory = this.allTerritories[id];
       
       if (sum_bonus > 0) {
+        flag = false;
         region = territory.region;
         if (this.bonus[region] !== void 0 && this.bonus[region] !== 0) {
           this.bonus[region]--;
+          flag = true;
         }else if (this.bonus['troops'] > 0) {
           this.bonus['troops']--;
+          flag = true;
         }
         
         if (this.distribuition[id] === void 0) {
           this.distribuition[id] = 0;
         }
-        this.distribuition[id]++;
-        o = $('#l' + id + " tspan");
-        x = o.text();
-        o.text(parseInt(x) + 1);
-        this.update_action();
+        
+        if (flag) {
+          this.distribuition[id]++;
+          o = $('#l' + id + " tspan");
+          x = o.text();
+          o.text(parseInt(x) + 1);
+          this.update_action();
+        }
+        
       }
       if (sum_bonus === 0) {
         _ref = this.territories;

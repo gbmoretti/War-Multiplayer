@@ -1,4 +1,18 @@
-var Cards;
+var Cards, ChangeMessage;
+
+ChangeMessage = (function() {
+
+    function ChangeMessage(cards) {
+      this.controller = 'game';
+      this.action = 'exchange_cards';
+      this.params = {
+        'cards': cards
+      };
+    }
+
+    return ChangeMessage;
+
+  })();
 
 Cards = (function() {
   
@@ -16,12 +30,26 @@ Cards = (function() {
     this.send = this.modal.find('button#trocar');
     this.divCards = this.modal.find('div#cards-list');
     
+    this.endPhaseButton.off("click");
+    this.send.off("click");
+    
     this.endPhaseButton.click(function() {
       _this.endPhase();
     });
     
     this.closeButton.click(function() {
       _this.endPhase();
+    });
+    
+    this.send.click(function() {
+      var cards;
+      
+      cards = [];
+      _this.modal.find(":checked").each(function() {
+        cards.push($(this).attr('id'));
+      });
+      
+      _this.app.conn.send(new ChangeMessage(cards));
     });
     
     this.show();
@@ -35,7 +63,7 @@ Cards = (function() {
     for(i in this.cards) {
       card = this.cards[i];
       str += "<div class=\"card simbolo" + card.simbolo + "\">" + card.nome;
-      str += "<input type=\"checkbox\" value=\"" + card.id + "\"/></div>"; 
+      str += "<input type=\"checkbox\" value=\"" + card.id + "\"/></div><br/>"; 
       
     }
     

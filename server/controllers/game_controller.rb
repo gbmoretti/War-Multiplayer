@@ -55,6 +55,8 @@ class GameController < AppController
       update_status(p)
     end
     
+    puts "#{player}: fase: #{player.phase}"
+    
     case phase
       when Player::TROCA
         cards(player)
@@ -69,6 +71,17 @@ class GameController < AppController
   
   def cards(player)
     @app.send(player,Message.new('game','cards_phase'))
+  end
+  
+  def exchange_cards(conn,msg)
+    player = @app.get_client(conn)
+    r = player.room.game.exchange(msg['cards'])
+  end
+  
+  def cards_end(conn,msg)
+    player = @app.get_client(conn)
+    game = @games.get(msg['id'])
+    next_phase(game) if player.phase == Player::TROCA
   end
   
   def distribuition(player)

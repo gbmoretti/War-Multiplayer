@@ -2,7 +2,7 @@
 Controller game. Responsavel por por manipular os eventos em todas as fases do jogo
 */
 
-  var EndAttackMessage, EndDistributionMessage, EndMovementMessage, GameController;
+  var EndAttackMessage, EndDistributionMessage, EndMovementMessage, EndCardsMessage, GameController;
 
   EndDistributionMessage = (function() {
 
@@ -16,6 +16,20 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
     }
 
     return EndDistributionMessage;
+
+  })();
+  
+  EndCardsMessage = (function() {
+
+    function EndCardsMessage(id) {
+      this.controller = 'game';
+      this.action = 'cards_end';
+      this.params = {
+        'id': id
+      };
+    }
+
+    return EndCardsMessage;
 
   })();
 
@@ -68,7 +82,7 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
     GameController.prototype.cards_phase = function(msg) {
       var cards;
       cards = new Cards(this.cards,this.app,this,function(bonus) {
-        console.log("Bonus da troca: " + bonus)
+        this.app.conn.send(new EndCardsMessage(this.roomid));
       })
     };
 

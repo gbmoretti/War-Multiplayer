@@ -75,7 +75,9 @@ class GameController < AppController
   
   def exchange_cards(conn,msg)
     player = @app.get_client(conn)
-    r = player.room.game.exchange(msg['cards'])
+    troca = player.room.game.exchange(player,msg['cards'])
+    @app.send(player,Message.new('game','exchange_result',{'bonus' => troca}))
+    update_status(player) if troca > 0
   end
   
   def cards_end(conn,msg)
@@ -85,6 +87,9 @@ class GameController < AppController
   end
   
   def distribuition(player)
+    bonus = player.get_bonus
+    bonus['troops'] += player.bonus_troca
+    player.bonus_troca = 0
     @app.send(player,Message.new('game','distribution',{'bonus' => player.get_bonus}))
   end
   
@@ -96,6 +101,7 @@ class GameController < AppController
   end
   
   def attack(player)
+    player.territorios_ant = player.get_territories.size
     update_status(player)
     @app.send(player,Message.new('game','attack')) 
   end
@@ -117,8 +123,8 @@ class GameController < AppController
     game = @games.get(msg['id'])
     return nil unless p.phase == Player::ATAQUE
     
-    #fazer a verificacao aqui se o jogador conquistou pelo menos 1 territorio
-    game.push_card(p)
+    #puxa uma carta do monte para o jogador se ele conquistou pelo menos 1 territorio
+    game.push_card(p) if p.territorios_ant < p.get_territories.size
     
     next_phase(game)
   end

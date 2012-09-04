@@ -33,6 +33,8 @@ Cards = (function() {
     this.endPhaseButton.off("click");
     this.send.off("click");
     
+    this.modal.find("div#msg").html("");
+    
     this.endPhaseButton.click(function() {
       _this.endPhase();
     });
@@ -45,10 +47,9 @@ Cards = (function() {
       var cards;
       
       cards = [];
-      _this.modal.find(":checked").each(function() {
-        cards.push($(this).attr('id'));
+      _this.modal.find(":checked").each(function(k,v) {
+        cards.push($(this).val());
       });
-      
       _this.app.conn.send(new ChangeMessage(cards));
     });
     
@@ -73,6 +74,16 @@ Cards = (function() {
     
     this.app.openModal(this.modal);
   };
+
+  Cards.prototype.exchange_result = function(msg) {
+    var msgDiv = this.modal.find("div#msg")
+    if (msg.bonus == -1) {
+      msgDiv.html("Nao é possível fazer a troca com essas cartas.");
+    }else {
+      msgDiv.html("<b>Feito!</b> Você tem mais " + msg.bonus + " tropas para distribuir");
+      this.send.hide();
+    }
+  }
 
   Cards.prototype.endPhase = function() {
     this.callBackFunction.call(this.context, this.bonus);

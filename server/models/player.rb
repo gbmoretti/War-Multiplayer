@@ -2,7 +2,7 @@
 
 class Player
   attr_reader :sid, :nick
-  attr_accessor :color, :ready, :room, :id, :phase, :cards
+  attr_accessor :color, :ready, :room, :id, :phase, :cards, :trocas, :bonus_troca, :territorios_ant
 
   #phase constants
   AGUARDANDO   = 0
@@ -20,6 +20,9 @@ class Player
     @room = nil
     @phase = nil
     @cards = []
+    @trocas = 0
+    @bonus_troca = 0
+    @territorios_ant = 0
     @id = -1
   end
   
@@ -38,19 +41,15 @@ class Player
   
   def get_territories
     return @room.game.get_territories_by_player(self) unless @room.nil? || @room.game.nil?
-    nil
+    []
   end
   
   def get_bonus
     return @room.game.get_bonus_by_player(self) unless @room.nil? || @room.game.nil?
-    nil
+    []
   end
  
-	def get_cards
-    nil
-  end
-
-  def next_phase!
+	def next_phase!
     @phase = (@phase + 1) % N_PHASES
   end
   

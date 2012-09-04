@@ -127,31 +127,63 @@ class Game
     t_destiny.troops += qtd
   end
 
-  def exchange(cards)
+  def exchange(player,cards)
     array_c = []
     cards.each { |c| array_c.push(get_card_by_id(c)) }
     
+    #TODO: achar um lugar melhor pra colocar isso depois
+    #vetor com as combinacoes validas  de cartas
+    comb = []
+    comb.push([1,1,1])
+    comb.push([2,2,2])
+    comb.push([3,3,3])
+    comb.push([1,2,3])
+
     #verifica se a troca é valida
     valida = false
     if array_c.size == 3
-      if array_c[0].simbolo == array_c[1].simbolo && array_c[0].simbolo == array_c[2].simbolo && array_c[1].simbolo == array_c[2].simbolo
-        valida = true 
-      elsif array_c[0].simbolo != array_c[1].simbolo && array_c[0].simbolo != array_c[2].simbolo && array_c[1].simbolo != array_c[2].simbolo
-        valida = true
-      end
+      array_c = array_c.map { |c| c['simbolo'] } #pega apenas o simbolo das cartas recebidas
+      coringas = array_c.count(0) #conta quantos coringas existem
+      array_c = array_c.delete_if { |c| c == 0 } #remove os coringas da do vetor de simbolos recebidos
+      array_c.sort! #ordena vetor de simbolos
+      puts array_c.inspect
+      comb.each { |c| valida = true if c.slice(0,3-coringas) == array_c } #compara as combinacoes validas com o vetor de 
+                                                                      #simbolos. Se houver algum igual entao a combinacao
+                                                                      #recebida é valida      
     end
-    puts "Valida? #{valida}"
+    
+    return -1 unless valida
+    
+    #calcula bonus
+    player.trocas += 1
+    case player.trocas
+      when 1 
+        bonus = 4 
+      when 2 
+        bonus = 6
+      when 3 
+        bonus = 8 
+      when 4 
+        bonus = 10 
+      when 5 
+        bonus = 12
+      when 6 
+        bonus = 15 
+      else 
+        bonus = (player.trocas -2)*5
+    end
+    player.bonus_troca = bonus
+    
+    #retira cartas da posse do jogador
+    player.cards.delete(array_c)
+    
+    return bonus
   end
 
   def get_card_by_id(id)
-    c = nil
     cards = Definitions.get_instance.cards
-    cards.each do |card|
-      c = card if card['id'] == id
-      break if card['id'] == id
-    end
-    puts "carta:" + c.to_s
-    return c
+    puts cards['cards'][id]
+    return cards['cards'][id]
   end
 
   def get_territories_by_player(player)
@@ -186,7 +218,6 @@ class Game
           break
         end
       end
-      puts "+#{r.bonus} para #{player} por ter #{r.name}" if is_owner 
       bonus[r.id] = r.bonus if is_owner 
     end
     

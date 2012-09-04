@@ -80,8 +80,7 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
 
     //método chamado para iniciar a fase de troca
     GameController.prototype.cards_phase = function(msg) {
-      var cards;
-      cards = new Cards(this.cards,this.app,this,function(bonus) {
+      this.cards = new Cards(this.cards,this.app,this,function(bonus) {
         this.app.conn.send(new EndCardsMessage(this.roomid));
       })
     };
@@ -117,6 +116,10 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
         return this.app.conn.send(new EndMovementMessage(this.roomid, m));
       }));
     };
+
+    GameController.prototype.exchange_result = function(msg) {
+      this.cards.exchange_result(msg);
+    }
 
     //recebe informações do jogador
     GameController.prototype.update_status = function(msg) {

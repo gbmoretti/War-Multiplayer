@@ -25,7 +25,7 @@ class Game
     
     #seta fase de aguardo para todos os jogadores
     @players.each { |p| p.phase = Player::AGUARDANDO }
-            
+    
   end  
 
   #def remove_player(p)
@@ -50,9 +50,10 @@ class Game
 
   def next_player
       @turn = (@turn + 1) % (@players.size)
-      next_player = @players[@turn]
-      next_player.phase = Player::TROCA
-      next_player
+      nextp = @players[@turn]
+      next_player if nextp.get_territories.count < 1 #passa para o proximo jogador se o atual não tem mais territorios
+      nextp.phase = Player::TROCA
+      nextp
   end
 
   def distribuition(territories)
@@ -129,7 +130,7 @@ class Game
 
   def exchange(player,cards)
     array_c = []
-    cards.each { |c| array_c.push(get_card_by_id(c)) }
+    cards.each { |c| array_c.push(get_card_by_id(player.cards,c)) }
     
     #TODO: achar um lugar melhor pra colocar isso depois
     #vetor com as combinacoes validas  de cartas
@@ -142,12 +143,12 @@ class Game
     #verifica se a troca é valida
     valida = false
     if array_c.size == 3
-      array_c = array_c.map { |c| c['simbolo'] } #pega apenas o simbolo das cartas recebidas
-      coringas = array_c.count(0) #conta quantos coringas existem
-      array_c = array_c.delete_if { |c| c == 0 } #remove os coringas da do vetor de simbolos recebidos
-      array_c.sort! #ordena vetor de simbolos
+      simbolos = array_c.map { |c| c.simbolo } #pega apenas o simbolo das cartas recebidas
+      coringas = simbolos.count(0) #conta quantos coringas existem
+      simbolos = simbolos.delete_if { |c| c == 0 } #remove os coringas da do vetor de simbolos recebidos
+      simbolos.sort! #ordena vetor de simbolos
       puts array_c.inspect
-      comb.each { |c| valida = true if c.slice(0,3-coringas) == array_c } #compara as combinacoes validas com o vetor de 
+      comb.each { |c| valida = true if c.slice(0,3-coringas) == simbolos } #compara as combinacoes validas com o vetor de 
                                                                       #simbolos. Se houver algum igual entao a combinacao
                                                                       #recebida é valida      
     end
@@ -175,15 +176,15 @@ class Game
     player.bonus_troca = bonus
     
     #retira cartas da posse do jogador
-    player.cards.delete(array_c)
+    player.cards -= array_c
     
     return bonus
   end
 
-  def get_card_by_id(id)
-    cards = Definitions.get_instance.cards
-    puts cards['cards'][id]
-    return cards['cards'][id]
+  def get_card_by_id(cards,id)
+    card = nil
+    cards.each { |c|card = c if c.id.to_i == id.to_i }
+    return card
   end
 
   def get_territories_by_player(player)
@@ -232,12 +233,17 @@ class Game
   def load_data
     defs = Definitions.get_instance
     
+    ters = []
     t = defs.territories
-    i = 0
     t['territories'].each do |k,v|    
-      @territories[(k.to_i)-1] = Territory.new(k,v['nome'],@players[i%@players.count],v['vizinhos'],v['region'])
-      i += 1
+      index = (k.to_i)-1
+      @territories[index] = Territory.new(k,v['nome'],nil,v['vizinhos'],v['region'])
+      ters.push(@territories[index])
     end
+    
+    ters.shuffle!
+    i = 0
+    ters.each { |t| t.owner = @players[i%@players.count]; i += 1 }
     
     r = defs.regions
     r['regions'].each do |k,v|

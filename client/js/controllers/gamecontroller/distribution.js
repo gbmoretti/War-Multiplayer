@@ -94,7 +94,7 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
         msg += "<br/>E ";
         
         for(i in bonus) {
-          msg += bonus[i] + " em " + this.regions[i].nome + ". ";
+          msg += bonus[i] + " na <b>" + this.regions[i].nome + "</b>. ";
         }
       }
       

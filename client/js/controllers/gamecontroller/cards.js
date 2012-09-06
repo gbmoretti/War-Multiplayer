@@ -43,6 +43,7 @@ Cards = (function() {
       _this.endPhase();
     });
     
+    this.send.show();
     this.send.click(function() {
       var cards;
       

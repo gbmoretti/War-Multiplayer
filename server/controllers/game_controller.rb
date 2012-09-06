@@ -90,7 +90,7 @@ class GameController < AppController
     bonus = player.get_bonus
     bonus['troops'] += player.bonus_troca
     player.bonus_troca = 0
-    @app.send(player,Message.new('game','distribution',{'bonus' => player.get_bonus}))
+    @app.send(player,Message.new('game','distribution',{'bonus' => bonus}))
   end
   
   def distribution_end(conn,msg)

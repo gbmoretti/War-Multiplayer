@@ -26,8 +26,11 @@ class PregameController < AppController
 
   def change_color(conn,msg)
     p = @app.get_client(conn)
-    p.color = msg['color']
     
+    f = false
+    p.room.players.each { |p| f = true if p.color == msg['color'] }
+    
+    p.color = msg['color'] unless f
     update_player(p)
   end
 
@@ -40,7 +43,6 @@ class PregameController < AppController
     #verifica se existem pelo menos dois jogadores na sala e se estao todos prontos, e inicia partida
     room = p.room
     if room.players.count > 0 and room.all_ready?
-    #if room.all_ready?
       @app.send(room.players,Message.new('pregame','close'))
       puts "Iniciando partida na sala #{room.to_s}..."
       puts "Para os jogadores #{room.players.inspect}"
@@ -50,6 +52,12 @@ class PregameController < AppController
   end
 
   def show(player,room)  
+    color = 1
+    colors = player.room.players.collect { |p| p.color }
+    while colors.include?(color)
+      color += 1
+    end
+    player.color = color
     update_list(room)
   
     #envia mensagem para abrir modal Pregame ao cliente que juntou-se a sala

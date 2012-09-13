@@ -1,0 +1,79 @@
+{
+  "objetives": {
+    "1": {
+      "descricao": "Destruir na totalidade os exércitos amarelos.",
+      "tipo": "elimina",
+      "parametro": 6
+    },
+    "2": {
+      "descricao": "Destruir na totalidade os exércitos azuis.",
+      "tipo": "elimina",
+      "parametro": 2
+    },
+    "3": {
+      "descricao": "Destruir na totalidade os exércitos verdes.",
+      "tipo": "elimina",
+      "parametro": 3
+    },
+    "4": {
+      "descricao": "Destruir na totalidade os exércitos vermelho.",
+      "tipo": "elimina",
+      "parametro": 1
+    },
+    "5": {
+      "descricao": "Destruir na totalidade os exércitos brancos.",
+      "tipo": "elimina",
+      "parametro": 4
+    },
+    "6": {
+      "descricao": "Destruir na totalidade os exércitos pretos.",
+      "tipo": "elimina",
+      "parametro": 5
+    },
+    "7": {
+      "descricao": "Conquistar os continentes Ásia e África.",
+      "tipo": "continente",
+      "parametro": [2,3]
+    },
+    "8": {
+      "descricao": "Conquistar os continentes América do Norte e Oceania.",
+      "tipo": "continente",
+      "parametro": [1,6]
+    },
+    "9": {
+      "descricao": "Conquistar os continentes América do Norte e África.",
+      "tipo": "continente",
+      "parametro": [2,6]
+    },
+    "10": {
+      "descricao": "Conquistar os continentes Ásia e América do Sul.",
+      "tipo": "continente",
+      "parametro": [3,5]
+    },
+    "11": {
+      "descricao": "Conquistar os continentes Ásia e África.",
+      "tipo": "continente",
+      "parametro": [2,3]
+    },
+    "12": {
+      "descricao": "Conquistar os continentes América do Sul, Europa e qualquer outro a sua escolha.",
+      "tipo": "continente",
+      "parametro": [0,4,5]
+    },
+    "13": {
+      "descricao": "Conquistar os continentes Europa, Oceania e qualquer outro a sua escolha.",
+      "tipo": "continente",
+      "parametro": [0,1,4]
+    },
+    "14": {
+      "descricao": "Conquistar 18 territórios com pelos menos 2 exércitos em cada.",
+      "tipo": "territorio",
+      "parametro": [2,18]
+    },
+    "15": {
+      "descricao": "Conquistar 24 territórios.",
+      "tipo": "territorio",
+      "parametro": [1,24]
+    },
+  }
+}

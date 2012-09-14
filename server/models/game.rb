@@ -13,24 +13,28 @@ class Game
     @regions = []
     @territories = [] 
     @cards = []
+    @objectives = []
     
     #sorteia ordem dos jogadores
     @players.shuffle! 
     
-    #carrega territorios, regioes e cartas
+    #carrega territorios, regioes, cartas e objetivos
     load_data   
     
     #embaralha cartas
     @cards.shuffle!
+    #embaralha objetivos
+    @objectives.shuffle!
     
-    #seta fase de aguardo para todos os jogadores
-    @players.each { |p| p.phase = Player::AGUARDANDO }
+    
+    #seta fase de aguardo para todos os jogadores, e distribui objetivos
+    @players.each do |p| 
+      set_objetivo(p)
+      p.phase = Player::AGUARDANDO 
+    end
     
   end  
 
-  #def remove_player(p)
-  #  @players.delete(p)
-  #end
 
   def end_game
     puts "Jogo encerrado..."
@@ -181,6 +185,10 @@ class Game
     return bonus
   end
 
+  def win?(player)
+    nil
+  end
+
   def get_card_by_id(cards,id)
     card = nil
     cards.each { |c|card = c if c.id.to_i == id.to_i }
@@ -226,6 +234,19 @@ class Game
     return bonus 
   end
 
+  def set_objetivo(player)
+    objetivo = @objectives.pop
+    players = @players.clone
+    players.delete(player)
+    cores = players.collect(&:color) #gera um vetor com as cores de todos os jogadores, menos o "player"
+    #entrega outra carta para esse jogador se a carta for do tipo eliminacao e a cor do objetivo nao for de ninguem
+    if objetivo.tipo == "elimina" && !cores.include?(objetivo.params)
+      set_objetivo(player)
+    else
+      player.objetivo = objetivo
+    end
+  end
+
   def push_card(player)
     player.cards.push(@cards.pop)
   end
@@ -233,6 +254,7 @@ class Game
   def load_data
     defs = Definitions.get_instance
     
+    #carrega territorios
     ters = []
     t = defs.territories
     t['territories'].each do |k,v|    
@@ -241,19 +263,29 @@ class Game
       ters.push(@territories[index])
     end
     
+    #distribui territorios (TODO: passar para um metodo separado)
     ters.shuffle!
     i = 0
     ters.each { |t| t.owner = @players[i%@players.count]; i += 1 }
     
+    #carrega regioes
     r = defs.regions
     r['regions'].each do |k,v|
       @regions[(k.to_i)-1] = Region.new(k,v['nome'],v['territorios'],v['bonus'])
     end    
     
+    #carrega cartas-territorio 
     c = defs.cards
     c['cards'].each do |k,v|
       @cards[(k.to_i)-1] = Card.new(k,v['nome'],v['territorio'],v['simbolo'])
-    end   
+    end
+    
+    #carrega objetivos
+    o = defs.objectives
+    o['objectives'].each do |k,v|
+      @objectives[(k.to_i)-1] = Objective.new(k,v['descricao'],v['tipo'],v['parametro'])
+    end
+    
   end
 
 end

@@ -20,8 +20,13 @@ class Definitions
     get_from_file('war/cards')
   end
 
+  def objectives
+    get_from_file('war/objectives')
+  end
+  
   private
   def get_from_file(file)
+
     JSON.parse(File.open(File.expand_path("server/data/#{file}.json"), 'rb') { |file| file.read }) 
   end
 

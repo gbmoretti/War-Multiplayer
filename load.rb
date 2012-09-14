@@ -3,7 +3,9 @@
 
 require 'cgi'
 
-SERVER_DIR = "./server/"
+root = File.dirname(__FILE__)
+
+SERVER_DIR = root + "/server/"
 
 require SERVER_DIR + "includes/jsonable.rb"
 require SERVER_DIR + "includes/messages.rb"
@@ -16,6 +18,7 @@ require SERVER_DIR + "models/territory.rb"
 require SERVER_DIR + "models/game.rb"
 require SERVER_DIR + "models/region.rb"
 require SERVER_DIR + "models/card.rb"
+require SERVER_DIR + "models/objective.rb"
 require SERVER_DIR + "models/collection.rb"
 require SERVER_DIR + "models/players_collection.rb"
 require SERVER_DIR + "models/rooms_collection.rb"

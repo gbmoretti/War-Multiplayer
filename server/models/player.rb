@@ -2,7 +2,7 @@
 
 class Player
   attr_reader :sid, :nick
-  attr_accessor :color, :ready, :room, :id, :phase, :cards, :trocas, :bonus_troca, :territorios_ant
+  attr_accessor :color, :ready, :room, :id, :phase, :cards, :trocas, :bonus_troca, :territorios_ant, :objetivo
 
   #phase constants
   AGUARDANDO   = 0
@@ -19,6 +19,7 @@ class Player
     @ready = false
     @room = nil
     @phase = nil
+    @objetivo = nil
     @cards = []
     @trocas = 0
     @bonus_troca = 0

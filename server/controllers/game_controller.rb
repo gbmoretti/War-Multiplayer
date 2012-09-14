@@ -37,9 +37,7 @@ class GameController < AppController
       update_status(player)
       update_objective(player)
     end
-    #enviando apenas para o jogador real por enquanto
-    #update_status(game.jogador) 
-    #update_objective(game.jogador)
+    
 
     next_phase(game)
     
@@ -160,7 +158,7 @@ class GameController < AppController
   def update_objective(player)
     @app.send(player,Message.new('game','update_objective',
       {
-        'objective' => 'Nao implementado ainda :('
+        'objective' => player.objetivo.descricao
       }
     ))
   end

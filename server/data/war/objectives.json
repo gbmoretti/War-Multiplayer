@@ -1,5 +1,5 @@
 {
-  "objetives": {
+  "objectives": {
     "1": {
       "descricao": "Destruir na totalidade os exércitos amarelos.",
       "tipo": "elimina",
@@ -74,6 +74,6 @@
       "descricao": "Conquistar 24 territórios.",
       "tipo": "territorio",
       "parametro": [1,24]
-    },
+    }
   }
 }

@@ -173,7 +173,8 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
     GameController.prototype.update_objective = function(msg) {
       var objective_bar;
       this.objective = msg.objective;
-      objective_bar = this.rightbar.find('div#objetivo #texto-objetivo');
+      objective_bar = this.rightbar.find('div#objetivo .content');
+      console.log(objective_bar);
       return objective_bar.html(this.objective);
     };
 

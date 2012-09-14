@@ -40,6 +40,13 @@ class Game
     puts "Jogo encerrado..."
   end
 
+  def end_game?    
+    player = @players[@turn]
+    
+    return player if player.objetivo.completed? player, @territories, @regions
+    return nil
+  end
+
   def next_player_and_phase
     player = @players[@turn]
     

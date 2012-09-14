@@ -10,16 +10,19 @@ class GameController < AppController
     unless player.nil?
       game = player.room.game
       unless game.nil?
-        @app.send(game.players,Message.new('warn','#{player} foi desconectado. Encerrando partida.'))
-        
-        game.end_game
-        @games.rem(game)
+        @app.send(game.players,Message.new('warn','#{player} foi desconectado. Encerrando partida.'))        
+        finalize_game(game)
       end
     end
   end
   
   def name
     :game
+  end
+
+  def finalize_game(game)
+    game.end_game
+    @games.rem(game)
   end
 
   def start_game(room)
@@ -44,6 +47,12 @@ class GameController < AppController
   end
   
   def next_phase(game)
+    acabou = game.end_game?
+    unless acabou.nil?
+      puts "ACAAAAAAAAAAAAAABOOOOOOOOOOOOUUUUUUU! #{acabou} venceu!"
+      finalize_game(game)
+      return nil
+    end
     player = game.next_player_and_phase
     phase = player.phase
     
@@ -53,8 +62,7 @@ class GameController < AppController
       update_status(p)
     end
     
-    puts "#{player}: fase: #{player.phase}"
-    
+
     case phase
       when Player::TROCA
         cards(player)

@@ -26,11 +26,9 @@ class PregameController < AppController
 
   def change_color(conn,msg)
     p = @app.get_client(conn)
+    colors = get_players_color(p.room,p)
     
-    f = false
-    p.room.players.each { |p| f = true if p.color == msg['color'] }
-    
-    p.color = msg['color'] unless f
+    p.color = msg['color'].to_i unless colors.include?(msg['color'].to_i)
     update_player(p)
   end
 
@@ -52,12 +50,7 @@ class PregameController < AppController
   end
 
   def show(player,room)  
-    color = 1
-    colors = player.room.players.collect { |p| p.color }
-    while colors.include?(color)
-      color += 1
-    end
-    player.color = color
+    set_color(player)
     update_list(room)
   
     #envia mensagem para abrir modal Pregame ao cliente que juntou-se a sala
@@ -96,6 +89,24 @@ class PregameController < AppController
       }
     
     @app.send(room.players,Message.new('pregame','update',params))
+  end
+  
+  def get_players_color(room,player=nil)
+    unless player.nil?
+      players = room.players.clone
+      players.delete(player)
+    end
+    players.map(&:color)
+  end
+  
+  def set_color(player)
+    players_color = get_players_color(player.room,player)
+    total_colors = Definitions.get_instance.colors['colors'].count
+    i = 0
+    while players_color.include?(player.color)
+      player.color = (i%total_colors)+1
+      i += 1
+    end
   end
   
 end

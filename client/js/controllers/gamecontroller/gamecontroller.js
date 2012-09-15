@@ -207,6 +207,19 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
       return this.update_rightbar();
     };
 
+    GameController.prototype.end_game = function(msg) {
+       var modal;
+       
+       modal = $('div#end_game');
+       modal.find('div#msg').html(msg.msg);
+       
+       modal.find('div.closebtn').click(function() {
+        location.reload();
+      });
+       
+       this.app.openModal(modal);
+    };
+
     //atualiza barra lateral direita
     GameController.prototype.update_rightbar = function() {
       var color, id, pl, player, player_line, _ref, _results;
@@ -242,6 +255,8 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
       o = $('#l' + id);
       return o.find('tspan').text(troops);
     };
+
+
 
     return GameController;
 

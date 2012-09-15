@@ -10,8 +10,8 @@ class GameController < AppController
     unless player.nil?
       game = player.room.game
       unless game.nil?
-        @app.send(game.players,Message.new('warn','#{player} foi desconectado. Encerrando partida.'))        
-        finalize_game(game)
+        @app.send(game.players,Message.new('chat','warn',{'msg' => "#{player} foi desconectado. Encerrando partida."}))
+        finalize_game(game,"#{player} saiu.")
       end
     end
   end
@@ -20,8 +20,9 @@ class GameController < AppController
     :game
   end
 
-  def finalize_game(game)
+  def finalize_game(game,msg="")
     game.end_game
+    @app.send(game.players,Message.new('game','end_game',{'msg' => msg}))
     @games.rem(game)
   end
 
@@ -31,7 +32,7 @@ class GameController < AppController
     @games.add(game)
     room.game = game
     #atualiza nome da sala e id
-    @app.send(game.players,Message.new('game','update_room_data',{'name' => room.name, 'id' => room.id}))
+    @app.send(game.players,Message.new('game','update_room_data',{'name' => room.name, 'id' => game.id}))
     
     update_players(game)
     update_territories(game)
@@ -41,7 +42,7 @@ class GameController < AppController
       update_objective(player)
     end
     
-
+    puts "Games: " + @games.list.map(&:id).inspect
     next_phase(game)
     
   end
@@ -50,7 +51,7 @@ class GameController < AppController
     acabou = game.end_game?
     unless acabou.nil?
       puts "ACAAAAAAAAAAAAAABOOOOOOOOOOOOUUUUUUU! #{acabou} venceu!"
-      finalize_game(game)
+      finalize_game(game,"#{acabou} venceu.")
       return nil
     end
     player = game.next_player_and_phase
@@ -76,12 +77,6 @@ class GameController < AppController
   end
   
   def cards(player)
-    card = player.room.game.cards[1]
-    puts card.simbolo
-    player.cards << player.room.game.cards[1]
-    player.cards << player.room.game.cards[2]
-    player.cards << player.room.game.cards[42]
-    update_status(player)
     @app.send(player,Message.new('game','cards_phase'))
   end
   

@@ -76,6 +76,12 @@ class GameController < AppController
   end
   
   def cards(player)
+    card = player.room.game.cards[1]
+    puts card.simbolo
+    player.cards << player.room.game.cards[1]
+    player.cards << player.room.game.cards[2]
+    player.cards << player.room.game.cards[42]
+    update_status(player)
     @app.send(player,Message.new('game','cards_phase'))
   end
   
@@ -84,6 +90,7 @@ class GameController < AppController
     troca = player.room.game.exchange(player,msg['cards'])
     @app.send(player,Message.new('game','exchange_result',{'bonus' => troca}))
     update_status(player) if troca > 0
+    update_territories(player.room.game)
   end
   
   def cards_end(conn,msg)

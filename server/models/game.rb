@@ -1,7 +1,7 @@
 
 class Game
 
-  attr_reader :territories, :players, :jogador, :turn, :round
+  attr_reader :territories, :players, :jogador, :turn, :round, :cards
   attr_accessor :id
 
   def initialize(room)
@@ -22,7 +22,7 @@ class Game
     load_data   
     
     #embaralha cartas
-    @cards.shuffle!
+    #@cards.shuffle!
     #embaralha objetivos
     @objectives.shuffle!
     
@@ -140,28 +140,25 @@ class Game
   end
 
   def exchange(player,cards)
-    array_c = []
-    cards.each { |c| array_c.push(get_card_by_id(player.cards,c)) }
+    my_cards = []
+    cards.each { |c| my_cards << get_card_by_id(player.cards,c) }
     
-    #TODO: achar um lugar melhor pra colocar isso depois
-    #vetor com as combinacoes validas  de cartas
-    comb = []
-    comb.push([1,1,1])
-    comb.push([2,2,2])
-    comb.push([3,3,3])
-    comb.push([1,2,3])
-
+    array_c = my_cards.map { |c| c.simbolo.to_i }
+    
     #verifica se a troca é valida
     valida = false
     if array_c.size == 3
-      simbolos = array_c.map { |c| c.simbolo } #pega apenas o simbolo das cartas recebidas
-      coringas = simbolos.count(0) #conta quantos coringas existem
-      simbolos = simbolos.delete_if { |c| c == 0 } #remove os coringas da do vetor de simbolos recebidos
-      simbolos.sort! #ordena vetor de simbolos
-      puts array_c.inspect
-      comb.each { |c| valida = true if c.slice(0,3-coringas) == simbolos } #compara as combinacoes validas com o vetor de 
-                                                                      #simbolos. Se houver algum igual entao a combinacao
-                                                                      #recebida é valida      
+      if array_c.count(0) == 0 #se nao existirem coringas
+        combs = []
+        combs << [1,2,3]
+        combs << [1,1,1]
+        combs << [2,2,2]
+        combs << [3,3,3]
+        array_c.sort!
+        valida = true if combs.include?(array_c)
+      else
+        valida = true
+      end
     end
     
     return -1 unless valida
@@ -188,6 +185,12 @@ class Game
     
     #retira cartas da posse do jogador
     player.cards -= array_c
+    
+    #verifica se o jogador possui algum dos territorios da carta e adiciona 2 tropas
+    my_cards.each do |c|
+      territorio = @territories[c.territorio-1]
+      territorio.troops += 2 if territorio.owner == player && c.simbolo != 0
+    end
     
     return bonus
   end

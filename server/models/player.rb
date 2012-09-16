@@ -9,7 +9,7 @@ class Player
   TROCA        = 1
   DISTRIBUICAO = 2
   ATAQUE       = 3
-  MOVIMENTACAO = 4  
+  MOVIMENTACAO = 4
   N_PHASES     = 5
   
   def initialize(sid,nick)

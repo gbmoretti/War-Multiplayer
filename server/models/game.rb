@@ -184,7 +184,7 @@ class Game
     player.bonus_troca = bonus
     
     #retira cartas da posse do jogador
-    player.cards -= array_c
+    player.cards -= my_cards
     
     #verifica se o jogador possui algum dos territorios da carta e adiciona 2 tropas
     my_cards.each do |c|

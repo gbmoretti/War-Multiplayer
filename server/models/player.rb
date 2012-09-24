@@ -1,5 +1,3 @@
- 
-
 class Player
   attr_reader :sid, :nick
   attr_accessor :color, :ready, :room, :id, :phase, :cards, :trocas, :bonus_troca, :territorios_ant, :objetivo

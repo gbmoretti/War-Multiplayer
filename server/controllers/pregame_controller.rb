@@ -2,6 +2,7 @@ class PregameController < AppController
 
   def initialize(app)
     super(app)
+    @players_collection = PlayersCollection.get_instance
   end
 
   def name
@@ -41,12 +42,24 @@ class PregameController < AppController
     #verifica se existem pelo menos dois jogadores na sala e se estao todos prontos, e inicia partida
     room = p.room
     if room.players.count > 0 and room.all_ready?
+      (6-room.players.count).times do |x|
+        adiciona_bot(room)
+      end
+      update_list(room)
       @app.send(room.players,Message.new('pregame','close'))
       puts "Iniciando partida na sala #{room.to_s}..."
       puts "Para os jogadores #{room.players.inspect}"
       @app.controllers[:game].start_game(room)
     end
         
+  end
+  
+  def adiciona_bot(room)
+    bot = Ai.new(nil,'BOT')
+    bot.room = room
+    set_color(bot)
+    @players_collection.add(bot)
+    room.players << bot
   end
 
   def show(player,room)  
@@ -81,13 +94,14 @@ class PregameController < AppController
     end
     
     params = {
-      'id' => room.id,       
+      'id' => room.id,
       'name' => room.name,
       'owner' => room.owner,
-      'size' => '8',
+      'size' => '6',
       'players' => players
       }
-    
+    puts "update_list() =========" 
+    puts params
     @app.send(room.players,Message.new('pregame','update',params))
   end
   

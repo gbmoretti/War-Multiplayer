@@ -174,7 +174,6 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
       var objective_bar;
       this.objective = msg.objective;
       objective_bar = this.rightbar.find('div#objetivo .content');
-      console.log(objective_bar);
       return objective_bar.html(this.objective);
     };
 
@@ -183,16 +182,14 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
       var color, i, max, owner, t, _results;
       max = msg.length;
       i = 0;
-      _results = [];
       while (i < max) {
         t = msg[i];
         owner = this.players[t.owner];
         color = this.app.controllers['definitions'].colors[owner.color];
         this.change_color(t.id, color.hex);
         this.change_troops(t.id, t.troops);
-        _results.push(i++);
+        i++;
       }
-      return _results;
     };
 
     //recebe dados da sala
@@ -226,18 +223,18 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
       pl = this.rightbar.find('div#playerslist');
       pl.html("<div id=\"title\">" + this.roomname + "</div>");
       _ref = this.players;
-      _results = [];
       for (id in _ref) {
         player = _ref[id];
+        console.log(player);
         color = this.app.controllers['definitions'].colors[player.color];
-        player_line = "<div class=player>" + player.nick + "</div>      <div class=\"color\" style=\"background-color: " + color.hex + ";\"></div>      <div class=\"turn\"";
+        player_line = "<div class=player>" + player.nick + "</div><div class=\"color\" style=\"background-color: " + color.hex + ";\"></div><div class=\"turn\"";
         if (player.turn) {
           player_line += " id=\"active\"";
         }
         player_line += "></div>";
-        _results.push(pl.append(player_line));
+        pl.append(player_line);
       }
-      return _results;
+      
     };
 
     //responsavel por mudar a cor de um territorio e, se for o caso, mudar a cor do texto

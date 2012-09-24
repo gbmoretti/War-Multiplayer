@@ -39,7 +39,8 @@ class ServerConnection < Rack::WebSocket::Application
   
   def send_msg(msg)
     msg = msg.to_json
-    send_data(msg);
+    puts msg
+    send_data(msg)
   end
 end
 

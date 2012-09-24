@@ -12,7 +12,6 @@ class RoomsController < AppController
   def show(p)
     conn = @app.get_conn(p)
     get_list(conn)
-    #@app.send(p,OpenListRooms.new)
   end
 
   def get_list(conn,args=nil)

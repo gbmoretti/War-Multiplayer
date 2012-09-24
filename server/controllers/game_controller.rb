@@ -46,7 +46,7 @@ class GameController < AppController
     next_phase(game)
     
   end
-  
+    
   def next_phase(game)
     acabou = game.end_game?
     unless acabou.nil?
@@ -77,13 +77,15 @@ class GameController < AppController
   end
   
   def cards(player)
-    @app.send(player,Message.new('game','cards_phase'))
+    @app.send(player,Message.new('game','cards_phase')) if player.class == Player
+    player.cards if player.class == Ai
   end
   
   def exchange_cards(conn,msg)
     player = @app.get_client(conn)
     troca = player.room.game.exchange(player,msg['cards'])
-    @app.send(player,Message.new('game','exchange_result',{'bonus' => troca}))
+    @app.send(player,Message.new('game','exchange_result',{'bonus' => troca})) if player.class == Player
+    player.cards_result(troca) if player.class == Ai
     update_status(player) if troca > 0
     update_territories(player.room.game)
   end
@@ -98,7 +100,8 @@ class GameController < AppController
     bonus = player.get_bonus
     bonus['troops'] += player.bonus_troca
     player.bonus_troca = 0
-    @app.send(player,Message.new('game','distribution',{'bonus' => bonus}))
+    @app.send(player,Message.new('game','distribution',{'bonus' => bonus})) if player.class == Player
+    player.distribuition(bonus) if player.class == Ai
   end
   
   def distribution_end(conn,msg)
@@ -111,7 +114,8 @@ class GameController < AppController
   def attack(player)
     player.territorios_ant = player.get_territories.size
     update_status(player)
-    @app.send(player,Message.new('game','attack')) 
+    @app.send(player,Message.new('game','attack')) if player.class == Player
+    player.attack if player.class == Ai 
   end
 
   def attack_order(conn,msg)
@@ -123,7 +127,8 @@ class GameController < AppController
     result = game.attack(msg['origin'],msg['destiny'],msg['qtd'])    
     update_territories(game)
     update_status(p)
-    @app.send(p,Message.new('game','attack_result',result))
+    @app.send(p,Message.new('game','attack_result',result)) if p.class == Player
+    p.attack_result(result) if p.class == Ai
   end
 
   def attack_end(conn, msg)
@@ -132,13 +137,14 @@ class GameController < AppController
     return nil unless p.phase == Player::ATAQUE
     
     #puxa uma carta do monte para o jogador se ele conquistou pelo menos 1 territorio
-    game.push_card(p) if p.territorios_ant < p.get_territories.size
+    game.push_card(p) if p.territorios_ant < p.get_territories.size && p.cards.count < 5
     
     next_phase(game)
   end
 
   def movement(player)
-    @app.send(player,Message.new('game','movement'))
+    @app.send(player,Message.new('game','movement')) if player.class == Player
+    player.movement if player.class == Ai
   end
   
   def movement_end(conn,msg)
@@ -162,7 +168,7 @@ class GameController < AppController
         'territories' => player.get_territories.map { |t| t.to_hash },
         'troops' => player.get_troops,
         'bonus' => player.get_bonus
-      }))
+      })) if player.class == Player
   end
   
   def update_objective(player)

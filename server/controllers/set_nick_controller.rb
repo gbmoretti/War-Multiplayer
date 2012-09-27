@@ -6,7 +6,7 @@ class SetNickController < AppController
   end
 
   def set(conn,args)
-    p = Player.new(conn.sid,args['nick'])
+    p = Player.new(conn,args['nick'])
     @players.add(p)
     @app.bind_client(conn,p)
     @app.broadcast(Message.new('playerList','update',{'list' => @players.list}));    

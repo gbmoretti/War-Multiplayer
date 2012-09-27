@@ -10,8 +10,9 @@ class Player
   MOVIMENTACAO = 4
   N_PHASES     = 5
   
-  def initialize(sid,nick)
-    @sid = sid
+  def initialize(conn,nick)
+    @sid = conn.sid
+    @conn = conn
     @nick = nick
     @color = 1
     @ready = false

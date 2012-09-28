@@ -86,7 +86,9 @@ class Ai < Player
   end
   
   def joga
-    ##LINHA 156 do AI.js
+    while encontra_jogadas.count > 0
+      melhor = melhor_jogada(jogadas)
+    end
   end
   
   def encontra_jogadas
@@ -100,6 +102,10 @@ class Ai < Player
       end
     end
     return jogadas
+  end
+  
+  def melhor_jogada(jogada)
+    
   end
   
   #########

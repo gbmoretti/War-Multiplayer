@@ -97,7 +97,7 @@ class Ai < Player
       if t.troops > 1
         t.vizinhos do |v|
           qtd = t.troops-1 > 3 ? 3 : t.troops-1
-          jogadas.push {'origin' => t.id, 'destiny' => v.id, 'qtd' => qtd}
+          jogadas.push({'origin' => t.id, 'destiny' => v.id, 'qtd' => qtd})
         end
       end
     end

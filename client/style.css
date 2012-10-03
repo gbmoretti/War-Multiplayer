@@ -147,7 +147,7 @@ div.status-line {
 div#bottombar {
   display: inline-block;
   width: 100%;
-  height: 6%;
+  /*height: 6%;*/
   border-top: solid 2px #000;
 }
 

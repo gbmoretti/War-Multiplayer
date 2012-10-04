@@ -47,6 +47,8 @@ Ele mantem um lista de todos os controladores utilizados pela aplicação. Tamb�
         return _this.conn.refreshStatus();
       };
       
+      console.log("Aplicacao iniciada!");
+      
       /*Evento disparado quando uma mensagem é recebida.
         Padrão de mensagem:
           {

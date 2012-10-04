@@ -73,6 +73,9 @@ Cards = (function() {
     
     this.divCards.html(str);
     
+    if (this.cards.length < 3) this.modal.find("#opt2").show();
+    else this.modal.find("#opt1");
+    
     this.app.openModal(this.modal);
   };
 
@@ -88,6 +91,8 @@ Cards = (function() {
 
   Cards.prototype.endPhase = function() {
     this.callBackFunction.call(this.context, this.bonus);
+    this.modal.find("#opt1").hide();
+    this.modal.find("#opt2").hide();
     this.app.closeModal(this.modal);
   };
   

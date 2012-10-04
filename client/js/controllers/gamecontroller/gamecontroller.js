@@ -154,6 +154,7 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
         card = msg.cards[i];
         str += "<div class=\"card simbolo" + card.simbolo + "\">" + card.nome + "</div>";
       }
+      if (msg.cards.length == 0) str += "Nenhuma";
       str += "</div>";
       status_bar.append(str);
       
@@ -214,8 +215,11 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
        modal.find('div#msg').html(msg.msg);
        
        modal.find('div.closebtn').click(function() {
-        location.reload();
-      });
+         location.reload();
+       });
+       modal.find('button').click(function() {
+         location.reload();
+       });
        
        this.app.openModal(modal);
     };
@@ -227,7 +231,7 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
       this.rightbar.find(".info").show();
       
       pl = this.rightbar.find('div#playerslist');
-      pl.html("<div id=\"title\">" + this.roomname + "</div>");
+      pl.html("<div id=\"title\">Sala: " + this.roomname + "</div>");
       _ref = this.players;
       _results = [];
       for (id in _ref) {

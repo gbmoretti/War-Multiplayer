@@ -50,7 +50,6 @@ class GameController < AppController
   def next_phase(game)
     acabou = game.end_game?
     unless acabou.nil?
-      puts "ACAAAAAAAAAAAAAABOOOOOOOOOOOOUUUUUUU! #{acabou} venceu!"
       finalize_game(game,"#{acabou} venceu.")
       return nil
     end

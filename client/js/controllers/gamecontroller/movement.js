@@ -15,7 +15,7 @@ Classe responsavel pelos eventos da fase de movimentação
       this.callBackFunction = callBackFunction;
       this.territories_id = null;
       this.movement = {};
-      this.divEndPhase = "<div style=\"text-align: right\"><button id=\"endmovement\">Terminar fase</button></div>";
+      this.divEndPhase = "<div style=\"text-align: right\"><button id=\"endmovement\">Terminei movimentação</button></div>";
       $(document).off("click", 'button#endmovement');
       $(document).on('click', 'button#endmovement', function() {
         return _this.endPhase();
@@ -64,7 +64,7 @@ Classe responsavel pelos eventos da fase de movimentação
       self = this;
       this.origin_id = null;
       this.destiny_id = null;
-      this.actionController.open("Movimentação", "Escolha um território para mover tropas" + this.divEndPhase);
+      this.actionController.open("Movimentação de exércitos", "Escolha um território para mover tropas" + this.divEndPhase);
       $("path").off("hover click");
       _ref = this.territories_id;
       _results = [];
@@ -99,7 +99,7 @@ Classe responsavel pelos eventos da fase de movimentação
       $('path').off("hover click");
       self = this;
       nome = this.allTerritories[this.origin_id].nome;
-      this.actionController.open("Movimentação", ("Clique em um território vizinho ao " + nome + " para receber uma tropa.") + this.divEndPhase);
+      this.actionController.open("Movimentação de exércitos", ("Clique em um território vizinho ao " + nome + " para receber uma tropa.") + this.divEndPhase);
       _ref = this.allTerritories[this.origin_id].vizinhos;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         t = _ref[_i];

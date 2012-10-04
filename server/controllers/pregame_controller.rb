@@ -40,7 +40,7 @@ class PregameController < AppController
     
     #verifica se existem pelo menos dois jogadores na sala e se estao todos prontos, e inicia partida
     room = p.room
-    if room.players.count > 2 and room.all_ready?
+    if room.players.count > 0 and room.all_ready?
       @app.send(room.players,Message.new('pregame','close'))
       puts "Iniciando partida na sala #{room.to_s}..."
       puts "Para os jogadores #{room.players.inspect}"

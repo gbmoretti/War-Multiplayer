@@ -46,6 +46,8 @@ class RoomsController < AppController
     room.add_player(p)
     p.room = room
     
+    #atualiza lista de salas de todos os clientes
+    @app.broadcast(Message.new('rooms','list',{'list' => list_rooms}),[p])
     #chama controller pregame
     @app.controllers[:pregame].show(p,room)   
   end
@@ -69,7 +71,8 @@ class RoomsController < AppController
         'id' => r.id,       
         'name' => r.name,
         'owner' => r.owner,
-        'size' => '8',
+        'game' => !r.game.nil?,
+        'size' => 6,
         'players' => players
         }
       )

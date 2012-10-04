@@ -38,7 +38,7 @@
       <div id="buttons">
          <div id="btnchat">Chat</div>         
          <div id="btnrooms">Salas</div>
-         <div>Informações</div>              
+         <div>Informações</div>
       </div>
       
     </div>
@@ -46,28 +46,18 @@
     <div id="rightbar">
     
       <div class="info" id="playerslist">
-        <div id="title">SALA SALINHA SALETA</div>
-        <div class="player">gbmoretti</div> <div class="color" style="background-color: red;">&nbsp;</div> <div class="turn">&nbsp;</div>
-        <div class="player">jaguapiru</div> <div class="color" style="background-color: blue;">&nbsp;</div> <div class="turn" id="active">&nbsp;</div>
-        <div class="player">guandaline</div> <div class="color" style="background-color: yellow;">&nbsp;</div> <div class="turn">&nbsp;</div>
+        <div id="title"></div>        
       </div>
       
       <div class="info" id="objetivo">
         <div id="title">Objetivo</div>
-        <div class="content">
-        Seu objetivo é destruir os exércitos amarelos. Caso esse exército seja destruído por outro jogador seu objetivo
-        passa a ser conquistar 24 territórios.
+        <div class="content">        
         </div>
       </div>
     
       <div class="info" id="player-status">
         <div id="title">Status</div>
         <div class="content">
-          <div class="status-line">Turnos: 5</div>
-          <div class="status-line">Exércitos: 17</div>
-          <div class="status-line">Territórios: 10</div>
-          <div class="status-line">Bônus: 7 (+5 +2)</div>
-          <div class="status-line">Cartas: Brasil, Dudinka, África do Sul</div>     
         </div>
            
       </div>
@@ -81,7 +71,8 @@
         <div class="phase-line" id="phase4">Movimentação</div>
       </div>
       
-      
+      <div class="pregame" id="players">
+        <div id="title">Jogadores online</div>
     </div>
     
   </div>
@@ -89,9 +80,11 @@
   
   
   <div id="chat-window">
-      <div id="chat"></div>       
+      <div id="chat">
+        <span class="warn">Aguardando escolha do nick...</span><br/>
+      </div> 
       <div id="chatinput">
-          <input type="text" id="txt" />
+          <input type="text" id="txt" placeholder="Digite aqui..." />
       </div>
       
       </div>

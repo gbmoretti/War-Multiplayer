@@ -76,6 +76,7 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
       this.objective = null;
       this.phase = null;
       this.attackController = null;
+      
     }
 
     //método chamado para iniciar a fase de troca
@@ -174,7 +175,6 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
       var objective_bar;
       this.objective = msg.objective;
       objective_bar = this.rightbar.find('div#objetivo .content');
-      console.log(objective_bar);
       return objective_bar.html(this.objective);
     };
 
@@ -223,6 +223,9 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
     //atualiza barra lateral direita
     GameController.prototype.update_rightbar = function() {
       var color, id, pl, player, player_line, _ref, _results;
+      this.rightbar.find(".pregame").hide();
+      this.rightbar.find(".info").show();
+      
       pl = this.rightbar.find('div#playerslist');
       pl.html("<div id=\"title\">" + this.roomname + "</div>");
       _ref = this.players;

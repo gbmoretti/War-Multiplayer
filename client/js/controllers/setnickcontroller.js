@@ -36,6 +36,8 @@
     }
 
     SetNickController.prototype.open = function() {
+      $("div#rightbar").find("#players").show();
+      $("div#rightbar").find(".info").hide();
       return this.app.openModal(this.modal);
     };
 

@@ -73,8 +73,6 @@ Cards = (function() {
         
       }
       
-      if (str === "") str = "Nenhuma carta";
-      
       this.divCards.html(str);
       
       if (this.cards.length < 3) this.modal.find("#opt2").show();

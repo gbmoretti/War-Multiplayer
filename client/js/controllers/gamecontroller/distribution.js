@@ -85,8 +85,8 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
     Distribution.prototype.update_action = function(b) {
       var msg, bonus, i;
       
-      
-      msg = "Você tem " + this.bonus['troops'] + " tropas para distribuir em qualquer território.";
+      msg = "Para adicionar exércitos a um território, clique com o botão esquerdo do mouse sobre um território com sua cor."
+      msg += "Você tem " + this.bonus['troops'] + " tropas para distribuir em qualquer território.";
       
       bonus = $.extend(true, {}, this.bonus); //clonando objeto
       delete bonus['troops'];
@@ -98,7 +98,7 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
         }
       }
       
-      return this.actionController.open('Distribuição', msg);
+      return this.actionController.open('Distribuição de exércitos', msg);
     };
 
     return Distribution;

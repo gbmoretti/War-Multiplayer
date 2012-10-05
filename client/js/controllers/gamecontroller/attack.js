@@ -38,8 +38,10 @@ Classe responsavel por manipular os eventos durante a fase de ataque
       this.atkButton = this.modal.find('#btnattack');
       this.resultDiv = this.modal.find('#result');
       this.territories_id = null;
-      this.divEndPhase = "<div style=\"text-align: right\"><button id=\"endattack\">Terminar fase</button></div>";
-      this.modal.find('.closebtn').click(function() {
+      this.divEndPhase = "<div style=\"text-align: right\"><button id=\"endattack\">Terminei ataque</button></div>";
+      
+      this.modal.find("#parar").click(function() {
+        _this.app.closeModal(_this.modal);
         return _this.reset();
       });
       $(document).on('click', 'button#endattack', function() {
@@ -52,6 +54,7 @@ Classe responsavel por manipular os eventos durante a fase de ataque
     //método chamado quando a fase é terminada. Desliga os eventos e chama a função de callback
     Attack.prototype.endPhase = function() {
       $('button#endattack').off("click");
+      $('button#parar').off("click")
       $("path").off("hover click");
       return this.callBackFunction.call(this.callBackContext, null);
     };
@@ -77,7 +80,7 @@ Classe responsavel por manipular os eventos durante a fase de ataque
 
     //método para escolhar territorio de origem do ataque
     Attack.prototype.chooseOrigin = function() {
-      var id, self, _i, _len, _ref, _results;
+      var id, self, _i, _len, _ref, _results, troops;
       self = this;
       this.origin_id = null;
       this.destiny_id = null;
@@ -86,23 +89,27 @@ Classe responsavel por manipular os eventos durante a fase de ataque
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         id = _ref[_i];
-        $('#' + id).hover(function(o) {
-          if ($(this).find("tspan").text() !== 1) {
-            return $(this).attr('stroke-width', 2);
+        $('#' + id).hover(function(o) {          
+          troops = $("#l" + $(this).attr('id')).find("tspan").text();
+          if (troops !== '1') {
+            $(this).attr('stroke-width', 2);
           }
         }, function(o) {
           if ($(this).attr('id') !== self.origin_id) {
-            return $(this).attr('stroke-width', 1);
+            $(this).attr('stroke-width', 1);
           }
         });
-        _results.push($('#' + id).click(function(o) {
-          if ($(this).find("tspan").text() !== 1) {
+        
+        $('#' + id).click(function(o) {
+          troops = $("#l" + $(this).attr('id')).find("tspan").text();
+          if (troops !== '1') {
             self.origin_id = $(this).attr('id');
-            return self.chooseDestiny();
+            self.chooseDestiny();
+          }else {
+            self.actionController.open("Ataque", "Escolha um território para ser a origem do ataque. Apenas territórios com mais de 1 exércitos podem ser origem de ataque." + self.divEndPhase);
           }
-        }));
-      }
-      return _results;
+        });
+      }      
     };
 
     //método para escolher territorio alvo do ataque
@@ -115,20 +122,26 @@ Classe responsavel por manipular os eventos durante a fase de ataque
       _ref = this.allTerritories[this.origin_id].vizinhos;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         t = _ref[_i];
-        $('#' + t).hover(function(o) {
-          return $(this).attr('stroke-width', 2);
-        }, function(o) {
-          if ($(this).attr('id') !== self.destiny_id) {
-            return $(this).attr('stroke-width', 1);
-          }
-        });
-        $('#' + t).click(function(o) {
-          if (self.allTerritories[$(this).attr('id')].owner === self.app.controllers['game'].playerid) {
-            self.reset();
-          }
-          self.destiny_id = $(this).attr('id');
-          return self.attackWindow();
-        });
+        console.log(t + " " + Array.indexOf(t,this.territories_id));
+        if (Array.indexOf(t,this.territories_id) === -1) {
+          $('#' + t).hover(function(o) {
+            return $(this).attr('stroke-width', 2);
+          }, function(o) {
+            if ($(this).attr('id') !== self.destiny_id) {
+              return $(this).attr('stroke-width', 1);
+            }
+          });
+          $('#' + t).click(function(o) {
+            id = parseInt($(this).attr('id'));
+            console.log(self.allTerritories[id].owner + ' ' + self.app.controllers['game'].playerid)
+            if (self.allTerritories[id].owner === self.app.controllers['game'].playerid) {
+              self.reset();
+            }
+            self.destiny_id = $(this).attr('id');
+            return self.attackWindow();
+          });
+        }
+        
       }
       return $('#' + this.origin_id).click(function() {
         return self.reset();

@@ -48,6 +48,7 @@ Classe responsavel pelos eventos da fase de movimentação
         t = territories[_i];
         _results.push(this.territories_id.push(t.id));
       }
+      console.log(this.territories_id);
       return _results;
     };
 
@@ -103,7 +104,7 @@ Classe responsavel pelos eventos da fase de movimentação
       _ref = this.allTerritories[this.origin_id].vizinhos;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         t = _ref[_i];
-        if ($.inArray(t, this.territories_id)) {
+        if ($.inArray(t + "", this.territories_id) > -1) {
           $('#' + t).hover(function(o) {
             return $(this).attr('stroke-width', 2);
           }, function(o) {

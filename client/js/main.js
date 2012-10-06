@@ -18,6 +18,10 @@ $(document).ready(function() {
 
     app.start();
     $("#loading").hide();
+    $("div#btnreset").show();
+    $("div#btnreset").click(function() {
+      location.reload();
+    });
   }
 
   host = $(location).attr('host');

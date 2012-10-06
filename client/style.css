@@ -284,9 +284,9 @@ div.content {
 
 div#action {
   position: absolute;
-  top: 77%;
+  top: 71%;
   left: 25%;
-  height: 13%;
+  /*height: 13%;*/
   width: 35%;
   background-color: #DDD;
   border: solid 1px #000;
@@ -294,6 +294,10 @@ div#action {
   padding: 0.3%;
   text-align: left;
   z-index: 95;
+}
+
+div#action #msg {
+  font-size: 85%;
 }
 
 div.card {

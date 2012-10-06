@@ -30,8 +30,8 @@ Classe responsavel por manipular os eventos durante a fase de ataque
       this.callBackContext = callBackContext; //contexto em que a funcao callback sera chamada
       this.callBackFunction = callBackFunction; //funcao callback
       this.modal = $('.modal-div#attack'); //janela de status do ataque
-      this.nomeAtk = this.modal.find('#nome_atk');
-      this.nomeDef = this.modal.find('#nome_def');
+      this.nomeAtk = this.modal.find('.nome_atk');
+      this.nomeDef = this.modal.find('.nome_def');
       this.troopsAtk = this.modal.find('#troops_atk');
       this.troopsDef = this.modal.find('#troops_def');
       this.selectTroops = this.modal.find('#qtd_troops');
@@ -106,7 +106,7 @@ Classe responsavel por manipular os eventos durante a fase de ataque
             self.origin_id = $(this).attr('id');
             self.chooseDestiny();
           }else {
-            self.actionController.open("Ataque", "Escolha um território para ser a origem do ataque. Apenas territórios com mais de 1 exércitos podem ser origem de ataque." + self.divEndPhase);
+            self.actionController.open("Ataque", "Escolha um território para ser a origem do ataque. Apenas territórios com mais de 1 exército podem ser origem de ataque." + self.divEndPhase);
           }
         });
       }      
@@ -122,8 +122,7 @@ Classe responsavel por manipular os eventos durante a fase de ataque
       _ref = this.allTerritories[this.origin_id].vizinhos;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         t = _ref[_i];
-        console.log(t + " " + Array.indexOf(t,this.territories_id));
-        if (Array.indexOf(t,this.territories_id) === -1) {
+        if ($.inArray(t + "",this.territories_id) === -1) {
           $('#' + t).hover(function(o) {
             return $(this).attr('stroke-width', 2);
           }, function(o) {
@@ -133,12 +132,13 @@ Classe responsavel por manipular os eventos durante a fase de ataque
           });
           $('#' + t).click(function(o) {
             id = parseInt($(this).attr('id'));
-            console.log(self.allTerritories[id].owner + ' ' + self.app.controllers['game'].playerid)
-            if (self.allTerritories[id].owner === self.app.controllers['game'].playerid) {
+            if ($.inArray(t + "",this.territories_id) !== -1) {
               self.reset();
+            }else {
+              self.destiny_id = $(this).attr('id');
+              self.attackWindow();
             }
-            self.destiny_id = $(this).attr('id');
-            return self.attackWindow();
+            
           });
         }
         
@@ -150,15 +150,18 @@ Classe responsavel por manipular os eventos durante a fase de ataque
 
     //janela de status do ataque
     Attack.prototype.attackWindow = function(result) {
-      var html, qtd_troops,
+      var html, qtd_troops, terAtk, terDef,
         _this = this;
-      if (result == null) {
-        result = null;
-      }
+      
       $('path').off("hover click");
       this.actionController.close();
-      this.nomeAtk.text(this.allTerritories[this.origin_id].nome);
-      this.nomeDef.text(this.allTerritories[this.destiny_id].nome);
+      
+      terAtk = this.allTerritories[this.origin_id].nome;
+      terDef = this.allTerritories[this.destiny_id].nome;
+      
+      this.nomeAtk.text(terAtk);
+      this.nomeDef.text(terDef);
+
       this.troopsAtk.text($('#l' + this.origin_id + ' tspan').text());
       this.troopsDef.text($('#l' + this.destiny_id + ' tspan').text());
       qtd_troops = parseInt($('#l' + this.origin_id + ' tspan').text());
@@ -171,6 +174,7 @@ Classe responsavel por manipular os eventos durante a fase de ataque
         this.selectTroops.append("<option value=\"" + qtd_troops + "\">" + qtd_troops + "</option>");
         qtd_troops--;
       }
+      $("div#attack_actions").show();
       this.resultDiv.html("");
       this.app.openModal(this.modal);
       this.atkButton.off("click");
@@ -180,16 +184,15 @@ Classe responsavel por manipular os eventos durante a fase de ataque
       });
       if (result !== null) {
         html = "Resultados do último ataque:<br/>";
-        html += "" + (this.nomeAtk.text()) + " perdeu " + result.atk.lost + " tropas (" + result.atk.dice[0] + " / " + result.atk.dice[1] + " / " + result.atk.dice[2] + ")<br/>";
-        html += "" + (this.nomeDef.text()) + " perdeu " + result.def.lost + " tropas (" + result.def.dice[0] + " / " + result.def.dice[1] + " / " + result.def.dice[2] + ")<br/>";
+        html += terAtk + " perdeu " + result.atk.lost + " exércitos (" + result.atk.dice[0] + " / ";
+        html += (result.atk.dice[1] == 0 ? '-' : result.atk.dice[1]) + " / "; 
+        html += (result.atk.dice[2] == 0 ? '-' : result.atk.dice[2]) + ")<br/>";
+        html += terDef + " perdeu " + result.def.lost + " exércitos (" + result.def.dice[0] + " / "
+        html += (result.def.dice[1] == 0 ? '-' : result.def.dice[1]) + " / "
+        html += (result.def.dice[2] == 0 ? '-' : result.def.dice[2]) + ")<br/>";
         this.resultDiv.html(html);
         if (result.winner !== null) {
-          this.atkButton.html("Fechar");
-          this.atkButton.off("click");
-          return this.atkButton.click(function() {
-            _this.app.closeModal(_this.modal);
-            return _this.reset();
-          });
+          $("div#attack_actions").hide();
         }
       }
     };

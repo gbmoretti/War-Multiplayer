@@ -85,19 +85,19 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
     Distribution.prototype.update_action = function(b) {
       var msg, bonus, i;
       
-      msg = "Para adicionar exércitos a um território, clique com o botão esquerdo do mouse sobre um território com sua cor."
-      msg += "Você tem " + this.bonus['troops'] + " tropas para distribuir em qualquer território.";
+      msg = "Para adicionar exércitos a um território, clique com o botão esquerdo do mouse sobre um território com sua cor.<br/>"
+      msg += "Você tem <b>" + this.bonus['troops'] + "</b> tropas para distribuir em qualquer território.";
       
       bonus = $.extend(true, {}, this.bonus); //clonando objeto
       delete bonus['troops'];
       if(Object.keys(bonus).length > 0) {
-        msg += "<br/>E ";
+        msg += " E ";
         
         for(i in bonus) {
           msg += bonus[i] + " na <b>" + this.regions[i].nome + "</b>. ";
         }
       }
-      
+
       return this.actionController.open('Distribuição de exércitos', msg);
     };
 

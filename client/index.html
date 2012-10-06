@@ -39,6 +39,7 @@
          <div id="btnchat">Chat</div>         
          <div id="btnrooms">Salas</div>
          <div>Informações</div>
+         <div id="btnreset">Sair</div>
       </div>
       
     </div>
@@ -134,17 +135,20 @@
     <div class="closebtn">x</div>
     <div id="modal-title">Ataque</div>
     
-    <span id="nome_atk"></span> ataca <span id="nome_def"></span><br/><br/>
+    <div style="text-align: center;"><span class="nome_atk"></span> ataca <span class="nome_def"></span></div>
     
-    Total de exércitos no territorio atacante: <span id="troops_atk"></span><br/>
-    Total de exércitos no territorio defensor: <span id="troops_def"></span><br/>
+    Total de exércitos<br/>
+    <span class="nome_atk"></span>: <b><span id="troops_atk"></span></b><br/>
+    <span class="nome_def"></span>: <b><span id="troops_def"></span></b><br/>
     <hr>
-    <div id="result">      
+    <div id="result">
     </div>
-    <hr>    
-    Atacar com <select id="qtd_troops"></select> exércitios 
-    <button id="btnattack">Atacar!</button>
-    <button id="parar">Parar</button>
+    <hr>
+    <div id="attack_actions">
+      Atacar com <select id="qtd_troops"></select> exércitos 
+      <button id="btnattack">Atacar!</button>
+    </div>
+    <div style="text-align: right;"><button id="parar">Parar</button></div>
   </div>
   
   <div class="modal-div" id="cards">

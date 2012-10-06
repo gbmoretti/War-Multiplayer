@@ -92,27 +92,31 @@ div.info {
 }
 
 /*div#playerlist*/ div.player {
-  width: 75%;
+  /*width: 75%;*/
   overflow: hidden;
   display: inline-block;
   font-size: 90%;
-  margin-top: 3px;
+  vertical-align: middle;
 }
 
 /*div#playerlist*/ div.color {
-  width: 5px;
-  height: 5px;
+  width: 8px;
+  height: 8px;
   margin: 0px 5px 0px 5px;
   border: solid 1px #000;
   display: inline-block;
+  vertical-align: middle;
 }
 
-/*div#playerlist*/ div.turn, .ready-state {
-  width: 5px;
-  height: 5px;
+/*div#playerlist*/ div.turn {
   margin: 0px 5px 0px 5px;
   border: solid 1px #000;
   display: inline-block;
+  vertical-align: middle;
+  min-width: 50px;
+  font-size: 50%;
+  padding: 1px;
+  text-align: center;
 }
 
 div.info#playerlist {
@@ -246,12 +250,22 @@ div.closebtn {
   cursor: pointer;
 }
 
+.ready-state {
+  display: inline-block;
+  font-size: 50%;
+  vertical-align: middle;
+  padding: 1px;
+  min-width: 50px;
+  text-align: center;
+  border: solid 1px #000;
+}
+
 .ready-state#true {
-  background-color: #000;
+  background-color: #009900;
 }
 
 .ready-state#false {
-  background-color: #FFF;
+  background-color: #CCC;
 }
 
 .evento {

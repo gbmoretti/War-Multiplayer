@@ -79,7 +79,7 @@
     };
 
     PregameController.prototype.update_list = function(list) {
-      var colors, hex, p, _i, _len, _ref, _results;
+      var colors, hex, p, _i, _len, _ref, _results, line;
       this.players.html('');
       _ref = this.list;
       _results = [];
@@ -87,9 +87,13 @@
         p = _ref[_i];
         colors = this.app.controllers['definitions'].get_colors();
         hex = colors[p.color].hex;
-        _results.push(this.players.append("<li>" + p.nick + " <div class=\"color\" style=\"background-color: " + hex + "\">&nbsp;</div> <div class=\"ready-state\" id=" + p.ready + ">&nbsp;</div></li>"));
+        line = '<li>';
+        line += '<div class=\"ready-state\" id="' + p.ready + '">';
+        line += p.ready ? 'Pronto' : 'Aguardando';
+        line += "</div><div class=\"color\" style=\"background-color: " + hex + "\">&nbsp;</div>";
+        line += "</div> " + p.nick + "</li>"
+        this.players.append(line);
       }
-      return _results;
     };
 
     return PregameController;

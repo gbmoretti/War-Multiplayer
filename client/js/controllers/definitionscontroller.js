@@ -13,17 +13,14 @@
     }
 
     DefinitionsController.prototype.set_colors = function(msg) {
-      console.log('Recebendo lista de cores');
       return this.colors = msg.colors;
     };
 
     DefinitionsController.prototype.set_territories = function(msg) {
-      console.log('Recebendo lista de territórios');
       return this.territories = msg.territories;
     };
 
     DefinitionsController.prototype.set_regions = function(msg) {
-      console.log('Recebendo lista de regioes');
       return this.regions = msg.regions;
     };
 

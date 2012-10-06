@@ -237,11 +237,13 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
       for (id in _ref) {
         player = _ref[id];
         color = this.app.controllers['definitions'].colors[player.color];
-        player_line = "<div class=player>" + player.nick + "</div>      <div class=\"color\" style=\"background-color: " + color.hex + ";\"></div>      <div class=\"turn\"";
-        if (player.turn) {
-          player_line += " id=\"active\"";
-        }
-        player_line += "></div>";
+        player_line = "<div><div class=\"turn\"";
+        if (player.turn) player_line += " id=\"active\"";
+        player_line += ">";
+        player_line += player.turn ? 'Jogando' : 'Aguardando';
+        player_line += "</div>";
+        player_line += "<div class=\"color\" style=\"background-color: " + color.hex + "\"></div>";
+        player_line += "<div class=player>" + player.nick + "</div></div>";
         _results.push(pl.append(player_line));
       }
       return _results;

@@ -76,7 +76,7 @@ Cards = (function() {
       this.divCards.html(str);
       
       if (this.cards.length < 3) this.modal.find("#opt2").show();
-      else this.modal.find("#opt1");
+      else this.modal.find("#opt1").show();
       
       this.app.openModal(this.modal);
     }    

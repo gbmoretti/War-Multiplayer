@@ -142,8 +142,8 @@ class GameController < AppController
     game = @games.get(msg['id'])
     return nil unless p.phase == Player::ATAQUE
     
-    #puxa uma carta do monte para o jogador se ele conquistou pelo menos 1 territorio
-    game.push_card(p) if p.territorios_ant < p.get_territories.size
+    #puxa uma carta do monte para o jogador se ele conquistou pelo menos 1 territorio tem menos que 5 cartas
+    game.push_card(p) if p.territorios_ant < p.get_territories.size && p.cards.size < 5
     
     next_phase(game)
   end

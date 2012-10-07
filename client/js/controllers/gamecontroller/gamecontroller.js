@@ -95,7 +95,8 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
     GameController.prototype.cards_phase = function(msg) {
       this.cards = new Cards(this.cards,this.app,this,function(bonus) {
         this.app.conn.send(new EndCardsMessage(this.roomid));
-      })
+      });
+      $("#chat-window").hide();
     };
 
     //método chamado para iniciar a fase de distribuição

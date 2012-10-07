@@ -21,7 +21,7 @@ class ChatController < AppController
       @app.broadcast(Message.new('playerList','update',
             {'list' => @players.list}),[p]);
       @app.broadcast(Message.new('chat','warn',
-            {'msg' => CGI::escapeHTML(p.to_s) + " saiu..."}))
+            {'msg' => CGI::escapeHTML(p.to_s) + " saiu..."}),[p])
     end
   end
   

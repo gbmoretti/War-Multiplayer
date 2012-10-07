@@ -61,6 +61,18 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
     return EndMovementMessage;
 
   })();
+  
+  GetTerritoriesList = (function() {
+
+    function GetTerritoriesList(id, m) {
+      this.controller = 'game';
+      this.action = 'get_territories';
+      this.params = { };
+    }
+
+    return GetTerritoriesList;
+
+  })();
 
   GameController = (function() {
 
@@ -89,11 +101,18 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
     //método chamado para iniciar a fase de distribuição
     GameController.prototype.distribution = function(msg) {
       var distribution, allTerritories, regions;
+      console.log('chamou');
       allTerritories = this.app.controllers['definitions'].get_territories();
       regions = this.app.controllers['definitions'].get_regions();
-      return distribution = new Distribution(msg.bonus, this.territories, allTerritories, regions, this.app.controllers['action'], this, (function(d) {
-        this.app.conn.send(new EndDistributionMessage(this.roomid, d));
-        return distribution = null;
+      distribution = new Distribution(msg.bonus, this.territories, allTerritories, regions, this.app.controllers['action'], this, (function(d) {
+        if (d === null) {
+          console.log(msg);
+          /* pede ao servidor lista do territorios */
+          this.app.conn.send(new GetTerritoriesList());
+          this.distribution(msg);
+        }else {
+          this.app.conn.send(new EndDistributionMessage(this.roomid, d));
+        }
       }));
     };
 
@@ -193,6 +212,7 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
         this.change_troops(t.id, t.troops);
         _results.push(i++);
       }
+      console.log("atualizando territorios");
       return _results;
     };
 

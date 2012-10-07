@@ -87,7 +87,7 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
       for(i in _ref) {      
         sum_bonus += parseInt(_ref[i]); 
       }
-      
+      console.log("sum_bonus: " + sum_bonus);
       if (sum_bonus === 0) {
         _ref = this.territories;
         for (i in _ref) {
@@ -97,8 +97,9 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
         msg = 'Não há mais exércitos para distribuir.<br/>';
         msg += '<div style="text-align: right;"><button id="confirm_distribuition">Confirmar distribuição</button>';
         msg += '<button id="reset_distribuition">Recomeçar</button></div>';
+        this.actionController.open('Distribuição de exércitos', msg);
         
-        $("button#confirm_distribution").click(function() {
+        $("button#confirm_distribuition").click(function() {
           _this.confirm();
         });
         $("button#reset_distribuition").off();

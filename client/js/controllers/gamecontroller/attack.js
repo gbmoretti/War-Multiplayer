@@ -182,7 +182,7 @@ Classe responsavel por manipular os eventos durante a fase de ataque
       this.atkButton.click(function() {
         return _this.app.conn.send(new AttackMessage(_this.origin_id, _this.destiny_id, _this.selectTroops.val()));
       });
-      if (result !== null) {
+      if (result != null) {
         html = "Resultados do último ataque:<br/>";
         html += terAtk + " perdeu " + result.atk.lost + " exércitos (" + result.atk.dice[0] + " / ";
         html += (result.atk.dice[1] == 0 ? '-' : result.atk.dice[1]) + " / "; 

@@ -106,7 +106,6 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
       regions = this.app.controllers['definitions'].get_regions();
       distribution = new Distribution(msg.bonus, this.territories, allTerritories, regions, this.app.controllers['action'], this, (function(d) {
         if (d === null) {
-          console.log(msg);
           /* pede ao servidor lista do territorios */
           this.app.conn.send(new GetTerritoriesList());
           this.distribution(msg);
@@ -212,7 +211,6 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
         this.change_troops(t.id, t.troops);
         _results.push(i++);
       }
-      console.log("atualizando territorios");
       return _results;
     };
 

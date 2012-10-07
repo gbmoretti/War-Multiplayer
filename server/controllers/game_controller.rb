@@ -9,7 +9,8 @@ class GameController < AppController
   def closed_conn(conn)
     player = @app.get_client(conn)
     unless player.nil?
-      game = player.room.game
+      room = player.room
+      game = room.game unless room.nil?
       unless game.nil?
         @app.send(game.players,Message.new('chat','warn',{'msg' => "#{player} foi desconectado. Encerrando partida."}))
         finalize_game(game,nil,"#{player} saiu.")
@@ -169,7 +170,6 @@ class GameController < AppController
     p.room.game.territories.each do |t| 
       param.push t.to_hash
     end
-    puts "enviando territorios para #{p}"
     @app.send(p,Message.new('game','update_territories',param))
   end
 

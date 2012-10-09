@@ -9,8 +9,9 @@ class SetNickController < AppController
     p = Player.new(conn,args['nick'])
     @players.add(p)
     @app.bind_client(conn,p)
-    puts @players.list.inspect
-    @app.broadcast(Message.new('playerList','update',{'list' => @players.list}));    
+    list = @players.list.clone
+    list = list.delete_if { |p| p.is_a?(Ai) }
+    @app.broadcast(Message.new('playerList','update',{'list' => list}));    
     @app.broadcast(Message.new('chat','warn',{'msg' => CGI::escapeHTML(p.to_s) + " acabou de entrar..."}),[p])
     @app.send(p,Message.new('chat','warn',{'msg' => "Bem vindo " + CGI::escapeHTML(p.to_s)}))
     

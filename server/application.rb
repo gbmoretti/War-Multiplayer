@@ -5,7 +5,7 @@ class Application
   def initialize
     @controllers = {}
     @clients = []
-    @players = PlayersCollection.get_instance #talvez isso esteja errado (arquiterualmente falando)
+    @players = PlayersCollection.get_instance
     puts 'Aplicacao WarApp iniciada...'
   end
   
@@ -82,7 +82,9 @@ class Application
       @players.rem(p)
       unbind_client(p)  
     end
-    broadcast(Message.new('playerList','update',{'list' => @players.list}));  #atualiza lista de jogadores
+    list = @players.list.clone
+    list = list.delete_if { |p| p.is_a?(Ai) }
+    broadcast(Message.new('playerList','update',{'list' => list}));  #atualiza lista de jogadores
   end
   
   #actions

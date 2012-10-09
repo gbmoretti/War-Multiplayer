@@ -1,5 +1,5 @@
 class Player
-  attr_reader :sid, :nick
+  attr_reader :sid, :nick, :conn
   attr_accessor :color, :ready, :room, :id, :phase, :cards, :trocas, :bonus_troca, :territorios_ant, :objetivo
 
   #phase constants
@@ -11,7 +11,7 @@ class Player
   N_PHASES     = 5
   
   def initialize(conn,nick)
-    @sid = conn.sid
+    @sid = conn.respond_to?(:sid) ? conn.sid : conn
     @conn = conn
     @nick = nick
     @color = 1

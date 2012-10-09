@@ -123,12 +123,13 @@ class GameController < AppController
   
   def cards_end(conn,msg)
     player = @app.get_client(conn)
-    game = @games.get(msg['id'])
+    game = player.room.game
     next_phase(game) if player.phase == Player::TROCA
   end  
   
   def distribution_end(conn,msg)
-    game = @games.get(msg['id'])
+    player = @app.get_client(conn)
+    game = player.room.game
     game.distribuition(msg['territories']) #atualiza territorios no modelo
     update_territories(game) #envia atualizacao de territorio para todos os jogadores
     next_phase(game)
@@ -180,6 +181,7 @@ class GameController < AppController
     end
     @app.send(p,Message.new('game','update_territories',param))
   end
+
 
   def update_status(player)
     @app.send(player,Message.new('game','update_status',

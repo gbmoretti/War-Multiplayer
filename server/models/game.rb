@@ -1,7 +1,7 @@
 
 class Game
 
-  attr_reader :territories, :players, :jogador, :turn, :round, :cards
+  attr_reader :territories, :players, :jogador, :turn, :round, :cards, :regions
   attr_accessor :id
 
   def initialize(room)

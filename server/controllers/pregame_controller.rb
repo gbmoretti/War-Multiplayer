@@ -14,7 +14,7 @@ class PregameController < AppController
     
     unless p.nil? or p.room.nil?
       p.room.remove_player(p)
-      if p.room.players.count < 1 #remove sala se nao houver mais jogadores conectados nela
+      if p.room.players.count { |p| !p.is_a?(Ai) } < 1 #remove sala se nao houver mais jogadores conectados nela
         RoomsCollection.get_instance.rem(p.room)
         @app.controllers[:rooms].update_list #envia lista atualizada para todos os jogadores conectados
       else
@@ -55,9 +55,11 @@ class PregameController < AppController
   end
   
   def adiciona_bot(room)
-    bot = Ai.new(nil,'BOT')
+    bot = Ai.new(@app.controllers[:game],'BOT')
+    puts "Adicionando sala #{room} para a IA"
     bot.room = room
     set_color(bot)
+    @app.bind_client(bot.conn,bot)
     @players_collection.add(bot)
     room.players << bot
   end

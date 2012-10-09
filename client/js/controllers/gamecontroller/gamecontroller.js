@@ -261,7 +261,7 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
         player_line += "</div>";
         player_line += "<div class=\"color\" style=\"background-color: " + color.hex + "\"></div>";
         player_line += "<div class=player>" + player.nick + "</div></div>";
-        _results.push(pl.append(player_line));
+        pl.append(player_line);
       }
       
     };

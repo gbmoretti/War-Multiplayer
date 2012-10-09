@@ -10,6 +10,9 @@ SERVER_DIR = root + "/server/"
 require SERVER_DIR + "includes/jsonable.rb"
 require SERVER_DIR + "includes/messages.rb"
 
+require SERVER_DIR + "server_connection.rb"
+require SERVER_DIR + "fake_connection.rb"
+
 require SERVER_DIR + "models/player.rb"
 require SERVER_DIR + "models/chat_log.rb"
 require SERVER_DIR + "models/room.rb"
@@ -25,7 +28,7 @@ require SERVER_DIR + "models/players_collection.rb"
 require SERVER_DIR + "models/rooms_collection.rb"
 require SERVER_DIR + "models/games_collection.rb"
 
-require SERVER_DIR + "server_connection.rb"
+
 
 require SERVER_DIR + "application.rb"
 

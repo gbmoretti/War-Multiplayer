@@ -13,10 +13,19 @@ class Ai < Player
   #get_bonus       => quantidade de tropas que irá ganhar no próximo turno
   
   def initialize(controller,nick)
-    @controller = controller
-    @territorios = @controller.territories
+    @controller = controller  
+    
     sid = Random.rand(11111111..99999999)
-    super(sid,nick)
+    conn = FakeConnection.new(sid)
+    super(conn,nick)
+  end
+  
+  def todos_territorios
+    @territorios ||= @room.game.territories
+  end
+  
+  def todas_regioes
+    @regioes = @room.game.regions
   end
   
   #métodos que DEVEM ser implementados pela IA
@@ -24,7 +33,7 @@ class Ai < Player
   #método chamado ao iniciar fase de troca
   def cards
     #@controller.exchange_cards(@conn) para efetuar troca
-    #@controller.cards_end()
+    @controller.cards_end(@conn,nil)
   end
   
   #método chamado ao receber resultado de um troca
@@ -33,11 +42,38 @@ class Ai < Player
 
   #chamado no inicio da fase de distribuição
   def distribuition(bonus)
-    #@controller.distribuition_end()
+    #recebe como parametro o hash bonus. Com o seguinte formato:
+    #bonus['troops'] => quantidade de tropas para distribuir em qualquer territorio seu
+    #bonus[id_da_regiao] => quantidade de tropas para aquela regiao/continente
+    
+    distribuition = {} #hash para guardar os dados da distribuicao (distribuition[id_do_territorio] = qtd_tropas)
+    
+    bonus_tropas = bonus.delete('troops')
+    #adiciona 1 exercito em cada territorio até acabar o bonus
+    territorios = get_territories
+    max = territorios.size
+    bonus_tropas.times do |i|
+      distribuition[territorios[i%max].id] = 0 if distribuition[territorios[i%max].id].nil?
+      distribuition[territorios[i%max].id] += 1
+    end
+    
+    #adiciona 1 exercito em cada territorio até acabar o bonus
+    bonus.each do |r_id,qtd|
+      regiao = @regioes[r_id-1]
+      max_territorios = regiao.territories.size
+      qtd.times do |i|
+        territorio = regiao.territories[i%max_territorios]
+        distribuition[territorio.id] = 0 if distribuition[territorio.id].nil?
+        distribuition[territorio.id] += 1
+      end
+    end
+    
+    @controller.distribution_end(@conn,{'territories' => distribuition})
   end
   
   #chamado no inicio da fase de ataque
   def attack
+    puts "Agora eu tenho que atacar!"
     #usar @controller.attack_order() para fazer um ataque
     #usar @controller.attack_end() para terminar fase de ataque
   end
@@ -112,7 +148,7 @@ class Ai < Player
   #retorna um vetor com todos os territorios vizinhos que sao controlados por um inimigo
   def vizinhos_inimigos(territorio)
     r = []
-    territorios.vizinhos.each do |v|
+    territorio.vizinhos.each do |v|
       v = get_pais(v)
       r.push v if v.owner != self
     end
@@ -129,9 +165,9 @@ class Ai < Player
     ###### TODO: verificar como é "medida" essa distancia na classe de grafo do pereira #####
   end
   
-  #pega objeto pais pelo ID dele
+  #pega objeto territorio pelo ID dele
   def get_pais(id)
-    @territorios[(id.to_i)-1]
+    todos_territorios[(id.to_i)-1]
   end
   
 end

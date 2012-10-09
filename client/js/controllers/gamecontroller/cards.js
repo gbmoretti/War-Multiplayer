@@ -43,6 +43,7 @@ Cards = (function() {
       _this.endPhase();
     });
     
+    
     this.send.show();
     this.send.click(function() {
       var cards;
@@ -61,19 +62,24 @@ Cards = (function() {
   Cards.prototype.show = function() {
     var i, str;
     
-    str = "";
-    for(i in this.cards) {
-      card = this.cards[i];
-      str += "<div class=\"card simbolo" + card.simbolo + "\">" + card.nome;
-      str += "<input type=\"checkbox\" value=\"" + card.id + "\"/></div><br/>"; 
+    if (this.cards.length < 2) {
+      this.endPhase();
+    }else {
+      str = "";
+      for(i in this.cards) {
+        card = this.cards[i];
+        str += "<div class=\"card simbolo" + card.simbolo + "\">" + card.nome;
+        str += "<input type=\"checkbox\" value=\"" + card.id + "\"/></div><br/>"; 
+        
+      }
       
-    }
-    
-    if (str === "") str = "Nenhuma carta";
-    
-    this.divCards.html(str);
-    
-    this.app.openModal(this.modal);
+      this.divCards.html(str);
+      
+      if (this.cards.length < 3) this.modal.find("#opt2").show();
+      else this.modal.find("#opt1").show();
+      
+      this.app.openModal(this.modal);
+    }    
   };
 
   Cards.prototype.exchange_result = function(msg) {
@@ -88,6 +94,8 @@ Cards = (function() {
 
   Cards.prototype.endPhase = function() {
     this.callBackFunction.call(this.context, this.bonus);
+    this.modal.find("#opt1").hide();
+    this.modal.find("#opt2").hide();
     this.app.closeModal(this.modal);
   };
   

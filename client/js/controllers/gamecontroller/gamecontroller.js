@@ -61,6 +61,18 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
     return EndMovementMessage;
 
   })();
+  
+  GetTerritoriesList = (function() {
+
+    function GetTerritoriesList(id, m) {
+      this.controller = 'game';
+      this.action = 'get_territories';
+      this.params = { };
+    }
+
+    return GetTerritoriesList;
+
+  })();
 
   GameController = (function() {
 
@@ -76,23 +88,31 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
       this.objective = null;
       this.phase = null;
       this.attackController = null;
+      
     }
 
     //método chamado para iniciar a fase de troca
     GameController.prototype.cards_phase = function(msg) {
       this.cards = new Cards(this.cards,this.app,this,function(bonus) {
         this.app.conn.send(new EndCardsMessage(this.roomid));
-      })
+      });
+      $("#chat-window").hide();
     };
 
     //método chamado para iniciar a fase de distribuição
     GameController.prototype.distribution = function(msg) {
       var distribution, allTerritories, regions;
+      console.log('chamou');
       allTerritories = this.app.controllers['definitions'].get_territories();
       regions = this.app.controllers['definitions'].get_regions();
-      return distribution = new Distribution(msg.bonus, this.territories, allTerritories, regions, this.app.controllers['action'], this, (function(d) {
-        this.app.conn.send(new EndDistributionMessage(this.roomid, d));
-        return distribution = null;
+      distribution = new Distribution(msg.bonus, this.territories, allTerritories, regions, this.app.controllers['action'], this, (function(d) {
+        if (d === null) {
+          /* pede ao servidor lista do territorios */
+          this.app.conn.send(new GetTerritoriesList());
+          this.distribution(msg);
+        }else {
+          this.app.conn.send(new EndDistributionMessage(this.roomid, d));
+        }
       }));
     };
 
@@ -153,6 +173,7 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
         card = msg.cards[i];
         str += "<div class=\"card simbolo" + card.simbolo + "\">" + card.nome + "</div>";
       }
+      if (msg.cards.length == 0) str += "Nenhuma";
       str += "</div>";
       status_bar.append(str);
       
@@ -211,8 +232,11 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
        modal.find('div#msg').html(msg.msg);
        
        modal.find('div.closebtn').click(function() {
-        location.reload();
-      });
+         location.reload();
+       });
+       modal.find('button').click(function() {
+         location.reload();
+       });
        
        this.app.openModal(modal);
     };
@@ -220,19 +244,24 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
     //atualiza barra lateral direita
     GameController.prototype.update_rightbar = function() {
       var color, id, pl, player, player_line, _ref, _results;
+      this.rightbar.find(".pregame").hide();
+      this.rightbar.find(".info").show();
+      
       pl = this.rightbar.find('div#playerslist');
-      pl.html("<div id=\"title\">" + this.roomname + "</div>");
+      pl.html("<div id=\"title\">Sala: " + this.roomname + "</div>");
       _ref = this.players;
       for (id in _ref) {
         player = _ref[id];
         console.log(player);
         color = this.app.controllers['definitions'].colors[player.color];
-        player_line = "<div class=player>" + player.nick + "</div><div class=\"color\" style=\"background-color: " + color.hex + ";\"></div><div class=\"turn\"";
-        if (player.turn) {
-          player_line += " id=\"active\"";
-        }
-        player_line += "></div>";
-        pl.append(player_line);
+        player_line = "<div><div class=\"turn\"";
+        if (player.turn) player_line += " id=\"active\"";
+        player_line += ">";
+        player_line += player.turn ? 'Jogando' : 'Aguardando';
+        player_line += "</div>";
+        player_line += "<div class=\"color\" style=\"background-color: " + color.hex + "\"></div>";
+        player_line += "<div class=player>" + player.nick + "</div></div>";
+        _results.push(pl.append(player_line));
       }
       
     };

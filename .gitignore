@@ -2,4 +2,6 @@
 start_redis.sh
 server/data/dump.rdb
 server/data/redis.log
+tmp/*
+log/*
 *script.js

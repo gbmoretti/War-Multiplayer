@@ -42,11 +42,15 @@ class RoomsController < AppController
     room_i = args['room'].to_i-1
     room = @rooms.get_by_index(room_i)
     
-    room.add_player(p)
-    p.room = room
-    
-    #chama controller pregame
-    @app.controllers[:pregame].show(p,room)   
+    if room.players.count <= 6
+      room.add_player(p)
+      p.room = room
+      
+      #atualiza lista de salas de todos os clientes
+      @app.broadcast(Message.new('rooms','list',{'list' => list_rooms}),[p])
+      #chama controller pregame
+      @app.controllers[:pregame].show(p,room)
+    end
   end
 
   private
@@ -68,7 +72,8 @@ class RoomsController < AppController
         'id' => r.id,       
         'name' => r.name,
         'owner' => r.owner,
-        'size' => '8',
+        'game' => !r.game.nil?,
+        'size' => 6,
         'players' => players
         }
       )

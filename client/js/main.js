@@ -4,33 +4,43 @@ controllers.
 */
 
 $(document).ready(function() {
-  var host, svg;
+  var host, svg, app;
+
+  function loadApp() {
+    app.add_controller(new ChatController(app));
+    app.add_controller(new DefinitionsController(app));
+    app.add_controller(new PlayerListController(app));
+    app.add_controller(new SetNickController(app));
+    app.add_controller(new RoomsController(app));
+    app.add_controller(new PregameController(app));
+    app.add_controller(new GameController(app));
+    app.add_controller(new ActionController(app));
+
+    app.start();
+    $("#loading").hide();
+    $("div#btnreset").show();
+    $("div#btnreset").click(function() {
+      location.reload();
+    });
+  }
 
   host = $(location).attr('host');
-  this.app = new AppController("ws://" + host + "/websocket");
+  app = new AppController("ws://" + host + "/websocket");
+  $("#loading").show();
   $("#game").svg({
     onLoad: function() {
       var svg;
       svg = $("#game").svg('get');
       return svg.load('map.svg', {
         addTo: true,
-        changeSize: false
+        changeSize: false,
+        onLoad: function() {
+          loadApp();
+        }
       });
     },
     settings: {}
-  });
-
-  svg = $("#game").svg('get');
-  this.app.add_controller(new ChatController(this.app));
-  this.app.add_controller(new DefinitionsController(this.app));
-  this.app.add_controller(new PlayerListController(this.app));
-  this.app.add_controller(new SetNickController(this.app));
-  this.app.add_controller(new RoomsController(this.app));
-  this.app.add_controller(new PregameController(this.app));
-  this.app.add_controller(new GameController(this.app));
-  this.app.add_controller(new ActionController(this.app));
-
-  this.app.start();
+  });  
 
 })
 

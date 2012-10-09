@@ -12,7 +12,9 @@
 
     PlayerListController.prototype.update = function(args) {
       var nick, _i, _len, _ref, _results;
-      this.listElmnt.html('');
+      console.log("Atualizando lista de jogadores");
+      console.log(args.list);
+      this.listElmnt.html('<div id="title">Jogadores online</div>');
       _ref = args.list;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {

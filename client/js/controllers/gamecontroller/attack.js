@@ -30,16 +30,18 @@ Classe responsavel por manipular os eventos durante a fase de ataque
       this.callBackContext = callBackContext; //contexto em que a funcao callback sera chamada
       this.callBackFunction = callBackFunction; //funcao callback
       this.modal = $('.modal-div#attack'); //janela de status do ataque
-      this.nomeAtk = this.modal.find('#nome_atk');
-      this.nomeDef = this.modal.find('#nome_def');
+      this.nomeAtk = this.modal.find('.nome_atk');
+      this.nomeDef = this.modal.find('.nome_def');
       this.troopsAtk = this.modal.find('#troops_atk');
       this.troopsDef = this.modal.find('#troops_def');
       this.selectTroops = this.modal.find('#qtd_troops');
       this.atkButton = this.modal.find('#btnattack');
       this.resultDiv = this.modal.find('#result');
       this.territories_id = null;
-      this.divEndPhase = "<div style=\"text-align: right\"><button id=\"endattack\">Terminar fase</button></div>";
-      this.modal.find('.closebtn').click(function() {
+      this.divEndPhase = "<div style=\"text-align: right\"><button id=\"endattack\">Terminei ataque</button></div>";
+      
+      this.modal.find("#parar").click(function() {
+        _this.app.closeModal(_this.modal);
         return _this.reset();
       });
       $(document).on('click', 'button#endattack', function() {
@@ -52,6 +54,7 @@ Classe responsavel por manipular os eventos durante a fase de ataque
     //método chamado quando a fase é terminada. Desliga os eventos e chama a função de callback
     Attack.prototype.endPhase = function() {
       $('button#endattack').off("click");
+      $('button#parar').off("click")
       $("path").off("hover click");
       return this.callBackFunction.call(this.callBackContext, null);
     };
@@ -77,7 +80,7 @@ Classe responsavel por manipular os eventos durante a fase de ataque
 
     //método para escolhar territorio de origem do ataque
     Attack.prototype.chooseOrigin = function() {
-      var id, self, _i, _len, _ref, _results;
+      var id, self, _i, _len, _ref, _results, troops;
       self = this;
       this.origin_id = null;
       this.destiny_id = null;
@@ -86,23 +89,27 @@ Classe responsavel por manipular os eventos durante a fase de ataque
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         id = _ref[_i];
-        $('#' + id).hover(function(o) {
-          if ($(this).find("tspan").text() !== 1) {
-            return $(this).attr('stroke-width', 2);
+        $('#' + id).hover(function(o) {          
+          troops = $("#l" + $(this).attr('id')).find("tspan").text();
+          if (troops !== '1') {
+            $(this).attr('stroke-width', 2);
           }
         }, function(o) {
           if ($(this).attr('id') !== self.origin_id) {
-            return $(this).attr('stroke-width', 1);
+            $(this).attr('stroke-width', 1);
           }
         });
-        _results.push($('#' + id).click(function(o) {
-          if ($(this).find("tspan").text() !== 1) {
+        
+        $('#' + id).click(function(o) {
+          troops = $("#l" + $(this).attr('id')).find("tspan").text();
+          if (troops !== '1') {
             self.origin_id = $(this).attr('id');
-            return self.chooseDestiny();
+            self.chooseDestiny();
+          }else {
+            self.actionController.open("Ataque", "Escolha um território para ser a origem do ataque. Apenas territórios com mais de 1 exército podem ser origem de ataque." + self.divEndPhase);
           }
-        }));
-      }
-      return _results;
+        });
+      }      
     };
 
     //método para escolher territorio alvo do ataque
@@ -115,20 +122,26 @@ Classe responsavel por manipular os eventos durante a fase de ataque
       _ref = this.allTerritories[this.origin_id].vizinhos;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         t = _ref[_i];
-        $('#' + t).hover(function(o) {
-          return $(this).attr('stroke-width', 2);
-        }, function(o) {
-          if ($(this).attr('id') !== self.destiny_id) {
-            return $(this).attr('stroke-width', 1);
-          }
-        });
-        $('#' + t).click(function(o) {
-          if (self.allTerritories[$(this).attr('id')].owner === self.app.controllers['game'].playerid) {
-            self.reset();
-          }
-          self.destiny_id = $(this).attr('id');
-          return self.attackWindow();
-        });
+        if ($.inArray(t + "",this.territories_id) === -1) {
+          $('#' + t).hover(function(o) {
+            return $(this).attr('stroke-width', 2);
+          }, function(o) {
+            if ($(this).attr('id') !== self.destiny_id) {
+              return $(this).attr('stroke-width', 1);
+            }
+          });
+          $('#' + t).click(function(o) {
+            id = parseInt($(this).attr('id'));
+            if ($.inArray(t + "",this.territories_id) !== -1) {
+              self.reset();
+            }else {
+              self.destiny_id = $(this).attr('id');
+              self.attackWindow();
+            }
+            
+          });
+        }
+        
       }
       return $('#' + this.origin_id).click(function() {
         return self.reset();
@@ -137,15 +150,18 @@ Classe responsavel por manipular os eventos durante a fase de ataque
 
     //janela de status do ataque
     Attack.prototype.attackWindow = function(result) {
-      var html, qtd_troops,
+      var html, qtd_troops, terAtk, terDef,
         _this = this;
-      if (result == null) {
-        result = null;
-      }
+      
       $('path').off("hover click");
       this.actionController.close();
-      this.nomeAtk.text(this.allTerritories[this.origin_id].nome);
-      this.nomeDef.text(this.allTerritories[this.destiny_id].nome);
+      
+      terAtk = this.allTerritories[this.origin_id].nome;
+      terDef = this.allTerritories[this.destiny_id].nome;
+      
+      this.nomeAtk.text(terAtk);
+      this.nomeDef.text(terDef);
+
       this.troopsAtk.text($('#l' + this.origin_id + ' tspan').text());
       this.troopsDef.text($('#l' + this.destiny_id + ' tspan').text());
       qtd_troops = parseInt($('#l' + this.origin_id + ' tspan').text());
@@ -158,6 +174,7 @@ Classe responsavel por manipular os eventos durante a fase de ataque
         this.selectTroops.append("<option value=\"" + qtd_troops + "\">" + qtd_troops + "</option>");
         qtd_troops--;
       }
+      $("div#attack_actions").show();
       this.resultDiv.html("");
       this.app.openModal(this.modal);
       this.atkButton.off("click");
@@ -165,18 +182,17 @@ Classe responsavel por manipular os eventos durante a fase de ataque
       this.atkButton.click(function() {
         return _this.app.conn.send(new AttackMessage(_this.origin_id, _this.destiny_id, _this.selectTroops.val()));
       });
-      if (result !== null) {
+      if (result != null) {
         html = "Resultados do último ataque:<br/>";
-        html += "" + (this.nomeAtk.text()) + " perdeu " + result.atk.lost + " tropas (" + result.atk.dice[0] + " / " + result.atk.dice[1] + " / " + result.atk.dice[2] + ")<br/>";
-        html += "" + (this.nomeDef.text()) + " perdeu " + result.def.lost + " tropas (" + result.def.dice[0] + " / " + result.def.dice[1] + " / " + result.def.dice[2] + ")<br/>";
+        html += terAtk + " perdeu " + result.atk.lost + " exércitos (" + result.atk.dice[0] + " / ";
+        html += (result.atk.dice[1] == 0 ? '-' : result.atk.dice[1]) + " / "; 
+        html += (result.atk.dice[2] == 0 ? '-' : result.atk.dice[2]) + ")<br/>";
+        html += terDef + " perdeu " + result.def.lost + " exércitos (" + result.def.dice[0] + " / "
+        html += (result.def.dice[1] == 0 ? '-' : result.def.dice[1]) + " / "
+        html += (result.def.dice[2] == 0 ? '-' : result.def.dice[2]) + ")<br/>";
         this.resultDiv.html(html);
         if (result.winner !== null) {
-          this.atkButton.html("Fechar");
-          this.atkButton.off("click");
-          return this.atkButton.click(function() {
-            _this.app.closeModal(_this.modal);
-            return _this.reset();
-          });
+          $("div#attack_actions").hide();
         }
       }
     };

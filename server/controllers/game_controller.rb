@@ -1,3 +1,4 @@
+#encoding: utf-8
 class GameController < AppController
 
   def initialize(app)
@@ -8,10 +9,11 @@ class GameController < AppController
   def closed_conn(conn)
     player = @app.get_client(conn)
     unless player.nil?
-      game = player.room.game
+      room = player.room
+      game = room.game unless room.nil?
       unless game.nil?
         @app.send(game.players,Message.new('chat','warn',{'msg' => "#{player} foi desconectado. Encerrando partida."}))
-        finalize_game(game,"#{player} saiu.")
+        finalize_game(game,nil,"#{player} saiu.")
       end
     end
   end
@@ -20,9 +22,19 @@ class GameController < AppController
     :game
   end
 
-  def finalize_game(game,msg="")
+  def finalize_game(game,winner,msg)
     game.end_game
-    @app.send(game.players,Message.new('game','end_game',{'msg' => msg}))
+    
+    if msg.nil?
+      game.players.each do |p|
+        @app.send(p,Message.new('game','end_game',{'msg' => "Parabéns! Você venceu!"})) if p == winner
+        @app.send(p,Message.new('game','end_game',{'msg' => "Fim de jogo! #{p} venceu!"})) if p != winner
+      end
+    else
+      @app.send(game.players,Message.new('game','end_game',{'msg' => msg}))
+    end    
+    
+    
     @games.rem(game)
   end
 
@@ -50,8 +62,7 @@ class GameController < AppController
   def next_phase(game)
     acabou = game.end_game?
     unless acabou.nil?
-      puts "ACAAAAAAAAAAAAAABOOOOOOOOOOOOUUUUUUU! #{acabou} venceu!"
-      finalize_game(game,"#{acabou} venceu.")
+      finalize_game(game,acabou,nil)
       return nil
     end
     player = game.next_player_and_phase
@@ -141,8 +152,9 @@ class GameController < AppController
     game = @games.get(msg['id'])
     return nil unless p.phase == Player::ATAQUE
     
-    #puxa uma carta do monte para o jogador se ele conquistou pelo menos 1 territorio
-    game.push_card(p) if p.territorios_ant < p.get_territories.size && p.cards.count < 5
+
+    #puxa uma carta do monte para o jogador se ele conquistou pelo menos 1 territorio tem menos que 5 cartas
+    game.push_card(p) if p.territorios_ant < p.get_territories.size && p.cards.size < 5
     
     next_phase(game)
   end
@@ -158,6 +170,15 @@ class GameController < AppController
     
     update_territories(game)
     next_phase(game)
+  end
+
+  def get_territories(conn,msg)
+    p = @app.get_client(conn)
+    param = []
+    p.room.game.territories.each do |t| 
+      param.push t.to_hash
+    end
+    @app.send(p,Message.new('game','update_territories',param))
   end
 
   def update_status(player)

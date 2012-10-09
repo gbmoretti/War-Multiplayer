@@ -105,7 +105,7 @@ class Ai < Player
   end
   
   def melhor_jogada(jogada)
-    
+    #objetivo.js linha 9
   end
   
   #########

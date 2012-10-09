@@ -26,14 +26,14 @@
       this.chatElmnt = $('div#chat');
       this.chatWindow = $('div#chat-window');
       this.btnElmnt = $('#btnchat');
-      this.chatWindow.hide(0);
+
       this.inputElmnt.keydown(function(eventObject) {
         if (eventObject.keyCode === 13) {
           return _this.sendTxt();
         }
       });
       this.btnElmnt.click(function(eventObject) {
-        return _this.chatWindow.toggle(0);
+        return _this.chatWindow.toggle();
       });
     }
 

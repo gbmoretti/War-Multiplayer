@@ -20,9 +20,11 @@ class Application
   end
   
   def unbind_client(o)
+    to_delete = []
     @clients.each do |c|
-      @clients.delete(c) if c[:obj] = o
+      to_delete << c if c[:obj] == o
     end
+    @clients -= to_delete
   end
   
   def get_conn(o)
@@ -78,8 +80,9 @@ class Application
     p = get_client(conn)
     unless p.nil?
       @players.rem(p)
-      unbind_client(p)
+      unbind_client(p)  
     end
+    broadcast(Message.new('playerList','update',{'list' => @players.list}));  #atualiza lista de jogadores
   end
   
   #actions
@@ -88,9 +91,9 @@ class Application
     c = msg['controller'].to_sym
     a = msg['action'].to_sym
     p = msg['params']
-    #puts "#{c}##{a}(#{p})"   
+    #puts "#{c}##{a}(#{p})"
     
-    #o = get_client(conn)   
+    #o = get_client(conn)
     @controllers[c].__send__ a, conn, p if @controllers[c].respond_to?(a)
   end
 end

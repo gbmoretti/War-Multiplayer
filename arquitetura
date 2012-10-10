@@ -1,3 +1,38 @@
+A arquitetura do War Multiplayer é inspirada pelo modelo MVC 
+(Model-View-Controller) - modelo, visão e controle, em português. Onde 
+temos três camadas de classes que trocam mensagens entre si através de 
+chamadas de métodos.
+No modelo padrão, cada camada tem sua responsabilidade dentro da 
+aplicação em si:
+ * Modelo (model): Pode ser entendida como uma representação de toda 
+ informação operada pelo sistema. É responsável por aplicar as regras
+ do negócio, e armazenar as informações.
+ * Visão (view): É a visualização e manipulação dos dados pelo usuário.
+ Reponsável por receber os dados do Controle e mostrar ao usuário, além
+ de notificar o Controle sobre qualquer interação do usuário.
+ * Controle (controller): É a camada que fica entre os dados (Modelo) e
+ o usuário (Visão). Interpreta os comandos do usuário na visão e aciona
+ os modelos para que os dados reflitam esta ação. Também é nesta camada
+ que os dados são consultados (através de métodos implementados pelo 
+ Modelo) e mostrados para a Visão.
+ 
+No War Multiplayer temos essa arquiterura separada em duas partes: 
+Servidor e Cliente. Onde o servidor é um único processo reponsável por 
+centralizar os dados do sistema, aplicar as devidas regras a esses 
+dados e enviar as informações necessárias ao clientes conectados. O 
+cliente é um processo rodando em um navegador de internet.
+As camadas da aplicação podem ser divididas da seguinte maneira:
+ * Servidor
+  ** Modelo:
+  ** Controle:
+  
+ * Cliente
+  ** Controle:
+  ** Visão:
+
+
+
+
 Classes no lado servidor
 ========================
 

@@ -1,3 +1,4 @@
+#encoding: utf-8
 class Ai < Player
 
   #atributos importantes herdados de Player
@@ -31,7 +32,7 @@ class Ai < Player
   #métodos que DEVEM ser implementados pela IA
   
   #método chamado ao iniciar fase de troca
-  def cards
+  def cards_phase
     #@controller.exchange_cards(@conn) para efetuar troca
     @controller.cards_end(@conn,nil)
   end
@@ -41,7 +42,7 @@ class Ai < Player
   end
 
   #chamado no inicio da fase de distribuição
-  def distribuition(bonus)
+  def distribuition_phase(bonus)
     #recebe como parametro o hash bonus. Com o seguinte formato:
     #bonus['troops'] => quantidade de tropas para distribuir em qualquer territorio seu
     #bonus[id_da_regiao] => quantidade de tropas para aquela regiao/continente
@@ -49,41 +50,84 @@ class Ai < Player
     distribuition = {} #hash para guardar os dados da distribuicao (distribuition[id_do_territorio] = qtd_tropas)
     
     bonus_tropas = bonus.delete('troops')
-    #adiciona 1 exercito em cada territorio até acabar o bonus
+    #adiciona 1 exercito em cada territorio com pelo menos 1 vizinho de inimigo até acabar o bonus
     territorios = get_territories
     max = territorios.size
-    bonus_tropas.times do |i|
-      distribuition[territorios[i%max].id] = 0 if distribuition[territorios[i%max].id].nil?
-      distribuition[territorios[i%max].id] += 1
+    i = 0
+    while bonus_tropas > 0
+      if vizinhos_inimigos(territorios[i%max]).size > 0
+        distribuition[territorios[i%max].id] = 0 if distribuition[territorios[i%max].id].nil?
+        distribuition[territorios[i%max].id] += 1
+        bonus_tropas -= 1
+      end
+      i += 1
     end
     
-    #adiciona 1 exercito em cada territorio até acabar o bonus
+    #adiciona 1 exercito em cada territorio com pelo menos 1 vizinhos inimigo até acabar o bonus
     bonus.each do |r_id,qtd|
-      regiao = @regioes[r_id-1]
+      regiao = todas_regioes[(r_id.to_i)-1]
       max_territorios = regiao.territories.size
-      qtd.times do |i|
+      i = 0
+      while qtd > 0
         territorio = regiao.territories[i%max_territorios]
-        distribuition[territorio.id] = 0 if distribuition[territorio.id].nil?
-        distribuition[territorio.id] += 1
+        if vizinhos_inimigos(territorio).size > 0
+          distribuition[territorio.id] = 0 if distribuition[territorio.id].nil?
+          distribuition[territorio.id] += 1
+          qtd -= 1
+        end
+        i += 1
       end
+      
     end
     
     @controller.distribution_end(@conn,{'territories' => distribuition})
   end
   
   #chamado no inicio da fase de ataque
-  def attack
-    puts "Agora eu tenho que atacar!"
+  def attack_phase
+    
+    #encontra o territorio com mais exercitos
+    territorios = get_territories.clone
+    territorios.sort! { |a,b| b.troops <=> a.troops }
+    
+    if territorios[0].troops == 1
+      @controller.attack_end(@conn,nil)
+      return
+    else
+      origem = territorios[0]
+
+      #encontra territorio inimigo com menos tropas
+      alvos = vizinhos_inimigos(origem)
+      
+      if alvos.size == 0 
+        puts "Nao tenho alvos :( Tenho que para de atacar se nao entro em um laço infinito. 
+              Meu programador talvez dê um jeito nisso depois. TALVEZ!"
+        @controller.attack_end(@conn,nil)
+        return
+      end
+      alvos.sort! { |a,b| a.troops <=> b.troops }  
+      
+      alvo = alvos[0]
+      
+      
+      order = {'origin' => origem.id, 'destiny' => alvo.id, 'qtd' => origem.troops-1}
+      @controller.attack_order(@conn,order)
+    end
+    
+    
+    
     #usar @controller.attack_order() para fazer um ataque
     #usar @controller.attack_end() para terminar fase de ataque
   end
   
   #chamado depois que o resultado de um ataque é calculado
   def attack_result(result)
+    attack_phase
   end
   
   #chamado no inicio da fase de movimentação
-  def movement
+  def movement_phase
+    @controller.movement_end(@conn,{'m' => {}})
     #usar @controller.movement_end() para terminar a fase
   end
   
@@ -131,7 +175,7 @@ class Ai < Player
     jogadas = []
     get_territories.each do |t|
       if t.troops > 1
-        t.vizinhos do |v|
+        t.vizinhos do |v|          
           qtd = t.troops-1 > 3 ? 3 : t.troops-1
           jogadas.push({'origin' => t.id, 'destiny' => v.id, 'qtd' => qtd})
         end

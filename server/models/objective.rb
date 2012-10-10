@@ -26,7 +26,7 @@ class Objective
   def verifica_elimina(player,territories)
     encontrou = false
     territories.each do |t|
-      if t.owner.color = @params 
+      if t.owner.color == @params 
         encontrou = true
         break 
       end

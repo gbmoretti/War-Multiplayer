@@ -5,7 +5,6 @@ class Game
   attr_accessor :id
 
   def initialize(room)
-    puts room.players.inspect
     @players = room.players
     @turn = 0
     @round = 1

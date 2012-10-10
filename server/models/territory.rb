@@ -1,6 +1,6 @@
 class Territory
 
-  attr_reader :name, :id
+  attr_reader :name, :id, :vizinhos
   attr_accessor :owner, :troops
 
   def initialize(id,nome,owner,vizinhos,region)

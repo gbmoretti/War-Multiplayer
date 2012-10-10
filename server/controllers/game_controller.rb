@@ -89,7 +89,7 @@ class GameController < AppController
   
   def cards(player)
     @app.send(player,Message.new('game','cards_phase')) if player.class == Player
-    player.cards if player.class == Ai
+    player.cards_phase if player.class == Ai
   end
   
   def distribuition(player)
@@ -97,19 +97,19 @@ class GameController < AppController
     bonus['troops'] += player.bonus_troca
     player.bonus_troca = 0
     @app.send(player,Message.new('game','distribution',{'bonus' => bonus})) if player.class == Player
-    player.distribuition(bonus) if player.class == Ai
+    player.distribuition_phase(bonus) if player.class == Ai
   end
   
   def attack(player)
     player.territorios_ant = player.get_territories.size
     update_status(player)
     @app.send(player,Message.new('game','attack')) if player.class == Player
-    player.attack if player.class == Ai 
+    player.attack_phase if player.class == Ai 
   end
   
   def movement(player)
     @app.send(player,Message.new('game','movement')) if player.class == Player
-    player.movement if player.class == Ai
+    player.movement_phase if player.class == Ai
   end
   
   def exchange_cards(conn,msg)
@@ -150,7 +150,7 @@ class GameController < AppController
 
   def attack_end(conn, msg)
     p = @app.get_client(conn)
-    game = @games.get(msg['id'])
+    game = p.room.game
     return nil unless p.phase == Player::ATAQUE
     
 
@@ -162,7 +162,7 @@ class GameController < AppController
   
   
   def movement_end(conn,msg)
-    game = @games.get(msg['id'])
+    game = @app.get_client(conn).room.game
     msg['m'].each do |origin,v|
       v.each do |destiny,qtd|
         game.move_troops(origin,destiny,qtd)

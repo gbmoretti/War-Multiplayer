@@ -56,7 +56,6 @@ class PregameController < AppController
   
   def adiciona_bot(room)
     bot = Ai.new(@app.controllers[:game],'BOT')
-    puts "Adicionando sala #{room} para a IA"
     bot.room = room
     set_color(bot)
     @app.bind_client(bot.conn,bot)
@@ -102,8 +101,6 @@ class PregameController < AppController
       'size' => '6',
       'players' => players
       }
-    puts "update_list() =========" 
-    puts params
     @app.send(room.players,Message.new('pregame','update',params))
   end
   

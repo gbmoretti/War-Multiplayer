@@ -1,3 +1,5 @@
+#Classe primitiva de todos os controllers.
+#Aqui podem ser implementados métodos usados em todos os controllers.
 class AppController
 
   attr_reader :app

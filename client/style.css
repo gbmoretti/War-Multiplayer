@@ -119,8 +119,16 @@ div.info {
   text-align: center;
 }
 
+div.info {
+  overflow: auto;
+}
+
 div.info#playerlist {
   height: 25%; 
+}
+
+div.info#objetivo {
+  height: 10%;
 }
 
 div.info#player-status {
@@ -128,11 +136,16 @@ div.info#player-status {
 }
 
 div.info#phase {
-  height: 25%;
+  height: 22%;
 }
 
 div.info#events {
-  height: 20%;
+  height: 27%;
+}
+
+div.info#events .evento {
+  font-size: 60%;
+  padding: 3px;
 }
 
 div#objetivo .content {

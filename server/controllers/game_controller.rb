@@ -1,4 +1,5 @@
 #encoding: utf-8
+#Controller responsável por gerenciar toda a sessão de jogo
 class GameController < AppController
 
   def initialize(app)
@@ -6,38 +7,51 @@ class GameController < AppController
     @games = GamesCollection.get_instance
   end
   
+  #executado quando um jogador é desconectado
   def closed_conn(conn)
-    player = @app.get_client(conn)
-    unless player.nil?
-      room = player.room
+    player = @app.get_client(conn) #pega objeto Player relativo a essa conexão
+    unless player.nil? #se player nao for nulo
+      room = player.room 
       game = room.game unless room.nil?
-      unless game.nil?
+      unless game.nil? #se game nao for nulo
+        #envia aviso a todos os jogadores da sessao que um dos clientes desconectou
         @app.send(game.players,Message.new('chat','warn',{'msg' => "#{player} foi desconectado. Encerrando partida."}))
+        #encerra partida
         finalize_game(game,nil,"#{player} saiu.")
       end
     end
   end
   
+  #define nome do controller
   def name
     :game
   end
 
+  # Finalizar uma partida enviando uma mensagem amigável para todos os jogadores.
+  # Mensagem padrão: mensagem informando quem foi o vencedor (parametro winner) 
+  #
+  # @param [Game] game sessão de jogo que será encerrada
+  # @param [Player] winner jogador vencedor, 'nil' se for encerrado por desconexão de algum dos participantes
+  # @param [String] msg mensagem que sera enviada a todos os jogadores, 'nil' se for enviar a mensagem padrão
   def finalize_game(game,winner,msg)
-    game.end_game
+    game.end_game #chamado método do modelo Game para encerrar
     
-    if msg.nil?
-      game.players.each do |p|
+    if msg.nil? #se a mensagem for nula. Entao envia mensagem padrao
+      game.players.each do |p| #para cada jogador da sessao de jogo, envia a mensagem de fim de jogo
         @app.send(p,Message.new('game','end_game',{'msg' => "Parabéns! Você venceu!"})) if p == winner
-        @app.send(p,Message.new('game','end_game',{'msg' => "Fim de jogo! #{p} venceu!"})) if p != winner
+        @app.send(p,Message.new('game','end_game',{'msg' => "Fim de jogo! #{winner} venceu!"})) if p != winner
       end
     else
+      #se for passado uma mensagem padrao, envia ela a todos os jogadores
       @app.send(game.players,Message.new('game','end_game',{'msg' => msg}))
     end    
     
-    
-    @games.rem(game)
+    @games.rem(game) #remove sessao de jogo da lista de jogos
   end
 
+  #inicia uma sessao de jogo para uma sala
+  #Parametros recebidos:
+  ## Room room: sala que terá uma sessão de jogo iniciada
   def start_game(room)
     game = Game.new(room)
     
@@ -49,7 +63,7 @@ class GameController < AppController
     update_players(game)
     update_territories(game)
     
-    game.players.each do |player|
+    game.players.each do |player| #envia status e objetivos para todos os jogadores da sessão
       update_status(player)
       update_objective(player)
     end

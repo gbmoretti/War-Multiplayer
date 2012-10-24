@@ -15,6 +15,7 @@ $(document).ready(function() {
     app.add_controller(new PregameController(app));
     app.add_controller(new GameController(app));
     app.add_controller(new ActionController(app));
+    app.add_controller(new EventsController(app));
 
     app.start();
     $("#loading").hide();

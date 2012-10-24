@@ -68,6 +68,8 @@ class GameController < AppController
       update_objective(player)
     end
     
+    register_event(game,"Jogo iniciado")
+    
     puts "Games: " + @games.list.map(&:id).inspect
     next_phase(game)
     
@@ -91,12 +93,16 @@ class GameController < AppController
 
     case phase
       when Player::TROCA
+        register_event(game,"#{player.to_s} iniciou fase de cartas")
         cards(player)
       when Player::DISTRIBUICAO
+        register_event(game,"#{player.to_s} iniciou fase de distribuição")
         distribuition(player)
       when Player::ATAQUE
+        register_event(game,"#{player.to_s} iniciou fase de ataque")
         attack(player)
       when Player::MOVIMENTACAO
+        register_event(game,"#{player.to_s} iniciou fase de movimentação")
         movement(player)
      end
   end
@@ -158,6 +164,10 @@ class GameController < AppController
     result = game.attack(msg['origin'],msg['destiny'],msg['qtd'])    
     update_territories(game)
     update_status(p)
+    t = game.territories[msg['destiny'].to_i-1]
+    if result['winner'] == 'atk'
+      register_event(game,"#{p.to_s} conquistou #{t.name}")  
+    end
     @app.send(p,Message.new('game','attack_result',result)) if p.class == Player
     p.attack_result(result) if p.class == Ai
   end

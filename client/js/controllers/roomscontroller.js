@@ -63,7 +63,6 @@
       var list, sala, _i, _len;
       list = msg.list;
       this.listElmt.html('');
-      console.log(list);
       for (_i = 0, _len = list.length; _i < _len; _i++) {
         sala = list[_i];
         html = '<li class="sala">' + sala.name + ' (' + sala.players.length + '/' + sala.size + ')' ;

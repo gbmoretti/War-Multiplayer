@@ -87,7 +87,6 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
       for(i in _ref) {      
         sum_bonus += parseInt(_ref[i]); 
       }
-      console.log("sum_bonus: " + sum_bonus);
       if (sum_bonus === 0) {
         _ref = this.territories;
         for (i in _ref) {

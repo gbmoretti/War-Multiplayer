@@ -48,7 +48,6 @@ Classe responsavel pelos eventos da fase de movimentação
         t = territories[_i];
         _results.push(this.territories_id.push(t.id));
       }
-      console.log(this.territories_id);
       return _results;
     };
 

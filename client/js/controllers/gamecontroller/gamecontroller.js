@@ -102,7 +102,6 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
     //método chamado para iniciar a fase de distribuição
     GameController.prototype.distribution = function(msg) {
       var distribution, allTerritories, regions;
-      console.log('chamou');
       allTerritories = this.app.controllers['definitions'].get_territories();
       regions = this.app.controllers['definitions'].get_regions();
       distribution = new Distribution(msg.bonus, this.territories, allTerritories, regions, this.app.controllers['action'], this, (function(d) {
@@ -252,7 +251,6 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
       _ref = this.players;
       for (id in _ref) {
         player = _ref[id];
-        console.log(player);
         color = this.app.controllers['definitions'].colors[player.color];
         player_line = "<div><div class=\"turn\"";
         if (player.turn) player_line += " id=\"active\"";

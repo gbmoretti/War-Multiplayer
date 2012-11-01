@@ -41,10 +41,7 @@ class PregameController < AppController
     
     #verifica se existem pelo menos dois jogadores na sala e se estao todos prontos, e inicia partida
     room = p.room
-    if room.players.count > 0 and room.all_ready?
-      (6-room.players.count).times do |x|
-        adiciona_bot(room)
-      end
+    if room.players.count > 3 and room.all_ready?
       update_list(room)
       @app.send(room.players,Message.new('pregame','close'))
       puts "Iniciando partida na sala #{room.to_s}..."
@@ -54,9 +51,19 @@ class PregameController < AppController
         
   end
   
+  def add_ia(conn,msg)
+    p = @app.get_client(conn)
+    room = p.room
+    adiciona_bot(room) if p.room.owner == p
+    update_list(room) if p.room.owner == p
+  end
+  
   def adiciona_bot(room)
+    return nil if room.players.count == 6
+
     bot = Ai.new(@app.controllers[:game],'BOT')
     bot.room = room
+    bot.ready = true
     set_color(bot)
     @app.bind_client(bot.conn,bot)
     @players_collection.add(bot)
@@ -69,6 +76,8 @@ class PregameController < AppController
   
     #envia mensagem para abrir modal Pregame ao cliente que juntou-se a sala
     @app.send(player,Message.new('pregame','open'))
+    @app.send(player,Message.new('pregame','set_owner',{'is_owner' => true})) if room.players.size == 1
+    @app.send(player,Message.new('pregame','set_owner',{'is_owner' => false})) unless room.players.size == 1
   end
   
   private
@@ -97,7 +106,7 @@ class PregameController < AppController
     params = {
       'id' => room.id,
       'name' => room.name,
-      'owner' => room.owner,
+      'owner' => room.owner.id,
       'size' => '6',
       'players' => players
       }

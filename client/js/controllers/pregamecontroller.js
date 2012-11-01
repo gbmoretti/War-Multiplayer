@@ -26,6 +26,18 @@
     return ToggleStateMessage;
 
   })();
+  
+  AddIaMessage = (function() {
+
+    function AddIaMessage() {
+      this.controller = 'pregame';
+      this.action = 'add_ia';
+      this.params = {};
+    }
+
+    return AddIaMessage;
+
+  })();
 
   PregameController = (function() {
 
@@ -37,8 +49,10 @@
       this.players = this.modal.find('ul#players');
       this.colorSelect = this.modal.find('select[name=colors]');
       this.readyButton = this.modal.find('button#ready');
+      this.addIaButton = this.modal.find("button#addia");
       this.title = null;
       this.list = null;
+      this.is_owner = false;
       this.colorSelect.change(function(eventObject) {
         var index;
         index = $(eventObject.target).val();
@@ -47,9 +61,22 @@
       this.readyButton.click(function(eventObject) {
         return _this.app.conn.send(new ToggleStateMessage());
       });
+      
     }
 
-    PregameController.prototype.open = function(msg) {
+    PregameController.prototype.update_ia_button = function() {
+      var _this = this;
+      
+      if(!this.is_owner) {
+        this.addIaButton.hide();
+      }else {
+        this.addIaButton.click(function() {
+          _this.app.conn.send(new AddIaMessage());
+        });
+      }
+    };
+
+    PregameController.prototype.open = function(msg) {    
       var color, i, _ref;
       this.colorSelect.html('');
       _ref = this.app.controllers['definitions'].get_colors();
@@ -69,6 +96,12 @@
       this.players.html('');
       this.list = msg.players;
       return this.update_list();
+    };
+
+    PregameController.prototype.set_owner = function(msg) {
+      console.log(msg.is_owner);
+      this.is_owner = msg.is_owner;
+      this.update_ia_button();
     };
 
     PregameController.prototype.update_player = function(msg) {

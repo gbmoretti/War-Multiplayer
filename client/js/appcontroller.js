@@ -67,7 +67,7 @@ Ele mantem um lista de todos os controladores utilizados pela aplicação. Tamb�
         if (msgObj.params === '') {
           controller[msgObj.action]();
         }
-        if (msgObj.params !== '') {
+        if (msgObj.params !== '') {          
           return controller[msgObj.action](msgObj.params);
         }
       };

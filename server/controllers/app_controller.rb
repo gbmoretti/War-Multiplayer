@@ -16,7 +16,6 @@ class AppController
     @events[game].push msg
     @app.send(game.players,Message.new('events','refresh',{'events' => @events[game]}))
     
-    puts @events[game].inspect
   end
   
   

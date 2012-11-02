@@ -19,6 +19,8 @@ Classe responsavel por manipular os eventos durante a fase de ataque
 
   })();
 
+  
+
   Attack = (function() {
 
     function Attack(app, allTerritories, territories, actionController, callBackContext, callBackFunction) {
@@ -39,6 +41,7 @@ Classe responsavel por manipular os eventos durante a fase de ataque
       this.resultDiv = this.modal.find('#result');
       this.territories_id = null;
       this.divEndPhase = "<div style=\"text-align: right\"><button id=\"endattack\">Terminei ataque</button></div>";
+      this.divCancel = "<div style=\"text-align: right\"><button id=\"cancel\">Cancelar</button></div>";
       
       this.modal.find("#parar").click(function() {
         _this.app.closeModal(_this.modal);
@@ -47,6 +50,9 @@ Classe responsavel por manipular os eventos durante a fase de ataque
       $(document).on('click', 'button#endattack', function() {
         return _this.endPhase();
       });
+      $(document).on('click', 'button#cancel', function() {
+        _this.reset();
+      })
       this.updateTerritories_id(this.territories);
       this.chooseOrigin();
     }
@@ -66,86 +72,60 @@ Classe responsavel por manipular os eventos durante a fase de ataque
       _results = [];
       for (_i = 0, _len = territories.length; _i < _len; _i++) {
         t = territories[_i];
-        _results.push(this.territories_id.push(t.id));
+        this.territories_id.push(t.id);
       }
-      return _results;
+      this.territories = territories;
     };
 
     //recomeça a fase de ataque
     Attack.prototype.reset = function() {
       $('path').off("hover click");
-      $('path').attr('stroke-width', 1);
-      return this.chooseOrigin();
+      this.app.controllers['game'].refresh_colors();
+      this.chooseOrigin();
     };
 
     //método para escolhar territorio de origem do ataque
     Attack.prototype.chooseOrigin = function() {
-      var id, self, _i, _len, _ref, _results, troops;
+      var id, self, _i, _len, list, _results, troops;
       self = this;
       this.origin_id = null;
       this.destiny_id = null;
       this.actionController.open("Ataque", "Escolha um território para ser a origem do ataque" + this.divEndPhase);
-      _ref = this.territories_id;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        id = _ref[_i];
-        $('#' + id).hover(function(o) {          
-          troops = $("#l" + $(this).attr('id')).find("tspan").text();
-          if (troops !== '1') {
-            $(this).attr('stroke-width', 2);
-          }
-        }, function(o) {
-          if ($(this).attr('id') !== self.origin_id) {
-            $(this).attr('stroke-width', 1);
-          }
-        });
-        
-        $('#' + id).click(function(o) {
-          troops = $("#l" + $(this).attr('id')).find("tspan").text();
-          if (troops !== '1') {
-            self.origin_id = $(this).attr('id');
-            self.chooseDestiny();
-          }else {
-            self.actionController.open("Ataque", "Escolha um território para ser a origem do ataque. Apenas territórios com mais de 1 exército podem ser origem de ataque." + self.divEndPhase);
-          }
-        });
-      }      
+      
+      list = this.territories.map(function(o) { return o.troops > 1 ? o.id : 0; });
+      selectable_territories(list,this,function(id) {
+        var troops = $("#l" + id).find("tspan").text();
+        if (troops !== '1') {
+            this.origin_id = id;
+            this.chooseDestiny();
+        }else {
+          this.actionController.open("Ataque", "Escolha um território para ser a origem do ataque. Apenas territórios com mais de 1 exército podem ser origem de ataque." + this.divEndPhase);
+        }        
+      });      
+      
     };
 
     //método para escolher territorio alvo do ataque
     Attack.prototype.chooseDestiny = function() {
-      var nome, self, t, _i, _len, _ref;
+      var nome, self, t, list, i;
       $('path').off("hover click");
       self = this;
       nome = this.allTerritories[this.origin_id].nome;
-      this.actionController.open("Ataque", ("Escolha um território alvo<br/>Atacando de <b>" + nome + "</b>") + this.divEndPhase);
-      _ref = this.allTerritories[this.origin_id].vizinhos;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        t = _ref[_i];
-        if ($.inArray(t + "",this.territories_id) === -1) {
-          $('#' + t).hover(function(o) {
-            return $(this).attr('stroke-width', 2);
-          }, function(o) {
-            if ($(this).attr('id') !== self.destiny_id) {
-              return $(this).attr('stroke-width', 1);
-            }
-          });
-          $('#' + t).click(function(o) {
-            id = parseInt($(this).attr('id'));
-            if ($.inArray(t + "",this.territories_id) !== -1) {
-              self.reset();
-            }else {
-              self.destiny_id = $(this).attr('id');
-              self.attackWindow();
-            }
-            
-          });
+      this.actionController.open("Ataque", ("Escolha um território alvo<br/>Atacando de <b>" + nome + "</b>") + this.divCancel);
+      
+      list = [];
+      for(i in this.allTerritories[this.origin_id].vizinhos) {
+        v = this.allTerritories[this.origin_id].vizinhos[i];
+        if($.inArray(v + "",this.territories_id) === -1) {
+          list.push(v);
         }
-        
       }
-      return $('#' + this.origin_id).click(function() {
-        return self.reset();
+      
+      selectable_territories(list,this,function(id) {
+          this.destiny_id = id;
+          this.attackWindow();
       });
+      
     };
 
     //janela de status do ataque

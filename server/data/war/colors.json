@@ -2,27 +2,33 @@
   "colors": {
     "1": {
       "name": "Vermelho",
-      "hex": "#DD0000"
+      "hex": "#DD0000",
+      "hex2": "#EE0000"
     },
     "2": {
       "name": "Azul",
-      "hex": "#0000DD"
+      "hex": "#0000DD",
+      "hex2": "#0000EE"
     },
     "3": {
       "name": "Verde",
-      "hex": "#00DD00"
+      "hex": "#00DD00",
+      "hex2": "#00EE00"
     },
     "4": {
       "name": "Branco",
-      "hex": "#DDDDDD"
+      "hex": "#DDDDDD",
+      "hex2": "#EEEEEE"
     },
     "5": {
       "name": "Preto",
-      "hex": "#333333"
+      "hex": "#333333",
+      "hex2": "#444444"
     },
     "6": {
       "name": "Amarelo",
-      "hex": "#E1E100"
+      "hex": "#E1E100",
+      "hex2": "F2F211"
     }    
   }
 }

@@ -88,7 +88,7 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
       this.objective = null;
       this.phase = null;
       this.attackController = null;
-      
+      this.territories_msg = null;
     }
 
     //método chamado para iniciar a fase de troca
@@ -131,7 +131,7 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
     //chamado para iniciar fase de movimentação
     GameController.prototype.movement = function(msg) {
       var movement;
-      return movement = new Movement(this.territories, this.app.controllers['definitions'].get_territories(), this.app.controllers['action'], this, (function(m) {
+      return movement = new Movement(this.app, this.territories, this.app.controllers['definitions'].get_territories(), this.app.controllers['action'], this, (function(m) {
         return this.app.conn.send(new EndMovementMessage(this.roomid, m));
       }));
     };
@@ -200,14 +200,33 @@ Controller game. Responsavel por por manipular os eventos em todas as fases do j
     //recebe dados do mapa
     GameController.prototype.update_territories = function(msg) {
       var color, i, max, owner, t, _results;
-      max = msg.length;
+      
+      if(msg != null) this.territories_msg = msg;
+      
+      max = this.territories_msg.length;
       i = 0;
+      
       while (i < max) {
-        t = msg[i];
+        t = this.territories_msg[i];
         owner = this.players[t.owner];
         color = this.app.controllers['definitions'].colors[owner.color];
         this.change_color(t.id, color.hex);
         this.change_troops(t.id, t.troops);
+        i++;
+      }
+    };
+    
+    GameController.prototype.refresh_colors = function() {
+      var color, i, max, owner, t, _results;
+      
+      max = this.territories_msg.length;
+      i = 0;
+      
+      while (i < max) {
+        t = this.territories_msg[i];
+        owner = this.players[t.owner];
+        color = this.app.controllers['definitions'].colors[owner.color];
+        this.change_color(t.id, color.hex);
         i++;
       }
     };

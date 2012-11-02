@@ -9,6 +9,7 @@
   <script src="js/lib/jquery.svgdom.js" type="text/javascript"></script> 
   
   <!-- Inclusão dos arquivos JavaScripts que implementam o cliente -->
+  <script src="js/utils.js" type="text/javascript"></script> 
   <script src="js/wsconnection.js" type="text/javascript"></script> 
   <script src="js/appcontroller.js" type="text/javascript"></script> 
   <script src="js/controllers/actioncontroller.js" type="text/javascript"></script> 
@@ -182,18 +183,34 @@
     <div id="msg"></div> <!-- mensagem vinda do servidor -->
     <div id="cards-list"> <!-- lista de cartas -->
   </div>
-    
-    <!-- ações que podem ser executadas -->
-    <div style="text-align: right;"> <!-- mostra esse container se é possivel fazer troca -->
-      <div id="opt1" style="display: none;">
-        <button id="trocar">Trocar!</button>
-        <button id="terminar">Terminar fase</button>
-      </div>
-      <div id="opt2" style="display: none;"> <!-- mostra esse container se não é possível fazer troca -->
-        <button id="terminar">Ok</button>
-      </div>
+  
+  <!-- janela para distribuição de exércitos -->
+  <div class="modal-div" id="distribuition">
+    <div class="closebtn">x</div>
+    <div id="modal-tittle">Distribuição de exércitos</div>
+    Colocar <select name="qtd"></select> exércitos
+    <div style="text-align: right;"><button>Ok</button></div>
+  </div>
+  
+  <!-- janela para movimentação de exércitos -->
+  <div class="modal-div" id="movementation">
+    <div class="closebtn">x</div>
+    <div id="modal-tittle">Movimentação de exércitos</div>
+    Mover <select name="qtd"></select> exércitos
+    <div style="text-align: right;"><button>Ok</button></div>
+  </div>
+  
+  <!-- ações que podem ser executadas -->
+  <div style="text-align: right;"> <!-- mostra esse container se é possivel fazer troca -->
+    <div id="opt1" style="display: none;">
+      <button id="trocar">Trocar!</button>
+      <button id="terminar">Terminar fase</button>
+    </div>
+    <div id="opt2" style="display: none;"> <!-- mostra esse container se não é possível fazer troca -->
+      <button id="terminar">Ok</button>
     </div>
   </div>
+  
   
   <!-- janela informando fim do jogo -->
   <div class="modal-div" id="end_game">

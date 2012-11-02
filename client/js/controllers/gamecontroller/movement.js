@@ -5,9 +5,10 @@ Classe responsavel pelos eventos da fase de movimentação
 
   Movement = (function() {
 
-    function Movement(territories, allTerritories, actionController, callBackContext, callBackFunction) {
+    function Movement(app, territories, allTerritories, actionController, callBackContext, callBackFunction) {
       var t, _i, _len, _ref,
         _this = this;
+      this.app = app;
       this.territories = territories; //territorios do jogador
       this.allTerritories = allTerritories; //todos os territorios do jogo
       this.actionController = actionController;
@@ -16,10 +17,17 @@ Classe responsavel pelos eventos da fase de movimentação
       this.territories_id = null;
       this.movement = {};
       this.divEndPhase = "<div style=\"text-align: right\"><button id=\"endmovement\">Terminei movimentação</button></div>";
+      this.divCancel = "<div style=\"text-align: right\"><button id=\"cancelmovement\">Escolher outro território</button> <button id=\"endmovement\">Terminei movimentação</button></div>"
       $(document).off("click", 'button#endmovement');
+      $(document).off("click", 'button#cancelmovement');
       $(document).on('click', 'button#endmovement', function() {
         return _this.endPhase();
       });
+      
+      $(document).on('click', 'button#cancelmovement',function() {
+        _this.reset();
+      });
+           
       this.updateTerritories_id(this.territories);
       this.total_movement = {};
       _ref = this.territories;
@@ -54,75 +62,49 @@ Classe responsavel pelos eventos da fase de movimentação
     //reinicia a fase
     Movement.prototype.reset = function() {
       $('path').off("hover click");
-      $('path').attr('stroke-width', 1);
-      return this.chooseOrigin();
+      this.app.controllers['game'].refresh_colors();
+      this.chooseOrigin();
     };
 
     //método para escolher territorio origem
     Movement.prototype.chooseOrigin = function() {
-      var id, self, _i, _len, _ref, _results;
+      var id, self, _i, _len, _ref, _results, list;
       self = this;
       this.origin_id = null;
       this.destiny_id = null;
       this.actionController.open("Movimentação de exércitos", "Escolha um território para mover tropas" + this.divEndPhase);
-      $("path").off("hover click");
-      _ref = this.territories_id;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        id = _ref[_i];
-        $('#' + id).hover(function(o) {
-          var t_id;
-          t_id = $(this).attr('id');
-          if (self.total_movement[t_id] !== 0) {
-            return $(this).attr('stroke-width', 2);
+      
+      list = this.territories.map(function(o) { return o.troops > 1 ? o.id : '0'; });
+      selectable_territories(list,this,function(id) {
+        if (this.total_movement[id] !== void 0 || this.total_movement[id] > 1) {
+            this.origin_id = id;
+            this.chooseDestiny();
           }
-        }, function(o) {
-          if ($(this).attr('id') !== self.origin_id) {
-            return $(this).attr('stroke-width', 1);
-          }
-        });
-        _results.push($('#' + id).click(function(o) {
-          var t_id;
-          t_id = $(this).attr('id');
-          if (self.total_movement[t_id] !== void 0 || self.total_movement[t_id] > 1) {
-            self.origin_id = $(this).attr('id');
-            return self.chooseDestiny();
-          }
-        }));
-      }
-      return _results;
+      });
+      
     };
 
     //método para escolher territorio destino
     Movement.prototype.chooseDestiny = function() {
-      var nome, self, t, _i, _len, _ref;
-      $('path').off("hover click");
+      var nome, self, t, _i, _len, _ref, list;
+      
       self = this;
       nome = this.allTerritories[this.origin_id].nome;
-      this.actionController.open("Movimentação de exércitos", ("Clique em um território vizinho ao " + nome + " para receber uma tropa.") + this.divEndPhase);
-      _ref = this.allTerritories[this.origin_id].vizinhos;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        t = _ref[_i];
-        if ($.inArray(t + "", this.territories_id) > -1) {
-          $('#' + t).hover(function(o) {
-            return $(this).attr('stroke-width', 2);
-          }, function(o) {
-            if ($(this).attr('id') !== self.destiny_id) {
-              return $(this).attr('stroke-width', 1);
-            }
-          });
-          $('#' + t).click(function(o) {
-            if ($(this).attr('id') === self.origin_id) {
-              self.reset();
-            }
-            self.destiny_id = $(this).attr('id');
-            return self.move(self.origin_id, self.destiny_id);
-          });
+      this.actionController.open("Movimentação de exércitos", ("Clique em um território vizinho ao " + nome + " para receber uma tropa.") + this.divCancel);
+      
+      list = [];
+      for(i in this.allTerritories[this.origin_id].vizinhos) {
+        v = this.allTerritories[this.origin_id].vizinhos[i];
+        if($.inArray(v + "",this.territories_id) !== -1) {
+          list.push(v);
         }
       }
-      return $('#' + this.origin_id).click(function() {
-        return self.reset();
+      
+      selectable_territories(list,this,function(id) {
+        this.destiny_id = id;
+        this.move(this.origin_id, this.destiny_id);
       });
+      
     };
 
     //executa a movimentação

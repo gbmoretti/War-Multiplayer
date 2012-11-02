@@ -7,7 +7,7 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
   Distribution = (function() {
 
     function Distribution(bonus, territories, allTerritories, regions, actionController, callBackContext, callBackFunction) {
-      var i, t, _ref,
+      var i, t, _ref, list,
         _this = this;
       this.bonus = $.extend(true, {}, bonus); //clonando objeto
       this.territories = territories; //vetor com os territorios do jogador
@@ -17,19 +17,14 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
       this.callBackContext = callBackContext; //contexto em que a funcao callback sera chamada
       this.callBackFunction = callBackFunction; //funcao callback
       this.distribuition = {}; //vetor que guarda as movimentações feita pelo jogador
+      this.distribuitionModal = $("div#distribution");
+      
       this.update_action();
-      _ref = this.territories;
-      for (i in _ref) {
-        t = _ref[i];
-        $('path#' + t.id).hover(function(o) {
-          return $(this).attr('stroke-width', 2);
-        }, function(o) {
-          return $(this).attr('stroke-width', 1);
-        });
-        $('path#' + t.id).click(function(o) {
-          return _this.add_troop($(this).attr('id'));
-        });
-      }
+      list = this.territories.map(function(o) { return o.id });
+      selectable_territories(list,this,function(id) {
+        this.add_troop(id);
+      });
+      
     }
 
     Distribution.prototype.reset = function() {

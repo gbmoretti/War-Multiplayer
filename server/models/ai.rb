@@ -100,8 +100,6 @@ class Ai < Player
       alvos = vizinhos_inimigos(origem)
       
       if alvos.size == 0 
-        puts "Nao tenho alvos :( Tenho que para de atacar se nao entro em um laço infinito. 
-              Meu programador talvez dê um jeito nisso depois. TALVEZ!"
         @controller.attack_end(@conn,nil)
         return
       end

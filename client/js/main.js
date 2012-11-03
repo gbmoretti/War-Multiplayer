@@ -7,6 +7,7 @@ $(document).ready(function() {
   var host, svg, app;
 
   function loadApp() {
+    $("path").attr('fill',"#FFFFFF");
     app.add_controller(new ChatController(app));
     app.add_controller(new DefinitionsController(app));
     app.add_controller(new PlayerListController(app));

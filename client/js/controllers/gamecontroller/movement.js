@@ -14,12 +14,14 @@ Classe responsavel pelos eventos da fase de movimentação
       this.actionController = actionController;
       this.callBackContext = callBackContext;
       this.callBackFunction = callBackFunction;
+      this.modal = $("div#movement");
       this.territories_id = null;
       this.movement = {};
       this.divEndPhase = "<div style=\"text-align: right\"><button id=\"endmovement\">Terminei movimentação</button></div>";
       this.divCancel = "<div style=\"text-align: right\"><button id=\"cancelmovement\">Escolher outro território</button> <button id=\"endmovement\">Terminei movimentação</button></div>"
       $(document).off("click", 'button#endmovement');
       $(document).off("click", 'button#cancelmovement');
+      
       $(document).on('click', 'button#endmovement', function() {
         return _this.endPhase();
       });
@@ -27,7 +29,7 @@ Classe responsavel pelos eventos da fase de movimentação
       $(document).on('click', 'button#cancelmovement',function() {
         _this.reset();
       });
-           
+      
       this.updateTerritories_id(this.territories);
       this.total_movement = {};
       _ref = this.territories;
@@ -102,33 +104,61 @@ Classe responsavel pelos eventos da fase de movimentação
       
       selectable_territories(list,this,function(id) {
         this.destiny_id = id;
-        this.move(this.origin_id, this.destiny_id);
+        //this.move(this.origin_id, this.destiny_id);
+        this.movementWindow();
       });
       
     };
 
+    Movement.prototype.movementWindow = function() {
+      var select, i, max, _this;
+      
+      _this = this;
+      select = this.modal.find("select[name=qtd]");
+      select.html("");
+      max = this.total_movement[this.origin_id];
+      for(i=1;i<=max;i++) {
+        select.append("<option>" + i + "</option>");
+      }
+      
+      $("button#cancelmovement").off("click");
+      $("button#makemovement").off("click");
+      $("button#cancelmovement").click(function() {
+        _this.reset();
+        _this.app.closeModal(this.modal);
+      });
+      $("button#makemovement").click(function() {
+        console.log('movendo: ' + select.val());
+        _this.move(_this.origin_id,_this.destiny_id,select.val());
+      });
+      this.app.openModal(this.modal);
+    };
+
     //executa a movimentação
-    Movement.prototype.move = function(origin, destiny) {
+    Movement.prototype.move = function(origin, destiny, qtd) {
       var t, total;
+      qtd = parseInt(qtd);
+      if (qtd > this.total_movement[origin]) qtd = this.total_movement[origin];
       if (this.total_movement[origin] === 0) {
         return this.reset();
       }
-      this.total_movement[origin] -= 1;
+      this.total_movement[origin] -= qtd;
       if (this.movement[origin] === void 0) {
         this.movement[origin] = {};
       }
       if (this.movement[origin][destiny] === void 0) {
         this.movement[origin][destiny] = 0;
       }
-      this.movement[origin][destiny] += 1;
+      this.movement[origin][destiny] += qtd;
       t = $("#l" + origin + " tspan");
       total = parseInt(t.text());
-      total -= 1;
+      total -= qtd;
       t.text(total);
       t = $("#l" + destiny + " tspan");
       total = parseInt(t.text());
-      total += 1;
+      total += qtd;
       t.text(total);
+      this.app.closeModal(this.modal);
       return this.chooseDestiny();
     };
 

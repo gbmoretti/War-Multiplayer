@@ -6,9 +6,10 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
 
   Distribution = (function() {
 
-    function Distribution(bonus, territories, allTerritories, regions, actionController, callBackContext, callBackFunction) {
+    function Distribution(app, bonus, territories, allTerritories, regions, actionController, callBackContext, callBackFunction) {
       var i, t, _ref, list,
         _this = this;
+      this.app = app;
       this.bonus = $.extend(true, {}, bonus); //clonando objeto
       this.territories = territories; //vetor com os territorios do jogador
       this.allTerritories = allTerritories; //vetor com todos os territorios do tabuleiro
@@ -17,12 +18,12 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
       this.callBackContext = callBackContext; //contexto em que a funcao callback sera chamada
       this.callBackFunction = callBackFunction; //funcao callback
       this.distribuition = {}; //vetor que guarda as movimentações feita pelo jogador
-      this.distribuitionModal = $("div#distribution");
+      this.modal = $("div#distribution");
       
       this.update_action();
       list = this.territories.map(function(o) { return o.id });
       selectable_territories(list,this,function(id) {
-        this.add_troop(id);
+        this.window(id);
       });
       
     }
@@ -39,10 +40,43 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
       this.callBackFunction.call(this.callBackContext, this.distribuition);
     }
 
-    //adiciona uma tropa no territorio com id 'id'
-    Distribution.prototype.add_troop = function(id) {
-      var i, o, t, x, _ref, territory, sum_bonus, flag, _this;
+    Distribution.prototype.window = function(id) {
+      var i, max, select, _this;
       
+      _this = this;
+      max = 0;
+      _ref = this.bonus;
+      for(i in _ref) {      
+        max += parseInt(_ref[i]); 
+      }
+      territory = this.allTerritories[id];
+      
+      this.modal.find("span#nome").text(territory.nome);
+      
+      select = this.modal.find("select[name=qtd]");
+      select.html("");
+      for(i=1;i<=max;i++) {
+        select.append("<option>" + i + "</option>");
+      }
+      
+      $("button#make_distribution").off("click");
+      $("button#cancel_distribution").off("click");
+      $("button#make_distribution").click(function() {
+        _this.add_troop(id,select.val());
+        _this.app.closeModal(_this.modal);
+      });
+      $("button#cancel_distribution").click(function() {
+        _this.app.closeModal(_this.modal);
+      });
+      
+      this.app.openModal(this.modal);
+      
+    }
+
+    //adiciona uma tropa no territorio com id 'id'
+    Distribution.prototype.add_troop = function(id,qtd) {
+      var i, o, t, x, _ref, territory, sum_bonus, flag, _this;
+      qtd = parseInt(qtd);
       _this = this;
       sum_bonus = 0;
       _ref = this.bonus;
@@ -55,11 +89,11 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
       if (sum_bonus > 0) {
         flag = false;
         region = territory.region;
-        if (this.bonus[region] !== void 0 && this.bonus[region] !== 0) {
-          this.bonus[region]--;
+        if (this.bonus[region] !== void 0 && this.bonus[region] >= qtd) {
+          this.bonus[region] -= qtd;
           flag = true;
-        }else if (this.bonus['troops'] > 0) {
-          this.bonus['troops']--;
+        }else if (this.bonus['troops'] >= qtd) {
+          this.bonus['troops'] -= qtd;
           flag = true;
         }
         
@@ -68,10 +102,10 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
         }
         
         if (flag) {
-          this.distribuition[id]++;
+          this.distribuition[id] += qtd;
           o = $('#l' + id + " tspan");
           x = o.text();
-          o.text(parseInt(x) + 1);
+          o.text(parseInt(x) + parseInt(qtd));
           this.update_action();
         }
         
@@ -83,11 +117,7 @@ Classe responsavel por manipular os eventos durante a fase de distribuição
         sum_bonus += parseInt(_ref[i]); 
       }
       if (sum_bonus === 0) {
-        _ref = this.territories;
-        for (i in _ref) {
-          t = _ref[i];
-          $('path#' + t.id).attr('stroke-width', 1);
-        }
+        
         msg = 'Não há mais exércitos para distribuir.<br/>';
         msg += '<div style="text-align: right;"><button id="confirm_distribuition">Confirmar distribuição</button>';
         msg += '<button id="reset_distribuition">Recomeçar</button></div>';

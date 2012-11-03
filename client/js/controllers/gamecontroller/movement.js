@@ -131,6 +131,10 @@ Classe responsavel pelos eventos da fase de movimentação
         console.log('movendo: ' + select.val());
         _this.move(_this.origin_id,_this.destiny_id,select.val());
       });
+      
+      this.modal.find("span#nome1").text(this.allTerritories[this.origin_id].nome);
+      this.modal.find("span#nome2").text(this.allTerritories[this.destiny_id].nome);
+      
       this.app.openModal(this.modal);
     };
 

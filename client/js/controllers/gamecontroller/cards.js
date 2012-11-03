@@ -68,9 +68,8 @@ Cards = (function() {
       str = "";
       for(i in this.cards) {
         card = this.cards[i];
-        str += "<div class=\"card simbolo" + card.simbolo + "\">" + card.nome;
-        str += "<input type=\"checkbox\" value=\"" + card.id + "\"/></div><br/>"; 
-        
+        str += "<input type=\"checkbox\" value=\"" + card.id + "\"/>"; 
+        str += "<div class=\"card simbolo" + card.simbolo + "\">" + card.nome + "</div><br/>";      
       }
       
       this.divCards.html(str);

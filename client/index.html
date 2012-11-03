@@ -44,7 +44,6 @@
       <div id="buttons">
          <div id="btnchat">Chat</div>         
          <div id="btnrooms">Salas</div>
-         <div>Informações</div>
          <div id="btnreset">Sair</div>
       </div>      
     </div> <!-- fim da barra de botões inferior -->
@@ -182,22 +181,37 @@
     <div id="modal-title">Troca de cartas</div>
     <div id="msg"></div> <!-- mensagem vinda do servidor -->
     <div id="cards-list"></div> <!-- lista de cartas -->
+    <div style="text-align: right;">
+      <div id="opt1" style="display: none;">
+          <button id="trocar">Trocar!</button>
+          <button id="terminar">Terminar fase</button>
+      </div>
+      <div id="opt2" style="display: none;">
+        <button id="terminar">Ok</button>
+      </div>
+    </div>
   </div>
   
   <!-- janela para distribuição de exércitos -->
-  <div class="modal-div" id="distribuition">
+  <div class="modal-div" id="distribution">
     <div class="closebtn">x</div>
-    <div id="modal-title">Distribuição de exércitos</div>
-    Colocar <select name="qtd"></select> exércitos
-    <div style="text-align: right;"><button>Ok</button></div>
+    <div id="modal-title">Distribuição</div>
+    Colocar <select name="qtd"></select> exércitos em <span id="nome"></span>
+    <div style="text-align: right;">
+      <button id="cancel_distribution">Cancelar</button>
+      <button id="make_distribution">Ok</button>
+    </div>
   </div>
   
   <!-- janela para movimentação de exércitos -->
   <div class="modal-div" id="movement">
     <div class="closebtn">x</div>
     <div id="modal-title">Movimentação</div>
-    Mover <select name="qtd"></select> exércitos
-    <div style="text-align: right;"><button id="cancelmovement">Cancelar</button><button id="makemovement">Ok</button></div>
+    Mover <select name="qtd"></select> exércitos de <span id="nome1"></span> a <span id="nome2"></span>
+    <div style="text-align: right;">
+      <button id="cancelmovement">Cancelar</button>
+      <button id="makemovement">Ok</button>
+    </div>
   </div>
   
   <!-- ações que podem ser executadas -->

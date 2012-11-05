@@ -65,6 +65,7 @@ Classe responsavel pelos eventos da fase de movimentação
     Movement.prototype.reset = function() {
       $('path').off("hover click");
       this.app.controllers['game'].refresh_colors();
+      this.app.closeModal(this.modal);
       this.chooseOrigin();
     };
 

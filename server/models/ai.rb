@@ -69,7 +69,7 @@ class Ai < Player
       max_territorios = regiao.territories.size
       i = 0
       while qtd > 0
-        territorio = regiao.territories[i%max_territorios]
+        territorio = get_pais(regiao.territories[i%max_territorios])
         if vizinhos_inimigos(territorio).size > 0
           distribuition[territorio.id] = 0 if distribuition[territorio.id].nil?
           distribuition[territorio.id] += 1

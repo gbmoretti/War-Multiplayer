@@ -2,6 +2,7 @@
 
 require 'cgi'
 require 'json'
+require 'pry'
 
 class ServerConnection < Rack::WebSocket::Application
   
@@ -10,12 +11,12 @@ class ServerConnection < Rack::WebSocket::Application
   def initialize(app,opts = {}) #chamado quando servidor é estartado.
     super(opts) #super sempre deve ser chamado primeiro
     @@app ||= app
-    @sid = nil
+    @sid ||= nil
     puts 'Rodando aplicacao: ' + @@app.to_s
   end
   
   def on_open(env) #chamado quando uma conexão é aberta
-    @sid = env['rack.session.options'][:id]
+    @sid = env['rack.session']['session_id']
     @@app.new_conn(self)
   end
   
@@ -24,7 +25,7 @@ class ServerConnection < Rack::WebSocket::Application
   end
   
   def on_message(env,msg) #chamado quando recebe um mensagem
-    @sid = env['rack.session.options'][:id]
+    @sid = env['rack.session']['session_id']
     msg = JSON.parse(msg)
     msg.each { |k,v| msg[k] = CGI::escapeHTML(v) if msg[k].respond_to?(:gsub) }
     @@app.message(msg, self)      

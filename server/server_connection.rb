@@ -2,7 +2,6 @@
 
 require 'cgi'
 require 'json'
-require 'pry'
 
 class ServerConnection < Rack::WebSocket::Application
   

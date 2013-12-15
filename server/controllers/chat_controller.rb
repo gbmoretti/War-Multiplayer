@@ -14,7 +14,6 @@ class ChatController < AppController
       @app.broadcast(Message.new('chat','txt',
             {'author' => CGI::escapeHTML(p.to_s), 'msg' => CGI::escapeHTML(args['msg'])}
             )) #envia a mensagem para todos os clientes
-      log(p.nick,args['msg'])
     end
   end
   

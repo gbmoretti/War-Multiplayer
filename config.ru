@@ -7,6 +7,9 @@ use Rack::Session::Cookie, :key => 'rack.session',
                            :expire_after => 2592000,
                            :secret => 'que_eh_isso'
 
+use Rack::Static,
+  :root => "client"
+
 app = Application.new
 app.add_c ChatController.new(app)
 app.add_c SetNickController.new(app)
@@ -25,6 +28,14 @@ map '/websocket' do
 end
 
 map '/' do
-  f = File.expand_path(File.dirname(__FILE__)) + '/client/'
-  run Rack::File.new(f)
+  run lambda { |env|
+    [
+      200,
+      {
+        'Content-Type'  => 'text/html',
+        'Cache-Control' => 'public, max-age=86400'
+      },
+      File.open('client/index.html', File::RDONLY)
+    ]
+  }
 end

@@ -33,7 +33,7 @@ $(document).ready(function() {
     onLoad: function() {
       var svg;
       svg = $("#game").svg('get');
-      return svg.load('map.svg', {
+      return svg.load('client/map.svg', {
         addTo: true,
         changeSize: false,
         onLoad: function() {

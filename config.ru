@@ -8,6 +8,7 @@ use Rack::Session::Cookie, :key => 'rack.session',
                            :secret => 'que_eh_isso'
 
 use Rack::Static,
+  :urls => ["js"],
   :root => "client"
 
 app = Application.new
@@ -25,6 +26,11 @@ map '/websocket' do
     :expire_after => 2592000)
     
   run sessioned
+end
+
+map '/client' do
+  f = File.expand_path(File.dirname(__FILE__)) + '/client/'
+  run Rack::File.new(f)
 end
 
 map '/' do
